@@ -1,0 +1,92 @@
+{
+	"name": "openfga-vscode",
+	"description": "Language support for OpenFGA authorization models",
+	"author": "OpenFGA",
+	"keywords": [
+		"openfga",
+		"authorization",
+		"fga",
+		"fine-grained-authorization",
+		"rebac",
+		"zanzibar"
+	],
+	"license": "Apache-2.0",
+	"version": "1.0.0",
+	"repository": {
+		"type": "git",
+		"url": "https://github.com:openfga/openfga-vscode"
+	},
+	"bugs": {
+		"url": "https://github.com/openfga/openfga-vscode/issues"
+	},
+	"homepage": "https://github.com/openfga/openfga-vscode#readme",
+	"publisher": "openfga",
+	"categories": [],
+	"engines": {
+		"vscode": "^1.75.0"
+	},
+	"activationEvents": [
+		"onLanguage:openfga",
+		"onLanguage:plaintext"
+	],
+	"main": "./client/out/extension",
+	"contributes": {
+		"configuration": {
+			"type": "object",
+			"title": "Example configuration",
+			"properties": {
+				"languageServerExample.maxNumberOfProblems": {
+					"scope": "resource",
+					"type": "number",
+					"default": 100,
+					"description": "Controls the maximum number of problems produced by the server."
+				},
+				"languageServerExample.trace.server": {
+					"scope": "window",
+					"type": "string",
+					"enum": [
+						"off",
+						"messages",
+						"verbose"
+					],
+					"default": "off",
+					"description": "Traces the communication between VS Code and the language server."
+				}
+			}
+		},
+		"languages": [{
+		  "id": "openfga",
+		  "aliases": ["OpenFGA", "openfga"],
+		  "extensions": [".openfga"],
+		  "configuration": "./client/src/language-configuration.json"
+		}],
+		"grammars": [{
+		  "language": "openfga",
+		  "scopeName": "source.openfga",
+		  "path": "./client/src/syntaxes/openfga.tmLanguage.json"
+		}],
+		"themes": [
+		  {
+			"label": "OpenFGA Dark",
+			"uiTheme": "vs-dark",
+			"path": "./client/src/themes/openfga-dark.json"
+		  }
+		]
+	},
+	"scripts": {
+		"vscode:prepublish": "npm run compile",
+		"compile": "tsc -b",
+		"watch": "tsc -b -w",
+		"lint": "eslint ./client/src ./server/src --ext .ts,.tsx",
+		"postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
+		"test": "sh ./scripts/e2e.sh"
+	},
+	"devDependencies": {
+		"@types/mocha": "^10.0.1",
+		"@types/node": "^18.16.3",
+		"@typescript-eslint/eslint-plugin": "^5.59.2",
+		"@typescript-eslint/parser": "^5.59.2",
+		"eslint": "^8.39.0",
+		"mocha": "^10.2.0"
+	}
+}

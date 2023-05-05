@@ -1,0 +1,145 @@
+{
+  "language": {
+    "defaultToken": "",
+    "tokenPostfix": ".openfga",
+    "keywords": [],
+    "operators": [],
+    "identifiers": {},
+    "comments": {
+      "lineComment": "#",
+    },
+    "brackets": [
+      ["{", "}"],
+      ["[", "]"],
+      ["(", ")"]
+    ],
+    "autoClosingPairs": [
+      { "open": "{", "close": "}" },
+      { "open": "[", "close": "]" },
+      { "open": "(", "close": ")" },
+    ],
+    "surroundingPairs": [
+      ["{", "}"],
+      ["[", "]"],
+      ["(", ")"],
+    ],
+    "indentationRules": {
+      "indentNextLinePattern": "^model$",
+      "increaseIndentPattern": "^((type\\s+.*+)|(\\s{2}relations)|(\\s{4}define.*?))$",
+      "decreaseIndentPattern": "^\\s{2}schema 1\\.[01]$"
+    },
+
+    "onEnterRules": [
+      {
+        "beforeText": "^\\s*(?:type|relations|model|define).*?:\\s*$",
+        "action": { "indent": "indent" },
+      },
+      {
+        "beforeText": "^\\s{2}schema 1\\.[01]$",
+        "action": { "indent": "outdent" },
+      }
+    ],
+    "tokenizer": {
+      "root": [
+        { "include": "@whitespace" },
+        [{}, "comment"],
+        [
+          {},
+          [
+            "@brackets",
+            "@whitespace",
+            "type.type-restrictions.value",
+            "@whitespace",
+            "@brackets"
+          ]
+        ],
+        [
+          {},
+          [
+            "comma.type-restrictions.delimiter",
+            "@whitespace",
+            "type.type-restrictions.value",
+            "@whitespace",
+            "@brackets"
+          ]
+        ],
+        [
+          {},
+          [
+            "@brackets",
+            "@whitespace",
+            "type.type-restrictions.value",
+            "@whitespace",
+            "comma.type-restrictions.delimiter"
+          ]
+        ],
+        [{}, "@brackets"],
+        [{}, ["schema.keyword", "@whitespace", "schema.value"]],
+        [{}, ["type.keyword", "@whitespace", "name.type.value"]],
+        [{}, ["define.keyword", "@whitespace", "name.relation.value"]],
+        [{}, ["union.operator", "@whitespace", "computed.relation.value"]],
+        [
+          {},
+          ["intersection.operator", "@whitespace", "computed.relation.value"]
+        ],
+        [{}, ["exclusion.operator", "@whitespace", "computed.relation.value"]],
+        [{}, ["as.keyword", "@whitespace", "computed.relation.value"]],
+        [
+          {},
+          ["colon.define.delimiter", "@whitespace", "computed.relation.value"]
+        ],
+        [
+          {},
+          [
+            "computed.tupletouserset.relation.value",
+            "@whitespace",
+            "from.keyword",
+            "@whitespace",
+            "tupleset.tupletouserset.relation.value"
+          ]
+        ],
+        [
+          {},
+          [
+            "type.type-restrictions.value",
+            "hashtag.type-restrictions.delimiter",
+            "relation.type-restrictions.value"
+          ]
+        ],
+        [
+          {},
+          [
+            "type.type-restrictions.value",
+            "colon.type-restrictions.delimiter",
+            "wildcard.type-restrictions.value"
+          ]
+        ],
+        [":", "colon.define.delimiter"],
+        [",", "comma.type-restrictions.delimiter"],
+        ["but not", "exclusion.operator"],
+        ["self", "self.keyword"],
+        [
+          {},
+          {
+            "cases": {
+              "and": "intersection.operator",
+              "or": "union.operator",
+              "type": "type.keyword",
+              "relations": "relations.keyword",
+              "define": "define.keyword",
+              "from": "from.keyword",
+              "as": "as.keyword",
+              "model": "model.keyword",
+              "schema": { "token": "schema.keyword" },
+              "@default": "tupleset.tupletouserset.relation.value"
+            }
+          }
+        ]
+      ],
+      "whitespace": [
+        [{}, "white"],
+        [{}, "comment"]
+      ]
+    }
+  }
+}

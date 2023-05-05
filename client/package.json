@@ -1,0 +1,50 @@
+{
+  "name": "openfga-vscode-client",
+  "description": "VS Code language support for OpenFGA authorization models",
+  "author": "OpenFGA",
+  "keywords": [
+    "openfga",
+    "authorization",
+    "fga",
+    "fine-grained-authorization",
+    "rebac",
+    "zanzibar"
+  ],
+  "license": "Apache-2.0",
+  "version": "0.0.1",
+  "publisher": "openfga",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com:openfga/openfga-vscode"
+  },
+  "contributes": {
+    "languages": [{
+      "id": "openfga",
+      "aliases": ["OpenFGA", "openfga"],
+      "extensions": [".openfga"],
+      "configuration": "./language-configuration.json"
+    }],
+    "grammars": [{
+      "language": "openfga",
+      "scopeName": "source.openfga",
+      "path": "./syntaxes/openfga.tmLanguage.json"
+    }],
+    "themes": [
+      {
+        "label": "OpenFGA Dark",
+        "uiTheme": "vs-dark",
+        "path": "./themes/openfga-dark.json"
+      }
+    ]
+  },
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "dependencies": {
+    "vscode-languageclient": "^8.1.0"
+  },
+  "devDependencies": {
+    "@types/vscode": "^1.75.1",
+    "@vscode/test-electron": "^2.2.3"
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "name": "OpenFGA Dark",
+  "colors": {
+    "editor.background": "#141517",
+    "editor.foreground": "#eeffff",
+    "activityBarBadge.background": "#007acc",
+    "sideBarTitle.foreground": "#bbbbbb"
+  },
+  "tokenColors": [
+    {
+      "name": "Comment",
+      "scope": ["comment.openfga"],
+      "settings": {
+        "fontStyle": "italic",
+        "foreground": "#737981"
+      }
+    },
+    {
+      "name": "Keyword",
+      "scope": [
+        "as.keyword.openfga",
+        "define.keyword.openfga",
+        "from.keyword.openfga",
+        "model.keyword.openfga",
+        "relations.keyword.openfga",
+        "schema.keyword.openfga",
+        "self.keyword.openfga",
+        "type.keyword.openfga",
+        "intersection.operator.openfga",
+        "exclusion.operator.openfga",
+        "union.operator.openfga",
+        "computed.relation.value.openfga"
+      ],
+      "settings": {
+        "foreground": "#AAAAAA"
+      }
+    },
+    {
+      "name": "Value",
+      "scope": [
+        "relation-definition.bracket.delimiter.openfga",
+        "computed.relation.value.openfga",
+        "computed.tupletouserset.relation.value.openfga",
+        "tupleset.tupletouserset.relation.value.openfga",
+        "schema.value.openfga"
+      ],
+      "settings": {
+        "foreground": "#AAAAAA"
+      }
+    },
+    {
+      "name": "Type Restrictions",
+      "scope": [
+		"type-restrictions.value.openfga",
+        "relation.type-restrictions.value.openfga",
+        "type.type-restrictions.value.openfga",
+        "wildcard.type-restrictions.value.openfga",
+        "type-restrictions.bracket.delimiter.openfga",
+        "colon.type-restrictions.delimiter.openfga",
+        "comma.type-restrictions.delimiter.openfga",
+        "hashtag.type-restrictions.delimiter.openfga"
+      ],
+      "settings": {
+        "foreground": "#CEEC93"
+      }
+    },
+    {
+      "name": "Type",
+      "scope": ["name.type.value.openfga"],
+      "settings": {
+        "foreground": "#79ED83"
+      }
+    },
+    {
+      "name": "Relation",
+      "scope": ["name.relation.value.openfga"],
+      "settings": {
+        "foreground": "#20F1F5"
+      }
+    },
+    {
+      "name": "Invalid",
+      "scope": ["invalid", "invalid.illegal"],
+      "settings": {
+        "foreground": "#FF5370"
+      }
+    }
+  ]
+}
