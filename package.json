@@ -57,7 +57,7 @@
 		"languages": [{
 		  "id": "openfga",
 		  "aliases": ["OpenFGA", "openfga"],
-		  "extensions": [".openfga"],
+		  "extensions": [".fga", ".openfga"],
 		  "configuration": "./client/src/language-configuration.json"
 		}],
 		"grammars": [{
@@ -71,6 +71,12 @@
 			"uiTheme": "vs-dark",
 			"path": "./client/src/themes/openfga-dark.json"
 		  }
+		],
+		"commands": [
+			{
+				"command": "openfga.commands.transformToJson",
+				"title": "OpenFGA: Transform DSL to JSON"
+			}
 		]
 	},
 	"scripts": {

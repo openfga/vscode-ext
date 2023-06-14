@@ -16,12 +16,17 @@ import {
   InitializeResult,
   Hover,
   MarkupContent,
+  TextDocumentEdit,
+  CodeAction,
+  Command,
+  CodeActionKind,
 } from "vscode-languageserver/node";
 import * as VsCodeLanguageServer from "vscode-languageserver/node";
 import { checkDSL } from "@openfga/syntax-transformer";
 import { Marker } from "@openfga/syntax-transformer/dist/validator/reporters";
 import { provideCompletionItemsOneDotOne } from "@openfga/syntax-transformer/dist/syntax-highlighters/vscode/providers/completion";
-import { providerHover } from '@openfga/syntax-transformer/dist/syntax-highlighters/vscode/providers/hover-actions';
+import { providerHover } from "@openfga/syntax-transformer/dist/syntax-highlighters/vscode/providers/hover-actions";
+import { friendlySyntaxToApiSyntax } from "@openfga/syntax-transformer";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import {
   ITextModel,
@@ -63,6 +68,12 @@ connection.onInitialize((params: InitializeParams) => {
       // Tell the client that this server supports code completion.
       completionProvider: {
         resolveProvider: true,
+      },
+      codeActionProvider: true,
+      executeCommandProvider: {
+        commands: [
+          // 'openfga.commands.transformToJson'
+        ],
       },
     },
   };
@@ -116,7 +127,7 @@ connection.onDidChangeConfiguration((change) => {
   }
 
   // Revalidate all open text documents
-  documents.all().forEach(validateTextDocument);
+  documents.all().forEach(validateContent);
 });
 
 function getDocumentSettings(resource: string): Thenable<OpenFgaLspSettings> {
@@ -139,63 +150,63 @@ documents.onDidClose((e) => {
   documentSettings.delete(e.document.uri);
 });
 
+documents.onDidOpen((event) => {
+  validateContent(event.document);
+});
+
 // The content of a text document has changed. This event is emitted
 // when the text document first opened or when its content has changed.
 documents.onDidChangeContent((change) => {
-  validateTextDocument(change.document);
+  validateContent(change.document);
 });
 
-async function validateTextDocument(textDocument: TextDocument): Promise<void> {
+async function validateContent(textDocument: TextDocument): Promise<void> {
+  // return connection.sendDiagnostics({ uri: textDocument.uri,
+  // 	version: textDocument.version, diagnostics: [] });
   // In this simple example we get the settings for every validate run.
   const settings = await getDocumentSettings(textDocument.uri);
 
-  // The validator creates diagnostics for all uppercase words length 2 and more
   const text = textDocument.getText();
-  // const pattern = /\b[A-Z]{2,}\b/g;
-  let m: Marker | null | any;
 
-  let problems = 0;
   const diagnostics: Diagnostic[] = [];
-  while ((m = checkDSL(text)) && problems < 2) {
-    problems++;
-    const diagnostic: Diagnostic = {
-      severity: DiagnosticSeverity.Warning,
-      range: {
-        start: {
-          line: m.startLineNumber,
-          character: m.startColumn,
-        }, // textDocument.positionAt(m.index),
-        end: {
-          line: m.endLineNumber,
-          character: m.endColumn,
-        }, // textDocument.positionAt(m.index + m[0].length)
-      },
-      message: m.message, // `${m[0]} is all uppercase.`,
-      source: m.source, // 'ex'
-    };
-    if (hasDiagnosticRelatedInformationCapability) {
-      diagnostic.relatedInformation = [
-        {
-          location: {
-            uri: textDocument.uri,
-            range: Object.assign({}, diagnostic.range),
+  const markers = checkDSL(text);
+
+  for (const marker of markers) {
+    try {
+      const diagnostic = Diagnostic.create(
+        VsCodeLanguageServer.Range.create(
+          marker.startLineNumber - 1,
+          marker.startColumn - 1,
+          marker.endLineNumber - 1,
+          marker.endColumn - 1
+        ),
+        marker.message,
+        DiagnosticSeverity.Error,
+      );
+  
+      diagnostic.source = marker.source;
+      if (hasDiagnosticRelatedInformationCapability) {
+        diagnostic.relatedInformation = [
+          {
+            location: {
+              uri: textDocument.uri,
+              range: Object.assign({}, diagnostic.range),
+            },
+            message: marker.message,
           },
-          message: m.message, // 'Spelling matters'
-        },
-        {
-          location: {
-            uri: textDocument.uri,
-            range: Object.assign({}, diagnostic.range),
-          },
-          message: m.message, //'Particularly for names'
-        },
-      ];
-    }
-    diagnostics.push(diagnostic);
+        ];
+      }
+      diagnostics.push(diagnostic);
+
+    } catch (err) { /* empty */}
   }
 
   // Send the computed diagnostics to VSCode.
-  connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });
+  connection.sendDiagnostics({
+    uri: textDocument.uri,
+    version: textDocument.version,
+    diagnostics,
+  });
 }
 
 connection.onDidChangeWatchedFiles((_change) => {
@@ -214,32 +225,75 @@ connection.onCompletion(
     // which code complete got requested. For the example we ignore this
     // info and always provide the same completion items.
     const completionProvider = provideCompletionItemsOneDotOne(
-      VsCodeLanguageServer as unknown as VsCodeEditorType,
+      VsCodeLanguageServer,
       {}
     );
     const { items } = completionProvider(
-      document as unknown as ITextModel,
-      textDocumentPosition.position as unknown as STPosition
+      document,
+      textDocumentPosition.position
     );
-    return items as unknown as CompletionItem[];
+    return items;
   }
 );
 
 // This handler resolves additional information for the item selected in
 // the completion list.
-connection.onCompletionResolve(
-	(item: CompletionItem): CompletionItem => {
-		return item;
-	}
-);
+connection.onCompletionResolve((item: CompletionItem): CompletionItem => {
+  return item;
+});
 
 connection.onHover((params: TextDocumentPositionParams): Hover | undefined => {
-    const document = documents.get(params.textDocument.uri);
-    if (!document) {
-      return undefined;
-    }
-	return providerHover(VsCodeLanguageServer as any, {})(document, params.position);
+  const document = documents.get(params.textDocument.uri);
+  if (!document) {
+    return undefined;
+  }
+  return providerHover(VsCodeLanguageServer as any, {})(
+    document,
+    params.position
+  );
 });
+
+connection.onCodeAction((params) => {
+  const textDocument = documents.get(params.textDocument.uri);
+  if (textDocument === undefined) {
+    return undefined;
+  }
+  const title = "OpenFGA: Transform DSL to JSON";
+  return [
+    CodeAction.create(
+      title,
+      Command.create(
+        title,
+        "openfga.commands.transformToJson",
+        textDocument.uri
+      ),
+      CodeActionKind.RefactorRewrite
+    ),
+  ];
+});
+
+connection.onExecuteCommand(async (params) => {
+  return;
+  // if (params.command !== 'openfga.commands.transformToJson' || params.arguments ===  undefined) {
+  // 	return;
+  // }
+
+  // const textDocument = documents.get(params.arguments[0]);
+  // if (textDocument === undefined) {
+  // 	return;
+  // }
+  // const text = textDocument.getText();
+
+  // const modelInApiFormat = friendlySyntaxToApiSyntax(text);
+  // connection.workspace.applyEdit({
+  // 	documentChanges: [
+  // 		TextDocumentEdit.create({ uri: textDocument.uri, version: textDocument.version }, [
+  // 			VsCodeLanguageServer.TextEdit.replace(VsCodeLanguageServer.Range.create(0, 0, Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER), JSON.stringify(modelInApiFormat, null, "  "))
+  // 		])
+  // 	]
+  // });
+});
+
 // Make the text document manager listen on the connection
 // for open, change and close text document events
 documents.listen(connection);

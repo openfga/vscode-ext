@@ -4,7 +4,8 @@
  * ------------------------------------------------------------------------------------------ */
 
 import * as path from 'path';
-import { workspace, ExtensionContext } from 'vscode';
+import { window, workspace, ExtensionContext, commands, Range } from 'vscode';
+import { friendlySyntaxToApiSyntax } from '@openfga/syntax-transformer';
 
 import {
 	LanguageClient,
@@ -48,6 +49,22 @@ export function activate(context: ExtensionContext) {
 		serverOptions,
 		clientOptions
 	);
+
+	const transformCommand = commands.registerCommand('openfga.commands.transformToJson', async () => {
+		const activeEditor = window.activeTextEditor;
+		if (!activeEditor) {
+			return;
+		}
+		const text = activeEditor.document.getText();
+
+		const modelInApiFormat = friendlySyntaxToApiSyntax(text);
+		activeEditor.edit(editBuilder => {
+			const range = new Range(0, 0, Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER);
+			editBuilder.replace(range, JSON.stringify(modelInApiFormat, null, "  "));
+		});
+	});
+
+	context.subscriptions.push(transformCommand);
 
 	// Start the client. This will also launch the server
 	client.start();
