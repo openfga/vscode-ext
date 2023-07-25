@@ -1,5 +1,7 @@
 {
-  "name": "OpenFGA Dark",
+  "$schema": "vscode://schemas/color-theme",
+  "include": "./dark_vs.json",
+  "type": "dark",
   "colors": {
     "editor.background": "#141517",
     "editor.foreground": "#eeffff",
@@ -18,17 +20,17 @@
     {
       "name": "Keyword",
       "scope": [
-        "as.keyword.openfga",
-        "define.keyword.openfga",
-        "from.keyword.openfga",
-        "model.keyword.openfga",
-        "relations.keyword.openfga",
-        "schema.keyword.openfga",
-        "self.keyword.openfga",
-        "type.keyword.openfga",
-        "intersection.operator.openfga",
-        "exclusion.operator.openfga",
-        "union.operator.openfga",
+        "keyword.as.openfga",
+        "keyword.define.openfga",
+        "keyword.from.openfga",
+        "keyword.model.openfga",
+        "keyword.relations.openfga",
+        "keyword.schema.openfga",
+        "keyword.self.openfga",
+        "keyword.type.openfga",
+        "operator.intersection.openfga",
+        "operator.exclusion.openfga",
+        "operator.union.openfga",
         "computed.relation.value.openfga"
       ],
       "settings": {
@@ -51,7 +53,7 @@
     {
       "name": "Type Restrictions",
       "scope": [
-		"type-restrictions.value.openfga",
+		    "type-restrictions.value.openfga",
         "relation.type-restrictions.value.openfga",
         "type.type-restrictions.value.openfga",
         "wildcard.type-restrictions.value.openfga",
