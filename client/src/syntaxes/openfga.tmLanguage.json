@@ -1,5 +1,5 @@
 {
-	"name": "OpenFGA",
+	"name": "openfga",
 	"scopeName": "source.openfga",
 	"fileTypes": [".fga", ".openfga"],
 	"patterns": [
