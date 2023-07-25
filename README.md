@@ -1,6 +1,6 @@
-# VSCode-EXT
+# OpenFGA Extension for VS Code
 
-VSCode extension for display of syntax highlighting [OpenFGA](https://openfga.dev/)
+VSCode extension that provides syntax highlighting for the [OpenFGA](https://openfga.dev/) DSL.
 
 ## Functionality
 
