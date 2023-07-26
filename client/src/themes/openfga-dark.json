@@ -69,7 +69,7 @@
     },
     {
       "name": "Type",
-      "scope": ["support.class.name.value.openfga"],
+      "scope": ["support.class.type.name.value.openfga"],
       "settings": {
         "foreground": "#79ED83"
       }

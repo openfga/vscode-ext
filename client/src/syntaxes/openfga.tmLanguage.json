@@ -71,7 +71,7 @@
 			"match": "^(type)\\s+([a-zA-Z0-9-_]+)",
 			"captures": {
 				"1": { "name": "keyword.type.openfga" },
-				"2": { "name": "support.class.name.value.openfga" }
+				"2": { "name": "support.class.type.name.value.openfga" }
 			 }
 		  }
 		]
