@@ -87,7 +87,7 @@
 			   }
 			},
 			{
-			  "match": "^\\s{4}(define)\\s+([a-zA-Z0-9-_]+)(:)\\s*(\\[[a-zA-Z0-9-_:#,*]+])?",
+			  "match": "^\\s{4}(define)\\s+([a-zA-Z0-9-_]+)\\s*(:)\\s*(\\[[a-zA-Z0-9-_:#,*]+])?",
 			  "captures": {
 					"1": { "name": "keyword.define.openfga" },
 					"2": { "name": "name.relation.value.openfga" },
