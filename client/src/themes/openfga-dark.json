@@ -1,6 +1,7 @@
 {
   "$schema": "vscode://schemas/color-theme",
   "include": "./dark_vs.json",
+  "semanticHighlighting": false,
   "type": "dark",
   "colors": {
     "editor.background": "#141517",
@@ -53,7 +54,7 @@
     {
       "name": "Type Restrictions",
       "scope": [
-		    "type-restrictions.value.openfga",
+		    "variable.parameter.type-restrictions.value.openfga",
         "relation.type-restrictions.value.openfga",
         "type.type-restrictions.value.openfga",
         "wildcard.type-restrictions.value.openfga",
@@ -68,14 +69,14 @@
     },
     {
       "name": "Type",
-      "scope": ["name.type.value.openfga"],
+      "scope": ["support.class.name.value.openfga"],
       "settings": {
         "foreground": "#79ED83"
       }
     },
     {
       "name": "Relation",
-      "scope": ["name.relation.value.openfga"],
+      "scope": ["support.type.relation.name.value.openfga"],
       "settings": {
         "foreground": "#20F1F5"
       }

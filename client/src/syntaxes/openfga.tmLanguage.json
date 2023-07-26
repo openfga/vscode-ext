@@ -71,7 +71,7 @@
 			"match": "^(type)\\s+([a-zA-Z0-9-_]+)",
 			"captures": {
 				"1": { "name": "keyword.type.openfga" },
-				"2": { "name": "name.type.value.openfga" }
+				"2": { "name": "support.class.name.value.openfga" }
 			 }
 		  }
 		]
@@ -82,17 +82,17 @@
 			  "match": "^\\s{4}(define)\\s+([a-zA-Z0-9-_]+)\\s+(as)\\s+",
 			  "captures": {
 					"1": { "name": "keyword.define.openfga" },
-					"2": { "name": "name.relation.value.openfga" },
+					"2": { "name": "support.type.relation.name.value.openfga" },
 					"3": { "name": "keyword.as.openfga" }
 			   }
 			},
 			{
-			  "match": "^\\s{4}(define)\\s+([a-zA-Z0-9-_]+)\\s*(:)\\s*(\\[[a-zA-Z0-9-_:#,*]+])?",
+			  "match": "^\\s{4}(define)\\s+([a-zA-Z0-9-_]+)\\s*(:)\\s*(\\[([a-zA-Z0-9-_:#*]|,\\s*)+])?",
 			  "captures": {
 					"1": { "name": "keyword.define.openfga" },
-					"2": { "name": "name.relation.value.openfga" },
+					"2": { "name": "support.type.relation.name.value.openfga" },
 					"3": { "name": "colon.define.delimiter.openfga" },
-					"4": { "name": "type-restrictions.value.openfga" }
+					"4": { "name": "variable.parameter.type-restrictions.value.openfga" }
 			   }
 			}
 		]
