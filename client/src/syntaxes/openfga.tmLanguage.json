@@ -28,39 +28,39 @@
 	  "keywords": {
 		"patterns": [
 		  {
-			"name": "as.keyword.openfga",
+			"name": "keyword.as.openfga",
 			"match": "\\bas\\b"
 		  },
 		  {
-			"name": "from.keyword.openfga",
+			"name": "keyword.from.openfga",
 			"match": "\\bfrom\\b"
 		  },
 		  {
-			"name": "model.keyword.openfga",
+			"name": "keyword.model.openfga",
 			"match": "\\bmodel\\b"
 		  },
 		  {
-			"name": "relations.keyword.openfga",
+			"name": "keyword.relations.openfga",
 			"match": "\\brelations\\b"
 		  },
 		  {
-			"name": "schema.keyword.openfga",
+			"name": "keyword.schema.openfga",
 			"match": "\\bschema\\b"
 		  },
 		  {
-			"name": "self.keyword.openfga",
+			"name": "keyword.self.openfga",
 			"match": "\\bself\\b"
 		  },
 		  {
-			"name": "intersection.operator.openfga",
+			"name": "keyword.operator.word.intersection.openfga",
 			"match": "\\band\\b"
 		  },
 		  {
-			"name": "union.operator.openfga",
+			"name": "keyword.operator.word.union.openfga",
 			"match": "\\bor\\b"
 		  },
 		  {
-			"name": "exclusion.operator.openfga",
+			"name": "keyword.operator.word.exclusion.openfga",
 			"match": "\\bbut\\snot\\b"
 		  }
 		]
@@ -70,8 +70,8 @@
 		  {
 			"match": "^(type)\\s+([a-zA-Z0-9-_]+)",
 			"captures": {
-				"1": { "name": "type.keyword.openfga" },
-				"2": { "name": "name.type.value.openfga" }
+				"1": { "name": "keyword.type.openfga" },
+				"2": { "name": "support.class.type.name.value.openfga" }
 			 }
 		  }
 		]
@@ -81,18 +81,18 @@
 			{
 			  "match": "^\\s{4}(define)\\s+([a-zA-Z0-9-_]+)\\s+(as)\\s+",
 			  "captures": {
-					"1": { "name": "define.keyword.openfga" },
-					"2": { "name": "name.relation.value.openfga" },
-					"3": { "name": "as.keyword.openfga" }
+					"1": { "name": "keyword.define.openfga" },
+					"2": { "name": "entity.name.function.member.relation.name.openfga" },
+					"3": { "name": "keyword.as.openfga" }
 			   }
 			},
 			{
-			  "match": "^\\s{4}(define)\\s+([a-zA-Z0-9-_]+)(:)\\s*(\\[[a-zA-Z0-9-_:#,*]+])?",
+			  "match": "^\\s{4}(define)\\s+([a-zA-Z0-9-_]+)\\s*(:)\\s*(\\[\\s*([a-zA-Z0-9-_:#*]|,\\s*)+\\s*])?",
 			  "captures": {
-					"1": { "name": "define.keyword.openfga" },
-					"2": { "name": "name.relation.value.openfga" },
+					"1": { "name": "keyword.define.openfga" },
+					"2": { "name": "entity.name.function.member.relation.name.openfga" },
 					"3": { "name": "colon.define.delimiter.openfga" },
-					"4": { "name": "type-restrictions.value.openfga" }
+					"4": { "name": "variable.parameter.type-restrictions.openfga" }
 			   }
 			}
 		]
@@ -101,7 +101,7 @@
 		"patterns": [
 			{
 				"match": "$?[a-zA-Z0-9-_]",
-				"name": "word.openfga"
+				"name": "string.unquoted.openfga"
 			}
 		]
 	  }
