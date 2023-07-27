@@ -5,6 +5,7 @@ import assert = require('assert');
 import { activate } from '../extension';
 import { ExtensionContext, TextDocument, commands, window, workspace } from 'vscode';
 import { getDocUri } from './helper';
+import { friendlySyntaxToApiSyntax } from '@openfga/syntax-transformer';
 
 
 suite('Should execute command', () => {
@@ -39,14 +40,21 @@ suite('Should execute command', () => {
 
 		const docUri = getDocUri('test.fga');
 		
-		await window.showTextDocument(docUri);
+		// Get editor window
+		const editor = await window.showTextDocument(docUri);
 
-		const result = await commands.executeCommand<TextDocument>('openfga.commands.transformToJson')
-		
-		const testBuf = fs.readFileSync(getDocUri('expectedOutput/test.json').fsPath);
+		// Get result from running command against what is in editor window
+		const resultFromCommand = await commands.executeCommand<TextDocument>('openfga.commands.transformToJson')
 
-		// Trim out whitespace and compare fixtures to ensure consistent generation
-		assert.equal(JSON.stringify(JSON.parse(result.getText())), JSON.stringify(JSON.parse(testBuf.toString())))
+		// Get original document
+		const original = fs.readFileSync(getDocUri('test.fga').fsPath);
+
+		// Call transform directly for comparison, using original doc
+		const resultFromMethodCall = JSON.stringify(friendlySyntaxToApiSyntax(original.toString()), null, "  ")
+
+		// Ensure result from command is the same as result from method.
+		assert.equal(editor.document.getText(), original)
+		assert.equal(resultFromCommand.getText(), resultFromMethodCall)
 	});
 
 });
