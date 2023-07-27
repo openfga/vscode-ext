@@ -52,15 +52,15 @@
 			"match": "\\bself\\b"
 		  },
 		  {
-			"name": "operator.intersection.openfga",
+			"name": "keyword.operator.word.intersection.openfga",
 			"match": "\\band\\b"
 		  },
 		  {
-			"name": "operator.union.openfga",
+			"name": "keyword.operator.word.union.openfga",
 			"match": "\\bor\\b"
 		  },
 		  {
-			"name": "operator.exclusion.openfga",
+			"name": "keyword.operator.word.exclusion.openfga",
 			"match": "\\bbut\\snot\\b"
 		  }
 		]
@@ -82,7 +82,7 @@
 			  "match": "^\\s{4}(define)\\s+([a-zA-Z0-9-_]+)\\s+(as)\\s+",
 			  "captures": {
 					"1": { "name": "keyword.define.openfga" },
-					"2": { "name": "support.type.relation.name.value.openfga" },
+					"2": { "name": "entity.name.function.member.relation.name.value.openfga" },
 					"3": { "name": "keyword.as.openfga" }
 			   }
 			},
@@ -90,9 +90,9 @@
 			  "match": "^\\s{4}(define)\\s+([a-zA-Z0-9-_]+)\\s*(:)\\s*(\\[\\s*([a-zA-Z0-9-_:#*]|,\\s*)+\\s*])?",
 			  "captures": {
 					"1": { "name": "keyword.define.openfga" },
-					"2": { "name": "support.type.relation.name.value.openfga" },
+					"2": { "name": "entity.name.function.member.relation.name.value.openfga" },
 					"3": { "name": "colon.define.delimiter.openfga" },
-					"4": { "name": "variable.parameter.type-restrictions.value.openfga" }
+					"4": { "name": "variable.parameter.type-restrictions.openfga" }
 			   }
 			}
 		]
@@ -101,7 +101,7 @@
 		"patterns": [
 			{
 				"match": "$?[a-zA-Z0-9-_]",
-				"name": "word.openfga"
+				"name": "string.unquoted.openfga"
 			}
 		]
 	  }

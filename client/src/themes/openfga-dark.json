@@ -29,9 +29,9 @@
         "keyword.schema.openfga",
         "keyword.self.openfga",
         "keyword.type.openfga",
-        "operator.intersection.openfga",
-        "operator.exclusion.openfga",
-        "operator.union.openfga",
+        "keyword.operator.word.intersection.openfga",
+        "keyword.operator.word.exclusion.openfga",
+        "keyword.operator.word.union.openfga",
         "computed.relation.value.openfga"
       ],
       "settings": {
@@ -54,7 +54,7 @@
     {
       "name": "Type Restrictions",
       "scope": [
-		    "variable.parameter.type-restrictions.value.openfga",
+		    "variable.parameter.type-restrictions.openfga",
         "relation.type-restrictions.value.openfga",
         "type.type-restrictions.value.openfga",
         "wildcard.type-restrictions.value.openfga",
@@ -76,7 +76,7 @@
     },
     {
       "name": "Relation",
-      "scope": ["support.type.relation.name.value.openfga"],
+      "scope": ["entity.name.function.member.relation.name.value.openfga"],
       "settings": {
         "foreground": "#20F1F5"
       }
