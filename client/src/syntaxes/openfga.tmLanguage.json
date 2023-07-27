@@ -82,7 +82,7 @@
 			  "match": "^\\s{4}(define)\\s+([a-zA-Z0-9-_]+)\\s+(as)\\s+",
 			  "captures": {
 					"1": { "name": "keyword.define.openfga" },
-					"2": { "name": "entity.name.function.member.relation.name.value.openfga" },
+					"2": { "name": "entity.name.function.member.relation.name.openfga" },
 					"3": { "name": "keyword.as.openfga" }
 			   }
 			},
@@ -90,7 +90,7 @@
 			  "match": "^\\s{4}(define)\\s+([a-zA-Z0-9-_]+)\\s*(:)\\s*(\\[\\s*([a-zA-Z0-9-_:#*]|,\\s*)+\\s*])?",
 			  "captures": {
 					"1": { "name": "keyword.define.openfga" },
-					"2": { "name": "entity.name.function.member.relation.name.value.openfga" },
+					"2": { "name": "entity.name.function.member.relation.name.openfga" },
 					"3": { "name": "colon.define.delimiter.openfga" },
 					"4": { "name": "variable.parameter.type-restrictions.openfga" }
 			   }

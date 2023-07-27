@@ -76,7 +76,7 @@
     },
     {
       "name": "Relation",
-      "scope": ["entity.name.function.member.relation.name.value.openfga"],
+      "scope": ["entity.name.function.member.relation.name.openfga"],
       "settings": {
         "foreground": "#20F1F5"
       }
