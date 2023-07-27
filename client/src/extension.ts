@@ -9,7 +9,7 @@ import { friendlySyntaxToApiSyntax } from '@openfga/syntax-transformer';
 
 export function activate(context: ExtensionContext) {
 
-	const transformCommand = commands.registerCommand('openfga.commands.transformToJson', async () => {
+	const transformCommand = commands.registerCommand('openfga.commands.transformToJson', () => {
 		const activeEditor = window.activeTextEditor;
 		if (!activeEditor) {
 			return;
@@ -17,9 +17,9 @@ export function activate(context: ExtensionContext) {
 		const text = activeEditor.document.getText();
 
 		const modelInApiFormat = friendlySyntaxToApiSyntax(text);
-		activeEditor.edit(editBuilder => {
-			const range = new Range(0, 0, Number.MAX_SAFE_INTEGER, Number.MAX_SAFE_INTEGER);
-			editBuilder.replace(range, JSON.stringify(modelInApiFormat, null, "  "));
+		return workspace.openTextDocument({
+			content: JSON.stringify(modelInApiFormat, null, "  "), 
+			language: "json"
 		});
 	});
 
