@@ -10,7 +10,7 @@ import { friendlySyntaxToApiSyntax } from '@openfga/syntax-transformer';
 
 suite('Should execute command', () => {
 
-	test('Generates expected javascript', async () => {
+	test('Generates expected JSON', async () => {
 		const context: ExtensionContext = {
 			subscriptions: [],
 			workspaceState: undefined,
