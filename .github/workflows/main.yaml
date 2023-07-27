@@ -1,7 +1,8 @@
 on:
+  workflow_dispatch:
+  merge_group:
+  pull_request:
   push:
-    branches:
-      - main
 
 jobs:
   build:
@@ -11,11 +12,18 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
-    - name: Install Node.js
-      uses: actions/setup-node@v3
+      uses: actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3
       with:
-        node-version: 16.x
+        fetch-depth: 0
+    - name: Install Node.js
+      uses: actions/setup-node@e33196f7422957bea03ed53f6fbb155025ffc7b8 # 3.7.0
+      with:
+        node-version: 20.x
+        registry-url: 'https://registry.npmjs.org'
+        scope: '@openfga'
+        always-auth: false
+        cache: 'npm'
+        cache-dependency-path: ./package-lock.json
     - run: npm install
     - run: xvfb-run -a npm test
       if: runner.os == 'Linux'

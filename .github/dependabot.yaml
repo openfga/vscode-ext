@@ -4,5 +4,10 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    groups:
+     dependencies:
+        patterns:
+          - "*"
     allow:
       - dependency-type: "production"
+      
