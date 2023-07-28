@@ -15,15 +15,15 @@ export function activate(context: ExtensionContext) {
 			return;
 		}
 		const text = activeEditor.document.getText();
-		
+
 		const modelInApiFormat = friendlySyntaxToApiSyntax(text);
 
 		const doc = await workspace.openTextDocument({
-			content: JSON.stringify(modelInApiFormat, null, "  "), 
+			content: JSON.stringify(modelInApiFormat, null, "  "),
 			language: "json"
 		});
 
-		return (await window.showTextDocument(doc)).document
+		return (await window.showTextDocument(doc)).document;
 	});
 
 	context.subscriptions.push(transformCommand);
