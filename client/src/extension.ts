@@ -28,7 +28,3 @@ export function activate(context: ExtensionContext) {
 
 	context.subscriptions.push(transformCommand);
 }
-
-export function deactivate() {
-
-}
