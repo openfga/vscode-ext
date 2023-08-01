@@ -27,30 +27,48 @@
 	},
 	"main": "./client/out/extension",
 	"contributes": {
-		"languages": [{
-		  "id": "openfga",
-		  "aliases": ["OpenFGA", "openfga"],
-		  "extensions": [".fga", ".openfga"],
-		  "configuration": "./client/src/language-configuration.json"
-		}],
-		"grammars": [{
-		  "language": "openfga",
-		  "scopeName": "source.openfga",
-		  "path": "./client/src/syntaxes/openfga.tmLanguage.json"
-		}],
+		"languages": [
+			{
+				"id": "openfga",
+				"aliases": [
+					"OpenFGA",
+					"openfga"
+				],
+				"extensions": [
+					".fga",
+					".openfga"
+				],
+				"configuration": "./language-configuration.json"
+			}
+		],
+		"grammars": [
+			{
+				"language": "openfga",
+				"scopeName": "source.openfga",
+				"path": "./syntaxes/openfga.tmLanguage.json"
+			}
+		],
 		"themes": [
-		  {
-			"label": "OpenFGA Dark",
-			"uiTheme": "vs-dark",
-			"path": "./client/src/themes/openfga-dark.json"
-		  }
+			{
+				"label": "OpenFGA Dark",
+				"uiTheme": "vs-dark",
+				"path": "./themes/openfga-dark.json"
+			}
 		],
 		"commands": [
 			{
 				"command": "openfga.commands.transformToJson",
 				"title": "OpenFGA: Transform DSL to JSON"
 			}
-		]
+		],
+		"menus": {
+			"commandPalette": [
+				{
+					"command": "openfga.commands.transformToJson",
+					"when": "editorLangId == openfga"
+				}
+			]
+		}
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",

@@ -17,52 +17,16 @@
     "type": "git",
     "url": "https://github.com:openfga/openfga-vscode"
   },
-  "contributes": {
-    "languages": [
-      {
-        "id": "openfga",
-        "aliases": [
-          "OpenFGA",
-          "openfga"
-        ],
-        "extensions": [
-          ".fga",
-          ".openfga"
-        ],
-        "configuration": "./language-configuration.json"
-      }
-    ],
-    "grammars": [
-      {
-        "language": "openfga",
-        "scopeName": "source.openfga",
-        "path": "./syntaxes/openfga.tmLanguage.json"
-      }
-    ],
-    "themes": [
-      {
-        "label": "OpenFGA Dark",
-        "uiTheme": "vs-dark",
-        "path": "./themes/openfga-dark.json"
-      }
-    ],
-    "commands": [
-      {
-        "command": "openfga.commands.transformToJson",
-        "title": "OpenFGA: Transform DSL to JSON"
-      }
-    ]
-  },
   "engines": {
     "vscode": "^1.75.0"
   },
   "dependencies": {
     "@openfga/syntax-transformer": "^0.1.3",
+    "monaco-editor": "^0.40.0",
     "vscode-languageclient": "^8.1.0"
   },
   "devDependencies": {
     "@types/vscode": "^1.75.1",
-    "@vscode/test-electron": "^2.2.3",
-    "monaco-editor": "0.37.1"
+    "@vscode/test-electron": "^2.2.3"
   }
 }
