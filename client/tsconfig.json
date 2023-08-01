@@ -5,7 +5,8 @@
 		"lib": ["es2020", "dom"],
 		"outDir": "out",
 		"rootDir": "src",
-		"sourceMap": true
+		"sourceMap": true,
+		"moduleResolution": "NodeNext"
 	},
 	"include": ["src"],
 	"exclude": ["node_modules", ".vscode-test"]
