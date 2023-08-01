@@ -36,10 +36,10 @@ The extension currently offers 2 core features, with more to come.
 - Syntax Highlighting for OpenFGA files
 - A unique theme for OpenFGA for VSCode
 	- Once installed, go to your extensions
-	- Click on `OpenFGA` and click the `Set Color Scheme`
+	- Click on `OpenFGA` and click `Set Color Scheme`
 	- Click on `OpenFGA Dark` in the prompt
 
-![Prompt to set OpenFGA dark color scheme](resources/set-color-scheme.png)
+![Prompt to set OpenFGA Dark color scheme](resources/set-color-scheme.png)
 
 
 ## Development
