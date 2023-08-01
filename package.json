@@ -1,7 +1,9 @@
 {
 	"name": "openfga-vscode",
+	"displayName": "OpenFGA",
 	"description": "Language support for OpenFGA authorization models",
 	"author": "OpenFGA",
+	"icon": "./resources/openfga-icon-color.png",
 	"keywords": [
 		"openfga",
 		"authorization",

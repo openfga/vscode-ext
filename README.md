@@ -24,13 +24,36 @@ OpenFGA is designed to make it easy for application builders to model their perm
 
 ## Installation
 
-TBD
+- Download and install from [OpenFGA on the VSCode marketplace](https://marketplace.visualstudio.com/publishers/openfga)
+- Alternatively, you can find [VSIX releases on GitHub](https://github.com/openfga/vscode-ext/releases) and install it manually
+
+![Installing from VSIX file](resources/vsix-install.png)
 
 ## Usage
 
-TBD
+The extension currently offers 2 core features, with more to come.
+
+- Syntax Highlighting for OpenFGA files
+- A unique theme for OpenFGA for VSCode
+	- Once installed, go to your extensions
+	- Click on `OpenFGA` and click the `Set Color Scheme`
+	- Click on `OpenFGA Dark` in the prompt
+
+![Installing from VSIX file](resources/set-color-scheme.png)
+
 
 ## Development
+
+- Run `npm install` in this folder. This installs all necessary npm modules.
+- Run `npm run webpack` to bundle the code.
+- Run `npm run compile && npm test` to execute the client test suite.
+
+### Distribution (Optional)
+
+To generate an installable build of this extension, you can do the following:
+
+- Run `npm install --global @vscode/vsce` to get the latest version of `vsce` for packaging 
+- Run `vsce package` to generate an installable `VISX` artifact for testing or distribution
 
 ### Structure
 
@@ -55,7 +78,7 @@ TBD
 ### Testing
 
 - Run `npm install` in this folder. This installs all necessary npm modules.
-- Run `npm run compile` to compile the code & client tests.
+- Run `npm run compile` to compile the code & client for testing.
 - Run `npm test` to execute the client test suite.
 
 ## Roadmap
