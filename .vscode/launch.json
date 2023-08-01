@@ -22,7 +22,7 @@
 				"${workspaceRoot}/client/testFixture"
 			],
 			"outFiles": ["${workspaceRoot}/client/out/test/**/*.js"],
-			"preLaunchTask": "npm: test-compile"
+			"preLaunchTask": "npm: compile"
 		}
 	]
 }

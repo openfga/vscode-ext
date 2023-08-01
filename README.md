@@ -55,7 +55,7 @@ TBD
 ### Testing
 
 - Run `npm install` in this folder. This installs all necessary npm modules.
-- Run `npm run test-compile` to compile the code & client tests.
+- Run `npm run compile` to compile the code & client tests.
 - Run `npm test` to execute the client test suite.
 
 ## Roadmap
