@@ -15,7 +15,7 @@ const config = {
 
     entry: './client/src/extension.ts', // the entry point of this extension, 📖 -> https://webpack.js.org/configuration/entry-context/
     output: { // the bundle is stored in the 'dist' folder (check package.json), 📖 -> https://webpack.js.org/configuration/output/
-        path: path.resolve(__dirname, 'client/out'),
+        path: path.resolve(__dirname, 'client/dist'),
         filename: 'extension.js',
         libraryTarget: "commonjs2",
         devtoolModuleFilenameTemplate: "../[resource-path]",
@@ -43,4 +43,4 @@ const config = {
     },
 }
 
-module.exports = config;
+module.exports = [config];
