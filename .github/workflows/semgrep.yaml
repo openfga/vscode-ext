@@ -8,7 +8,7 @@ jobs:
     name: Scan
     runs-on: ubuntu-latest
     container:
-      image: returntocorp/semgrep@sha256-742b87f61e36652e031337c2cdb03c9954a73657dac76206de1444eac3893e92 # 1.34.1
+      image: returntocorp/semgrep@sha256:742b87f61e36652e031337c2cdb03c9954a73657dac76206de1444eac3893e92 # 1.34.1
     if: (github.actor != 'dependabot[bot]' && github.actor != 'snyk-bot')
     steps:
 
