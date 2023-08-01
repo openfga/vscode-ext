@@ -39,7 +39,7 @@ The extension currently offers 2 core features, with more to come.
 	- Click on `OpenFGA` and click the `Set Color Scheme`
 	- Click on `OpenFGA Dark` in the prompt
 
-![Installing from VSIX file](resources/set-color-scheme.png)
+![Prompt to set OpenFGA dark color scheme](resources/set-color-scheme.png)
 
 
 ## Development
