@@ -24,13 +24,36 @@ OpenFGA is designed to make it easy for application builders to model their perm
 
 ## Installation
 
-TBD
+- Download and install from [OpenFGA on the VSCode marketplace](https://marketplace.visualstudio.com/publishers/openfga)
+- Alternatively, you can find [VSIX releases on GitHub](https://github.com/openfga/vscode-ext/releases) and install it manually
+
+![Installing from VSIX file](resources/vsix-install.png)
 
 ## Usage
 
-TBD
+The extension currently offers 2 core features, with more to come.
+
+- Syntax Highlighting for OpenFGA files
+- A unique theme for OpenFGA for VSCode
+	- Once installed, go to your extensions
+	- Click on `OpenFGA` and click `Set Color Scheme`
+	- Click on `OpenFGA Dark` in the prompt
+
+![Prompt to set OpenFGA Dark color scheme](resources/set-color-scheme.png)
+
 
 ## Development
+
+- Run `npm install` in the root directory. This installs all necessary npm modules.
+- Run `npm run webpack` to bundle the code.
+- Run `npm run compile && npm test` to execute the client test suite.
+
+### Distribution (Optional)
+
+To generate an installable build of this extension, you can do the following:
+
+- Run `npm install --global @vscode/vsce` to get the latest version of `vsce` for packaging 
+- Run `vsce package` to generate an installable `VISX` artifact for testing or distribution
 
 ### Structure
 
@@ -45,8 +68,8 @@ TBD
 
 ### Running the Client
 
-- Run `npm install` in this folder. This installs all necessary npm modules.
-- Open VS Code on this folder.
+- Run `npm install` in the root directory. This installs all necessary npm modules.
+- Open the root directory in VS Code.
 - Press Ctrl+Shift+B to start compiling the client and server in [watch mode](https://code.visualstudio.com/docs/editor/tasks#:~:text=The%20first%20entry%20executes,the%20HelloWorld.js%20file.).
 - Switch to the Run and Debug View in the Sidebar (Ctrl+Shift+D).
 - Select `Launch Client` from the drop down (if it is not already).
@@ -54,8 +77,8 @@ TBD
 
 ### Testing
 
-- Run `npm install` in this folder. This installs all necessary npm modules.
-- Run `npm run compile` to compile the code & client tests.
+- Run `npm install` in the root directory. This installs all necessary npm modules.
+- Run `npm run compile` to compile the code & client for testing.
 - Run `npm test` to execute the client test suite.
 
 ## Roadmap
