@@ -1,8 +1,8 @@
 # Changelog
 
-## v0.0.1
+## v0.1.0
 
-### [0.0.1](https://github.com/openfga/vscode-ext/releases/tag/v0.0.1) (2023-08-02)
+### [0.1.0](https://github.com/openfga/vscode-ext/releases/tag/v0.1.0) (2023-08-02)
 
 Internal Release
 
