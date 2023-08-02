@@ -16,12 +16,12 @@
 	"version": "0.0.1",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/openfga/openfga-vscode"
+		"url": "https://github.com/openfga/vscode-ext"
 	},
 	"bugs": {
-		"url": "https://github.com/openfga/openfga-vscode/issues"
+		"url": "https://github.com/openfga/vscode-ext/issues"
 	},
-	"homepage": "https://github.com/openfga/openfga-vscode#readme",
+	"homepage": "https://github.com/openfga/vscode-ext#readme",
 	"publisher": "openfga",
 	"categories": [],
 	"engines": {
