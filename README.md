@@ -45,7 +45,7 @@ The extension currently offers 3 core features, with more to come.
 	- Open an `OpenFGA` file in the editor 
 	- Open the `Command Pallette` using Ctrl+Shift+P (Windows) or Command+Shift+P (OSX)
 	- Select `OpenFGA: Transform DSL to JSON`
-	- A new tab will open with the tranformed code
+	- A new tab will open with the transformed code
 
 ![Prompt to execute OpenFGA: Transform DSL to JSON command](resources/transform-command-select.png)
 
