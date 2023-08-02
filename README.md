@@ -1,6 +1,6 @@
 # OpenFGA Extension for VS Code
 
-VSCode extension that provides syntax highlighting for the [OpenFGA](https://openfga.dev/) [language for authorization models](https://openfga.dev/docs/configuration-language).
+VS Code extension that provides syntax highlighting for the [OpenFGA](https://openfga.dev/) [language for authorization models](https://openfga.dev/docs/configuration-language).
 
 [![Release](https://img.shields.io/github/v/release/openfga/vscode-ext?sort=semver&color=green)](https://github.com/openfga/vscode-ext/releases)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://github.com/openfga/vscode-ext/blob/main/LICENSE)
@@ -24,8 +24,8 @@ OpenFGA is designed to make it easy for application builders to model their perm
 
 ## Installation
 
-- Download and install from [OpenFGA on the VSCode marketplace](https://marketplace.visualstudio.com/publishers/openfga)
-- Alternatively, you can find [VSIX releases on GitHub](https://github.com/openfga/vscode-ext/releases) and install it manually
+- Download and install from [OpenFGA on the VS Code marketplace](https://marketplace.visualstudio.com/publishers/openfga)
+- Alternatively, you can find [VSIX releases on GitHub](https://github.com/openfga/vscode-ext/releases) for manual installation
 
 ![Installing from VSIX file](resources/vsix-install.png)
 
@@ -34,7 +34,7 @@ OpenFGA is designed to make it easy for application builders to model their perm
 The extension currently offers 2 core features, with more to come.
 
 - Syntax Highlighting for OpenFGA files
-- A unique theme for OpenFGA for VSCode
+- A unique theme for OpenFGA for VS Code
 	- Once installed, go to your extensions
 	- Click on `OpenFGA` and click `Set Color Scheme`
 	- Click on `OpenFGA Dark` in the prompt
@@ -60,18 +60,18 @@ To generate an installable build of this extension, you can do the following:
 ```
 .
 ├── package.json // The extension manifest
-├── client // Language Client
+├── client // Language client
 │   ├── src
-│   │   ├── test // End to End tests for Language Client / Server
-│   │   └── extension.ts // Language Client entry point
+│   │   ├── test // End to end tests for language client / server
+│   │   └── extension.ts // Language client entry point
 ```
 
 ### Running the Client
 
 - Run `npm install` in the root directory. This installs all necessary npm modules.
 - Open the root directory in VS Code.
-- Press Ctrl+Shift+B to start compiling the client and server in [watch mode](https://code.visualstudio.com/docs/editor/tasks#:~:text=The%20first%20entry%20executes,the%20HelloWorld.js%20file.).
-- Switch to the Run and Debug View in the Sidebar (Ctrl+Shift+D).
+- Press Ctrl+Shift+B (Windows) or Command+Shift+B (OSX) to start compiling the client and server in [watch mode](https://code.visualstudio.com/docs/editor/tasks#:~:text=The%20first%20entry%20executes,the%20HelloWorld.js%20file.).
+- Switch to the Run and Debug View in the Sidebar (Ctrl+Shift+D on Windows, Command+Shift+D on OSX).
 - Select `Launch Client` from the drop down (if it is not already).
 - Press ▷ to run the launch config (F5).
 
