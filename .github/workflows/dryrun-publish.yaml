@@ -1,7 +1,7 @@
 on:
   workflow_dispatch:
 
-name: Publish Extension
+name: Dryrun Publish Extension
 jobs:
   dryrun-publish:
     runs-on: ubuntu-latest
