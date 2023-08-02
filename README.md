@@ -47,7 +47,7 @@ The extension currently offers 3 core features, with more to come.
 	- Select `OpenFGA: Transform DSL to JSON`
 	- A new tab will open with the tranformed code
 
-![Prompt to set OpenFGA: Tranform DSL to JSON command](resources/transform-command-select.png)
+![Prompt to execute OpenFGA: Tranform DSL to JSON command](resources/transform-command-select.png)
 
 
 
