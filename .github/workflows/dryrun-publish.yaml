@@ -1,12 +1,9 @@
 on:
   workflow_dispatch:
-  push:
-    tags:
-      - "*"
 
-name: Publish Extension
+name: Dryrun Publish Extension
 jobs:
-  publish:
+  dryrun-publish:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -26,6 +23,6 @@ jobs:
       - name: Publish to Visual Studio Marketplace
         uses: HaaLeo/publish-vscode-extension@dfe4f6ad46624424fe24cb5bca79839183399045 # 1.4.0
         with:
-          pat: ${{ secrets.VS_MARKETPLACE_TOKEN }}
+          pat: "this_is_a_stub"
           registryUrl: https://marketplace.visualstudio.com/
-
+          dryRun: true
