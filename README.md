@@ -31,7 +31,7 @@ OpenFGA is designed to make it easy for application builders to model their perm
 
 ## Usage
 
-The extension currently offers 2 core features, with more to come.
+The extension currently offers 3 core features, with more to come.
 
 - Syntax Highlighting for OpenFGA files
 - A unique theme for OpenFGA for VS Code
@@ -40,6 +40,15 @@ The extension currently offers 2 core features, with more to come.
 	- Click on `OpenFGA Dark` in the prompt
 
 ![Prompt to set OpenFGA Dark color scheme](resources/set-color-scheme.png)
+
+- A command to transform `OpenFGA` files to `JSON`
+	- Open an `OpenFGA` file in the editor 
+	- Open the `Command Pallette` using Ctrl+Shift+P (Windows) or Command+Shift+P (OSX)
+	- Select `OpenFGA: Transform DSL to JSON`
+	- A new tab will open with the tranformed code
+
+![Prompt to set OpenFGA: Tranform DSL to JSON command](resources/transform-command-select.png)
+
 
 
 ## Development
