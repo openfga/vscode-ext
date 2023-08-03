@@ -48,6 +48,7 @@ jobs:
         cache: 'npm'
         cache-dependency-path: ./package-lock.json
     - run: npm install
+    - run: npm run webpack
     - run: npm run compile
     - run: xvfb-run -a npm test
       if: runner.os == 'Linux'
