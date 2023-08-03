@@ -6,9 +6,9 @@
 			"type": "extensionHost",
 			"request": "launch",
 			"name": "Launch Client",
+			"trace": true,
 			"runtimeExecutable": "${execPath}",
 			"args": ["--extensionDevelopmentPath=${workspaceRoot}"],
-			"outFiles": ["${workspaceRoot}/client/out/**/*.js"],
 			"preLaunchTask": "npm: webpack"
 		},
 		{
@@ -21,8 +21,16 @@
 				"--extensionTestsPath=${workspaceRoot}/client/out/test/index",
 				"${workspaceRoot}/client/testFixture"
 			],
-			"outFiles": ["${workspaceRoot}/client/out/test/**/*.js"],
 			"preLaunchTask": "npm: compile"
+		},
+		{
+			"type": "node",
+			"request": "attach",
+			"name": "Attach to Server",
+			"port": 6012,
+			"restart": true,
+			"outFiles": ["${workspaceRoot}/server/dist/**/*.js"],
+			"sourceMaps": true
 		}
 	]
 }

@@ -12,8 +12,12 @@
 		"url": "https://github.com/openfga/vscode-ext"
 	},
 	"dependencies": {
+		"monaco-editor": "^0.41.0",
 		"vscode-languageserver": "^8.1.0",
 		"vscode-languageserver-textdocument": "^1.0.8"
 	},
-	"scripts": {}
+	"scripts": {},
+	"devDependencies": {
+		"@openfga/syntax-transformer": "^0.1.3"
+	}
 }
