@@ -1,15 +1,15 @@
 {
-	"name": "lsp-sample-server",
-	"description": "Example implementation of a language server in node.",
-	"version": "1.0.0",
-	"author": "Microsoft Corporation",
-	"license": "MIT",
+	"name": "openfga-lsp-server",
+	"description": "Language server in node.",
+	"version": "0.1.0",
+	"author": "oepnfga",
+	"license": "Apache-2.0",
 	"engines": {
 		"node": "*"
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/Microsoft/vscode-extension-samples"
+		"url": "https://github.com/openfga/vscode-ext"
 	},
 	"dependencies": {
 		"vscode-languageserver": "^8.1.0",
