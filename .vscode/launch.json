@@ -18,7 +18,6 @@
 			"name": "Attach to Server",
 			"port": 6012,
 			"restart": true,
-			"outFiles": ["${workspaceRoot}/server/dist/**/*.js"],
 			"sourceMaps": true
 		},
 		{
@@ -34,5 +33,11 @@
 			],
 			"preLaunchTask": "npm: compile"
 		}
-	]
+	],
+	"compounds": [
+        {
+            "name": "Client/Server",
+            "configurations": ["Launch Client", "Attach to Server"]
+        }
+    ]
 }
