@@ -80,7 +80,7 @@
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
-		"compile": "tsc -b",
+		"compile": "rm -rf ./client/out ./server/out && tsc -b",
 		"watch": "tsc -b -w",
 		"test": "sh ./scripts/e2e.sh",
 		"lint": "eslint ./client/src ./server/src --ext .ts,.tsx",
