@@ -54,7 +54,6 @@ The extension currently offers 3 core features, with more to come.
 ## Development
 
 - Run `npm install` in the root directory. This installs all necessary npm modules.
-- Run `npm run webpack` to bundle the code.
 - Run `npm run compile && npm test` to execute the client test suite.
 
 ### Distribution (Optional)
@@ -87,7 +86,6 @@ To generate an installable build of this extension, you can do the following:
 ### Testing
 
 - Run `npm install` in the root directory. This installs all necessary npm modules.
-- Run `npm run webpack` to bundle the code
 - Run `npm run compile` to compile the code & client for testing.
 - Run `npm test` to execute the client test suite.
 

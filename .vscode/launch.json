@@ -10,13 +10,14 @@
 			"runtimeExecutable": "${execPath}",
 			"sourceMaps": true,
 			"args": ["--extensionDevelopmentPath=${workspaceRoot}"],
-			"preLaunchTask": "npm: webpack"
+			"outFiles": ["${workspaceRoot}/client/out/**/*.js", "${workspaceRoot}/server/out/**/*.js"],
+			"preLaunchTask": "npm: compile"
 		},
 		{
 			"type": "node",
 			"request": "attach",
 			"name": "Attach to Server",
-			"port": 6012, // Port number chosen and set in client/src/extnesion.ts upon startup
+			"port": 6012, // Port number chosen and set in client/src/extension.ts upon startup
 			"restart": true,
 			"sourceMaps": true
 		},
