@@ -6,23 +6,38 @@
 			"type": "extensionHost",
 			"request": "launch",
 			"name": "Launch Client",
+			"trace": true,
 			"runtimeExecutable": "${execPath}",
+			"sourceMaps": true,
 			"args": ["--extensionDevelopmentPath=${workspaceRoot}"],
-			"outFiles": ["${workspaceRoot}/client/out/**/*.js"],
 			"preLaunchTask": "npm: webpack"
+		},
+		{
+			"type": "node",
+			"request": "attach",
+			"name": "Attach to Server",
+			"port": 6012, // Port number chosen and set in client/src/extnesion.ts upon startup
+			"restart": true,
+			"sourceMaps": true
 		},
 		{
 			"name": "Language Server E2E Test",
 			"type": "extensionHost",
 			"request": "launch",
 			"runtimeExecutable": "${execPath}",
+			"sourceMaps": true,
 			"args": [
 				"--extensionDevelopmentPath=${workspaceRoot}",
 				"--extensionTestsPath=${workspaceRoot}/client/out/test/index",
 				"${workspaceRoot}/client/testFixture"
 			],
-			"outFiles": ["${workspaceRoot}/client/out/test/**/*.js"],
 			"preLaunchTask": "npm: compile"
 		}
-	]
+	],
+	"compounds": [
+        {
+            "name": "Client/Server",
+            "configurations": ["Launch Client", "Attach to Server"]
+        }
+    ]
 }
