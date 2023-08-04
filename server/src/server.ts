@@ -11,7 +11,8 @@ import {
 	CompletionItemKind,
 	TextDocumentPositionParams,
 	TextDocumentSyncKind,
-	InitializeResult
+	InitializeResult,
+	InsertTextFormat
 } from 'vscode-languageserver/node';
 
 import {
@@ -130,7 +131,30 @@ connection.onCompletion(
 		// The pass parameter contains the position of the text document in
 		// which code complete got requested. For the example we ignore this
 		// info and always provide the same completion items.
-		return [];
+
+		return [
+			{
+				kind: CompletionItemKind.Snippet,
+				label: "model",
+				detail: "model and schema",
+				insertText: "model\n  schema 1.$0",
+				insertTextFormat: InsertTextFormat.Snippet
+			},
+			{
+				kind: CompletionItemKind.Snippet,
+				label: "type",
+				detail: "declare type",
+				insertText: "type $0",
+				insertTextFormat: InsertTextFormat.Snippet
+			},
+			{
+				kind: CompletionItemKind.Snippet,
+				label: "define",
+				detail: "specify a define",
+				insertText: "define $1: $0",
+				insertTextFormat: InsertTextFormat.Snippet
+			}
+		];
 	}
 );
 
