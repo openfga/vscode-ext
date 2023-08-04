@@ -1,6 +1,8 @@
 on:
   workflow_dispatch:
-  pull_request:
+  push:
+    branches:
+      - main    
 
 name: Upload VSIX
 jobs:
