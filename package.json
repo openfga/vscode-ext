@@ -43,6 +43,12 @@
 				"configuration": "./language-configuration.json"
 			}
 		],
+		"snippets": [
+			{
+				"language": "openfga",
+				"path": "./snippets.json"
+			}
+		],
 		"grammars": [
 			{
 				"language": "openfga",
