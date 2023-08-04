@@ -111,7 +111,7 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
 			},
 			message: e.message,
 			source: e.source
-		}
+		};
 		return diagnostic;
 	});
 
