@@ -106,8 +106,8 @@ async function validateTextDocument(textDocument: TextDocument): Promise<void> {
 		const diagnostic: Diagnostic = {
 			severity: DiagnosticSeverity.Error,
 			range: {
-				start: {line: e.startLineNumber - 1, character: e.startColumn},
-				end: {line: e.endLineNumber - 1, character: e.endColumn}
+				start: {line: Math.max(e.startLineNumber - 1, 0), character: Math.max(e.startColumn - 1, 0)},
+				end: {line: Math.max(e.endLineNumber - 1, 0), character: Math.max(e.endColumn - 1, 0)}
 			},
 			message: e.message,
 			source: e.source
