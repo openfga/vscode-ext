@@ -49,8 +49,6 @@ The extension currently offers 3 core features, with more to come.
 
 ![Prompt to execute OpenFGA: Transform DSL to JSON command](resources/transform-command-select.png)
 
-
-
 ## Development
 
 - Run `npm install` in the root directory. This installs all necessary npm modules.
@@ -72,6 +70,10 @@ To generate an installable build of this extension, you can do the following:
 │   ├── src
 │   │   ├── test // End to end tests for language client / server
 │   │   └── extension.ts // Language client entry point
+├── package.json // The extension manifest.
+└── server // Language Server
+    └── src
+        └── server.ts // Language Server entry point
 ```
 
 ### Running the Client
