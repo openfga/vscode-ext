@@ -1,0 +1,13 @@
+model
+  schema 1.1
+type use
+type team
+  relations
+    define member: [user,team#member]
+type organization
+  relations
+    define membe: [user] or owner
+    define owner: [user]
+    define repo_admin: [user,organization#member]
+    define repo_reader: [user,organization#member]
+    define repo_writer: [user,organization#member]
