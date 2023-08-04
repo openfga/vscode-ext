@@ -16,7 +16,7 @@
 			"type": "node",
 			"request": "attach",
 			"name": "Attach to Server",
-			"port": 6012,
+			"port": 6012, // Port number chosen and set in client/src/extnesion.ts upon startup
 			"restart": true,
 			"sourceMaps": true
 		},
