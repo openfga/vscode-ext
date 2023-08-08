@@ -153,6 +153,13 @@ connection.onCompletion(
 				detail: "specify a define",
 				insertText: "define $1: $0",
 				insertTextFormat: InsertTextFormat.Snippet
+			},
+			{
+				kind: CompletionItemKind.Snippet,
+				label: "relations",
+				detail: "specify a relation",
+				insertText: "relations\n  define $1: $0",
+				insertTextFormat: InsertTextFormat.Snippet
 			}
 		];
 	}
