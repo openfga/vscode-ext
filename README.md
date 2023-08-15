@@ -2,6 +2,8 @@
 
 VS Code extension that provides syntax highlighting for the [OpenFGA](https://openfga.dev/) [language for authorization models](https://openfga.dev/docs/configuration-language).
 
+[![Visual Studio Marketplace](https://img.shields.io/visual-studio-marketplace/v/openfga.openfga-vscode)](https://marketplace.visualstudio.com/items?itemName=openfga.openfga-vscode)
+[![Open VSX Version](https://img.shields.io/open-vsx/v/OpenFGA/openfga-vscode)](https://open-vsx.org/extension/OpenFGA/openfga-vscode)
 [![Release](https://img.shields.io/github/v/release/openfga/vscode-ext?sort=semver&color=green)](https://github.com/openfga/vscode-ext/releases)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://github.com/openfga/vscode-ext/blob/main/LICENSE)
 [![Discord Server](https://img.shields.io/discord/759188666072825867?color=7289da&logo=discord "Discord Server")](https://discord.gg/8naAwJfWN6)
@@ -24,10 +26,13 @@ OpenFGA is designed to make it easy for application builders to model their perm
 
 ## Installation
 
-- Download and install from [OpenFGA on the VS Code marketplace](https://marketplace.visualstudio.com/publishers/openfga)
-- Alternatively, you can find [VSIX releases on GitHub](https://github.com/openfga/vscode-ext/releases) for manual installation
+You can install the OpenFGA VS Code plugin from:
 
-![Installing from VSIX file](resources/vsix-install.png)
+- [OpenFGA on the VS Code marketplace](https://marketplace.visualstudio.com/items?itemName=openfga.openfga-vscode)
+- [OpenFGA on the OpenVSX Registry](https://open-vsx.org/extension/OpenFGA/openfga-vscode)
+- [The VSIX releases on GitHub](https://github.com/openfga/vscode-ext/releases) for manual installation
+
+	![Installing from VSIX file](resources/vsix-install.png)
 
 ## Usage
 
