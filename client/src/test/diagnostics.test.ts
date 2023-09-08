@@ -7,15 +7,15 @@ suite('Should get diagnostics', () => {
 
 	test('Diagnoses uppercase texts', async () => {
 		await testDiagnostics(docUri, [
-			{ message: '`user` is not a valid type.', range: toRange(5, 20, 5, 24), severity: vscode.DiagnosticSeverity.Error, source: 'linter' },
-			{ message: '`user` is not a valid type.', range: toRange(8, 19, 8, 23), severity: vscode.DiagnosticSeverity.Error, source: 'linter' },
-			{ message: '`user` is not a valid type.', range: toRange(9, 19, 9, 23), severity: vscode.DiagnosticSeverity.Error, source: 'linter' },
-			{ message: '`user` is not a valid type.', range: toRange(10, 24, 10, 28), severity: vscode.DiagnosticSeverity.Error, source: 'linter' },
-			{ message: '`member` is not a valid relation for `organization`.', range: toRange(10, 29, 10, 48), severity: vscode.DiagnosticSeverity.Error, source: 'linter' },
-			{ message: '`user` is not a valid type.', range: toRange(11, 25, 11, 29), severity: vscode.DiagnosticSeverity.Error, source: 'linter' },
-			{ message: '`member` is not a valid relation for `organization`.', range: toRange(11, 30, 11, 49), severity: vscode.DiagnosticSeverity.Error, source: 'linter' },
-			{ message: '`user` is not a valid type.', range: toRange(12, 25, 12, 29), severity: vscode.DiagnosticSeverity.Error, source: 'linter' },
-			{ message: '`member` is not a valid relation for `organization`.', range: toRange(12, 30, 12, 49), severity: vscode.DiagnosticSeverity.Error, source: 'linter' },
+			{ message: '`user` is not a valid type.', range: toRange(5, 20, 5, 24), severity: vscode.DiagnosticSeverity.Error, source: 'ModelValidationError' },
+			{ message: '`user` is not a valid type.', range: toRange(8, 19, 8, 23), severity: vscode.DiagnosticSeverity.Error, source: 'ModelValidationError' },
+			{ message: '`user` is not a valid type.', range: toRange(9, 19, 9, 23), severity: vscode.DiagnosticSeverity.Error, source: 'ModelValidationError' },
+			{ message: '`user` is not a valid type.', range: toRange(10, 24, 10, 28), severity: vscode.DiagnosticSeverity.Error, source: 'ModelValidationError' },
+			{ message: '`member` is not a valid relation for `organization`.', range: toRange(10, 29, 10, 48), severity: vscode.DiagnosticSeverity.Error, source: 'ModelValidationError' },
+			{ message: '`user` is not a valid type.', range: toRange(11, 25, 11, 29), severity: vscode.DiagnosticSeverity.Error, source: 'ModelValidationError' },
+			{ message: '`member` is not a valid relation for `organization`.', range: toRange(11, 30, 11, 49), severity: vscode.DiagnosticSeverity.Error, source: 'ModelValidationError' },
+			{ message: '`user` is not a valid type.', range: toRange(12, 25, 12, 29), severity: vscode.DiagnosticSeverity.Error, source: 'ModelValidationError' },
+			{ message: '`member` is not a valid relation for `organization`.', range: toRange(12, 30, 12, 49), severity: vscode.DiagnosticSeverity.Error, source: 'ModelValidationError' },
 		]);
 	});
 });
@@ -38,5 +38,6 @@ async function testDiagnostics(docUri: vscode.Uri, expectedDiagnostics: vscode.D
 		assert.equal(actualDiagnostic.message, expectedDiagnostic.message);
 		assert.deepEqual(actualDiagnostic.range, expectedDiagnostic.range);
 		assert.equal(actualDiagnostic.severity, expectedDiagnostic.severity);
+		assert.equal(actualDiagnostic.source, expectedDiagnostic.source);
 	});
 }
