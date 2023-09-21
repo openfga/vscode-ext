@@ -18,8 +18,7 @@ import {
 	TextDocument
 } from 'vscode-languageserver-textdocument';
 
-import { checkDSL } from '@openfga/syntax-transformer';
-
+import { validator, errors } from '@openfga/syntax-transformer';
 
 // Create a connection for the server, using Node's IPC as a transport.
 // Also include all preview / proposed LSP features.
@@ -98,25 +97,50 @@ documents.onDidChangeContent(change => {
 	validateTextDocument(change.document);
 });
 
-async function validateTextDocument(textDocument: TextDocument): Promise<void> {
+const createDiagnostics = (err: errors.DSLSyntaxError | errors.ModelValidationError): Diagnostic[] => {
+	return err.errors.map((e: errors.DSLSyntaxSingleError | errors.ModelValidationSingleError)  => {
+		const lines = e.getLine(-1);
+		let characters;
+		let source;
 
-	const result = checkDSL(textDocument.getText());
+		if (e instanceof errors.DSLSyntaxSingleError) {
+			characters = e.getColumn();
+			source = "SyntaxError";
+		} else if (e instanceof errors.ModelValidationSingleError) {
+			characters = e.getColumn(-1);
+			source = "ModelValidationError";
+		} else {
+			throw new Error("Unhandled Exception: " + JSON.stringify(e, null, 4));
+		}
 
-	const diagnostics: Diagnostic[] = result.map((e: any)  => {
-		const diagnostic: Diagnostic = {
+		return {
+			message: e.msg,
 			severity: DiagnosticSeverity.Error,
 			range: {
-				start: {line: Math.max(e.startLineNumber - 1, 0), character: Math.max(e.startColumn - 1, 0)},
-				end: {line: Math.max(e.endLineNumber - 1, 0), character: Math.max(e.endColumn - 1, 0)}
+				start: {line: lines.start, character: characters.start},
+				end: {line: lines.end, character: characters.end},
 			},
-			message: e.message,
-			source: e.source
+			source,
 		};
-		return diagnostic;
+	}) || [];
+};
+
+async function validateTextDocument(textDocument: TextDocument): Promise<void> {
+    connection.sendDiagnostics({
+		uri: textDocument.uri,
+		diagnostics: [],
 	});
 
-	// Send the computed diagnostics to VSCode.
-	connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });
+	try {
+		validator.validateDSL(textDocument.getText());
+	} catch(err) {
+		if (err instanceof errors.DSLSyntaxError || err instanceof errors.ModelValidationError) {
+			const diagnostics = createDiagnostics(err);
+			connection.sendDiagnostics({uri: textDocument.uri, diagnostics});
+		} else {
+			console.error("Unhandled Exception: " + err);
+		}
+	}
 }
 
 connection.onDidChangeWatchedFiles(_change => {
