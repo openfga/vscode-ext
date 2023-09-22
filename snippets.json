@@ -3,7 +3,7 @@
 		"prefix": "model",
 		"body": [
 			"model",
-			"  schema 1.$0"
+			"  schema 1.1"
 		]
 	},
 	"type": {
