@@ -1,10 +1,9 @@
 
 
-import * as fs from 'fs';
-import assert = require('assert');
-import { TextDocument, commands, window } from 'vscode';
+import * as assert from 'assert';
+import { TextDocument, Uri, commands, window, workspace } from 'vscode';
 import { getDocUri, activate } from './helper';
-import { friendlySyntaxToApiSyntax } from '@openfga/syntax-transformer';
+import { transformer } from '@openfga/syntax-transformer';
 
 
 suite('Should execute command', () => {
@@ -22,10 +21,11 @@ suite('Should execute command', () => {
 		const resultFromCommand = await commands.executeCommand<TextDocument>('openfga.commands.transformToJson');
 
 		// Get original document
-		const original = fs.readFileSync(getDocUri('test.fga').fsPath);
+
+		const original = await workspace.fs.readFile(getDocUri('test.fga'));
 
 		// Call transform directly for comparison, using original doc
-		const resultFromMethodCall = JSON.stringify(friendlySyntaxToApiSyntax(original.toString()), null, "  ");
+		const resultFromMethodCall = JSON.stringify(transformer.transformDSLToJSON(original.toString()), null, "  ");
 
 		// Ensure result from command is the same as result from method.
 		assert.equal(editor.document.getText(), original);

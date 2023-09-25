@@ -2,11 +2,11 @@
 	"compilerOptions": {
 		"module": "commonjs",
 		"target": "es2020",
-		"lib": ["es2020", "dom"],
+		"lib": ["es2020", "WebWorker"],
+		"moduleResolution": "NodeNext",
 		"outDir": "out",
 		"rootDir": "src",
-		"sourceMap": true,
-		"moduleResolution": "NodeNext"
+		"sourceMap": true
 	},
 	"include": ["src"],
 	"exclude": ["node_modules", ".vscode-test"]

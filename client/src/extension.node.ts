@@ -1,6 +1,6 @@
 import * as path from 'path';
 import { window, workspace, ExtensionContext, commands, Range } from 'vscode';
-import { friendlySyntaxToApiSyntax } from '@openfga/syntax-transformer';
+import { transformer } from '@openfga/syntax-transformer';
 
 import {
 	LanguageClient,
@@ -13,7 +13,7 @@ let client: LanguageClient;
 
 export function activate(context: ExtensionContext) {
 
-	const module = path.join(__dirname, '..', '..', 'server', 'out', 'server.js');
+	const module = path.join(__dirname, '..', '..', 'server', 'out', 'server.node.js');
 	const debugOptions = { execArgv: ['--nolazy', '--inspect=6012'] };
 	const serverOptions: ServerOptions = {
 		run: { module, transport: TransportKind.ipc },
@@ -48,7 +48,7 @@ export function activate(context: ExtensionContext) {
 		}
 		const text = activeEditor.document.getText();
 
-		const modelInApiFormat = friendlySyntaxToApiSyntax(text);
+		const modelInApiFormat = transformer.transformDSLToJSON(text);
 
 		const doc = await workspace.openTextDocument({
 			content: JSON.stringify(modelInApiFormat, null, "  "),

@@ -27,7 +27,8 @@
 	"engines": {
 		"vscode": "^1.75.0"
 	},
-	"main": "./client/out/extension",
+	"main": "./client/out/extension.node",
+	"browser": "./client/out/extension.browser",
 	"contributes": {
 		"languages": [
 			{
@@ -80,18 +81,31 @@
 	},
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
-		"compile": "rm -rf ./client/out ./server/out && tsc -b",
-		"watch": "tsc -b -w",
-		"test": "sh ./scripts/e2e.sh",
+		"compile": "webpack",
+		"watch": "webpack --watch",
+		"package": "webpack --mode production --devtool hidden-source-map",
+		"test-node": "sh ./scripts/e2e.sh",
+		"test-web": "vscode-test-web --browserType=chromium --extensionDevelopmentPath=. --extensionTestsPath=./client/out/test/index.browser.js ./client/testFixture",
 		"lint": "eslint ./client/src ./server/src --ext .ts,.tsx",
 		"postinstall": "cd client && npm install && cd ../server && npm install && cd .."
 	},
 	"devDependencies": {
 		"@types/mocha": "^10.0.1",
 		"@types/node": "^18.16.3",
+		"@types/webpack-env": "^1.18.2",
 		"@typescript-eslint/eslint-plugin": "^5.59.2",
 		"@typescript-eslint/parser": "^5.59.2",
+		"@vscode/test-web": "^0.0.45",
+		"assert-browserify": "^2.0.0",
 		"eslint": "^8.39.0",
-		"mocha": "^10.2.0"
+		"mocha": "^10.2.0",
+		"path-browserify": "^1.0.1",
+		"process": "^0.11.10",
+		"ts-loader": "^9.4.4",
+		"webpack": "^5.88.2",
+		"webpack-cli": "^5.1.4"
+	},
+	"dependencies": {
+		"@openfga/syntax-transformer": "^0.2.0-beta.3"
 	}
 }
