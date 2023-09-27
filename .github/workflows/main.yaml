@@ -49,7 +49,7 @@ jobs:
         cache-dependency-path: ./package-lock.json
     - run: npm install
     - run: npm run compile
-    - run: xvfb-run -a npm test
+    - run: xvfb-run -a npm run test-node
       if: runner.os == 'Linux'
-    - run: npm test
+    - run: npm run test-node
       if: runner.os != 'Linux'
