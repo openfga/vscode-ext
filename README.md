@@ -54,12 +54,10 @@ The extension currently offers 3 core features, with more to come.
 
 ![Prompt to execute OpenFGA: Transform DSL to JSON command](resources/transform-command-select.png)
 
-
-
 ## Development
 
 - Run `npm install` in the root directory. This installs all necessary npm modules.
-- Run `npm run compile && npm test` to execute the client test suite.
+- Run `npm run compile && npm run test-node` to execute the client node test suite.
 
 ### Distribution (Optional)
 
@@ -72,11 +70,17 @@ To generate an installable build of this extension, you can do the following:
 
 ```
 .
-├── package.json // The extension manifest
-├── client // Language client
+├── client // Language Client
 │   ├── src
-│   │   ├── test // End to end tests for language client / server
-│   │   └── extension.ts // Language client entry point
+│   │   ├── test // End to End tests for Language Client / Server
+│   │   ├── extension.node.ts // Language Client node entry point
+│   │   └── extension.browser.ts // Language CLient web entry point
+├── package.json // The extension manifest.
+└── server // Language Server
+    └── src
+        ├── server.node.ts // Language Server node entry point
+        ├── server.browser.ts // Language Server web entry point
+        └── server.common.ts // Language Server common code
 ```
 
 ### Running the Client
@@ -92,7 +96,11 @@ To generate an installable build of this extension, you can do the following:
 
 - Run `npm install` in the root directory. This installs all necessary npm modules.
 - Run `npm run compile` to compile the code & client for testing.
-- Run `npm test` to execute the client test suite.
+- Run `npm run test-node` to execute the client node test suite.
+
+#### Remote Testing the Web functionality
+
+- To manually test the extension in the browser for [VS Code for the Web](https://vscode.dev/) before publishing, follow [these instructions](https://code.visualstudio.com/api/extension-guides/web-extensions#test-your-web-extension-in-vscode.dev) to setup a VS Code for the Web instance with your local extension, and then proceed with the normal testing flow.
 
 ## Roadmap
 
