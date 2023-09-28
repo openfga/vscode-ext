@@ -30,6 +30,25 @@
 	"main": "./client/out/extension.node",
 	"browser": "./client/out/extension.browser",
 	"contributes": {
+		"configuration": [
+			{
+				"id": "openfga-vscode",
+				"title": "OpenFGA VS Code",
+				"properties": {
+					"openfgaLanguageServer.trace.server": {
+						"type": "string",
+						"scope": "window",
+						"enum": [
+							"off",
+							"messages",
+							"verbose"
+						],
+						"default": "off",
+						"description": "Traces the communication between VS Code and the openfga language server."
+					}
+				}
+			}
+		],
 		"languages": [
 			{
 				"id": "openfga",
