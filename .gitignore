@@ -5,3 +5,4 @@ client/server
 .vscode-test
 .vscode-test-web
 .DS_Store
+.idea/
