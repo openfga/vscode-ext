@@ -22,6 +22,10 @@ import {
 import { validator, errors } from '@openfga/syntax-transformer';
 
 export function startServer(connection: _Connection) {
+
+	console.log = connection.console.log.bind(connection.console);
+	console.error = connection.console.error.bind(connection.console);
+
 	// Create a simple text document manager.
 	const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
 
@@ -30,6 +34,9 @@ export function startServer(connection: _Connection) {
 	let hasDiagnosticRelatedInformationCapability = false;
 
 	connection.onInitialize((params: InitializeParams) => {
+
+		console.log("Initialize openfga language server");
+
 		const capabilities = params.capabilities;
 
 		// Does the client support the `workspace/configuration` request?
@@ -62,6 +69,11 @@ export function startServer(connection: _Connection) {
 				}
 			};
 		}
+
+		console.log("hasConfigurationCapability: " + hasConfigurationCapability);
+		console.log("hasWorkspaceFolderCapability: " + hasWorkspaceFolderCapability);
+		console.log("hasDiagnosticRelatedInformationCapability: " + hasDiagnosticRelatedInformationCapability);
+
 		return result;
 	});
 
@@ -137,7 +149,7 @@ export function startServer(connection: _Connection) {
 
 	connection.onDidChangeWatchedFiles(_change => {
 		// Monitored files have change in VSCode
-		connection.console.log('We received an file change event');
+		console.log('We received an file change event');
 	});
 
 	// This handler provides the initial list of the completion items.
