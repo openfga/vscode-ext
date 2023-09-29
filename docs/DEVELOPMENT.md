@@ -49,3 +49,15 @@ To generate an installable build of this extension, you can do the following:
 ### Remote Testing the Web functionality
 
 - To manually test the extension in the browser for [VS Code for the Web](https://vscode.dev/) before publishing, follow [these instructions](https://code.visualstudio.com/api/extension-guides/web-extensions#test-your-web-extension-in-vscode.dev) to setup a VS Code for the Web instance with your local extension, and then proceed with the normal testing flow.
+
+#### Install Extension from location example steps
+
+1. Use `mkcert` to generate a certificate for localhost
+2. Use `serve` to startup a minimal web server
+![Using serve as a websever](images/serve.png)
+3. Open the command palette and choose:
+    >Developer: Install Extension from location
+4. Enter your serve url and select intstall
+![Install extension from location](images/install-location.png)
+5. Extension will install, and be ready to test
+![Installed extension](images/installed-extension.png)
