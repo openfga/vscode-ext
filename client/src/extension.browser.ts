@@ -9,11 +9,8 @@ let client: LanguageClient;
 // this method is called when vs code is activated
 export function activate(context: ExtensionContext) {
 
-	/*
-	 * all except the code to create the language client in not browser specific
-	 * and could be shared with a regular (Node) extension
-	 */
-	const documentSelector = [{ scheme: 'file', language: 'openfga' }, { scheme: 'untitled', language: 'openfga'}];
+	// Register the server for all document types
+	const documentSelector = [{ language: 'openfga' }];
 
 	// Options to control the language client
 	const clientOptions: LanguageClientOptions = {
