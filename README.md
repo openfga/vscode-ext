@@ -57,6 +57,8 @@ The extension currently offers 4 core features, with more to come.
 - Validation of OpenFGA's `.fga` files
 	- As you type in a `.fga` OpenFGA file in the editor, the extension will highlight errors that make your models invalid 
 
+![Errors being highlighted with validation](resources/validation_example.gif)
+
 ## Workflow to use it with the FGA CLI
 
 The extension works great when combined with the [FGA CLI](https://github.com/openfga/cli) to iterate on your model and test it.
