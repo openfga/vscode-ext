@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.2.3
+
+### [0.2.3](https://github.com/openfga/vscode-ext/compare/v0.2.2...v0.2.3) (2023-9-29)
+
+- fix: correct document selector to enable language server for saved models on github.dev
+- chore(docs): updated README and DEVELOPMENT documentation
+
 ## v0.2.2
 
 ### [0.2.2](https://github.com/openfga/vscode-ext/compare/v0.2.1...v0.2.2) (2023-9-28)
