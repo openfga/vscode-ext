@@ -9,8 +9,13 @@
 			"trace": true,
 			"runtimeExecutable": "${execPath}",
 			"sourceMaps": true,
-			"args": ["--extensionDevelopmentPath=${workspaceRoot}"],
-			"outFiles": ["${workspaceRoot}/client/out/**/*.js", "${workspaceRoot}/server/out/**/*.js"],
+			"args": [
+				"--extensionDevelopmentPath=${workspaceRoot}"
+			],
+			"outFiles": [
+				"${workspaceRoot}/client/out/**/*.js",
+				"${workspaceRoot}/server/out/**/*.js"
+			],
 			"preLaunchTask": "npm: compile"
 		},
 		{
@@ -32,38 +37,52 @@
 				"--extensionTestsPath=${workspaceRoot}/client/out/test/index.node",
 				"${workspaceRoot}/client/testFixture"
 			],
+			"env": {
+				"VSCODE_TEST_NODE": "true"
+			},
 			"preLaunchTask": "npm: compile"
 		},
 		{
-      "name": "Run Web Extension in VS Code",
-      "type": "pwa-extensionHost",
-      "debugWebWorkerHost": true,
-      "request": "launch",
-      "args": [
-        "--extensionDevelopmentPath=${workspaceFolder}",
-        "--extensionDevelopmentKind=web"
-      ],
-			"outFiles": ["${workspaceRoot}/client/out/**/*.js", "${workspaceRoot}/server/out/**/*.js"],
-      "preLaunchTask": "npm: watch"
-    },
+			"name": "Run Web Extension in VS Code",
+			"type": "pwa-extensionHost",
+			"debugWebWorkerHost": true,
+			"request": "launch",
+			"args": [
+				"--extensionDevelopmentPath=${workspaceFolder}",
+				"--extensionDevelopmentKind=web"
+			],
+			"outFiles": [
+				"${workspaceRoot}/client/out/**/*.js",
+				"${workspaceRoot}/server/out/**/*.js"
+			],
+			"preLaunchTask": "npm: watch"
+		},
+		// TODO: fix failing web test:
+		// Currently file handler helper defaults to 'vscode-test-web' for browser based tests
+		// env var VSCODE_TEST_NODE sets the file handling to use 'file' for node tests
+		// While running the web test from launch, files are still using 'file' scheme instead of 'vscode-test-web'
+		// It also does not appear to take env vars when in this mode. 
 		{
-      "name": "Extension Tests in VS Code Web",
-      "type": "extensionHost",
-      "debugWebWorkerHost": true,
-      "request": "launch",
-      "args": [
-        "--extensionDevelopmentPath=${workspaceFolder}",
-        "--extensionDevelopmentKind=web",
-        "--extensionTestsPath=${workspaceFolder}/client/out/test/index.browser",
+			"name": "Extension Tests in VS Code Web",
+			"type": "extensionHost",
+			"debugWebWorkerHost": true,
+			"request": "launch",
+			"args": [
+				"--extensionDevelopmentPath=${workspaceFolder}",
+				"--extensionDevelopmentKind=web",
+				"--extensionTestsPath=${workspaceFolder}/client/out/test/index.browser",
 				"${workspaceRoot}/client/testFixture"
-      ],
-      "preLaunchTask": "npm: compile"
-    }
+			],
+			"preLaunchTask": "npm: compile"
+		}
 	],
 	"compounds": [
-        {
-            "name": "Client/Server",
-            "configurations": ["Launch Client", "Attach to Server"]
-        }
-    ]
+		{
+			"name": "Client/Server",
+			"configurations": [
+				"Launch Client",
+				"Attach to Server"
+			]
+		}
+	]
 }

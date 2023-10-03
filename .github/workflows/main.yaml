@@ -48,8 +48,9 @@ jobs:
         cache: 'npm'
         cache-dependency-path: ./package-lock.json
     - run: npm install
+    - run: npx playwright install
     - run: npm run compile
-    - run: xvfb-run -a npm run test-node
+    - run: xvfb-run -a npm test
       if: runner.os == 'Linux'
-    - run: npm run test-node
+    - run: npm test
       if: runner.os != 'Linux'

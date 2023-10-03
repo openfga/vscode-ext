@@ -21,11 +21,10 @@ suite('Should execute command', () => {
 		const resultFromCommand = await commands.executeCommand<TextDocument>('openfga.commands.transformToJson');
 
 		// Get original document
-
-		const original = await workspace.fs.readFile(getDocUri('test.fga'));
+		const original = String.fromCharCode.apply(null, await workspace.fs.readFile(getDocUri('test.fga')));
 
 		// Call transform directly for comparison, using original doc
-		const resultFromMethodCall = JSON.stringify(transformer.transformDSLToJSON(original.toString()), null, "  ");
+		const resultFromMethodCall = JSON.stringify(transformer.transformDSLToJSON(original), null, "  ");
 
 		// Ensure result from command is the same as result from method.
 		assert.equal(editor.document.getText(), original);

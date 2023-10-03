@@ -35,7 +35,11 @@ export const getDocPath = (p: string) => {
 	return path.resolve(__dirname, '../../testFixture', p);
 };
 export const getDocUri = (p: string) => {
-	return vscode.Uri.file(getDocPath(p));
+	if (process.env.VSCODE_TEST_NODE) {
+		return vscode.Uri.file(getDocPath(p));
+	} else {
+		return vscode.Uri.file(p).with({ scheme: 'vscode-test-web', authority: 'mount', path: `/${p}` });
+	}
 };
 
 export async function setTestContent(content: string): Promise<boolean> {
