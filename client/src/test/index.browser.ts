@@ -7,6 +7,7 @@ export function run(): Promise<void> {
       ui: 'tdd',
       reporter: undefined
     });
+    mocha.timeout(30000);
 
     // bundles all files in the current directory matching `*.test`
     const importAll = (r: __WebpackModuleApi.RequireContext) => r.keys().forEach(r);

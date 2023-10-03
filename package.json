@@ -103,8 +103,10 @@
 		"compile": "webpack",
 		"watch": "webpack --watch",
 		"package": "webpack --mode production --devtool hidden-source-map",
-		"test-node": "sh ./scripts/e2e.sh",
+		"test-node": "sh ./scripts/e2e-node.sh",
 		"test-web": "vscode-test-web --browserType=chromium --extensionDevelopmentPath=. --extensionTestsPath=./client/out/test/index.browser.js ./client/testFixture",
+		"test-web-headless": "vscode-test-web --browserType=chromium --headless --extensionDevelopmentPath=. --extensionTestsPath=./client/out/test/index.browser.js ./client/testFixture",
+		"test": "npm run test-node && npm run test-web-headless",
 		"lint": "eslint ./client/src ./server/src --ext .ts,.tsx",
 		"postinstall": "cd client && npm install && cd ../server && npm install && cd .."
 	},
