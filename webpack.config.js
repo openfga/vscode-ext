@@ -73,6 +73,7 @@ const nodeClientConfig = {
 		'extension.node': './src/extension.node.ts', // the entry point of this extension, 📖 -> https://webpack.js.org/configuration/entry-context/
 		'test/extension.test': './src/test/extension.test.ts',
 		'test/diagnostics.test': './src/test/diagnostics.test.ts',
+		'test/hover.test': './src/test/hover.test.ts',
 		'test/index.node': './src/test/index.node.ts',
 		'test/runTest': './src/test/runTest.ts',
 	},

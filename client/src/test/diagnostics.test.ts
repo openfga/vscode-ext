@@ -6,7 +6,7 @@ import { getDocUri, activate } from "./helper";
 suite("Should get diagnostics", () => {
 	const docUri = getDocUri("diagnostics.openfga");
 
-	test("Diagnoses uppercase texts", async () => {
+	test("Diagnoses validation errors", async () => {
 		await testDiagnostics(docUri, [
 			{ message: "`user` is not a valid type.", range: toRange(5, 20, 5, 24), severity: vscode.DiagnosticSeverity.Error, source: "ModelValidationError" },
 			{ message: "`user` is not a valid type.", range: toRange(8, 19, 8, 23), severity: vscode.DiagnosticSeverity.Error, source: "ModelValidationError" },
