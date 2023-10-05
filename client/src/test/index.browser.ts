@@ -4,14 +4,14 @@ export function run(): Promise<void> {
 
   return new Promise((c, e) => {
     mocha.setup({
-      ui: 'tdd',
+      ui: "tdd",
       reporter: undefined
     });
     mocha.timeout(30000);
 
     // bundles all files in the current directory matching `*.test`
     const importAll = (r: __WebpackModuleApi.RequireContext) => r.keys().forEach(r);
-    importAll(require.context('.', true, /\.test$/));
+    importAll(require.context(".", true, /\.test$/));
 
     try {
       // Run the mocha test

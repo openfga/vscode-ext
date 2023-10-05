@@ -3,9 +3,9 @@ import {
 	BrowserMessageReader,
 	BrowserMessageWriter,
 	createConnection,
-} from 'vscode-languageserver/browser';
+} from "vscode-languageserver/browser";
 
-import { startServer } from './server.common';
+import { startServer } from "./server.common";
 
 const messageReader = new BrowserMessageReader(self);
 const messageWriter = new BrowserMessageWriter(self);
