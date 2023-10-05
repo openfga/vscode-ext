@@ -1,25 +1,22 @@
 
 import {
-	createConnection,
 	TextDocuments,
 	Diagnostic,
 	DiagnosticSeverity,
-	ProposedFeatures,
 	InitializeParams,
 	DidChangeConfigurationNotification,
 	CompletionItem,
-	CompletionItemKind,
 	TextDocumentPositionParams,
 	TextDocumentSyncKind,
 	InitializeResult,
 	_Connection,
-} from 'vscode-languageserver';
+} from "vscode-languageserver";
 
 import {
 	TextDocument
-} from 'vscode-languageserver-textdocument';
+} from "vscode-languageserver-textdocument";
 
-import { validator, errors } from '@openfga/syntax-transformer';
+import { validator, errors } from "@openfga/syntax-transformer";
 
 export function startServer(connection: _Connection) {
 
@@ -84,7 +81,7 @@ export function startServer(connection: _Connection) {
 		}
 		if (hasWorkspaceFolderCapability) {
 			connection.workspace.onDidChangeWorkspaceFolders(_event => {
-				connection.console.log('Workspace folder change event received.');
+				connection.console.log("Workspace folder change event received.");
 			});
 		}
 	});
@@ -149,7 +146,7 @@ export function startServer(connection: _Connection) {
 
 	connection.onDidChangeWatchedFiles(_change => {
 		// Monitored files have change in VSCode
-		console.log('We received an file change event');
+		console.log("We received an file change event");
 	});
 
 	// This handler provides the initial list of the completion items.

@@ -1,8 +1,9 @@
-import { transformer } from '@openfga/syntax-transformer';
-import { ExtensionContext, Uri, commands, window, workspace } from 'vscode';
-import { LanguageClientOptions } from 'vscode-languageclient';
+import { transformer } from "@openfga/syntax-transformer";
+// eslint-disable-next-line import/no-unresolved
+import { ExtensionContext, Uri, commands, window, workspace } from "vscode";
+import { LanguageClientOptions } from "vscode-languageclient";
 
-import { LanguageClient } from 'vscode-languageclient/browser';
+import { LanguageClient } from "vscode-languageclient/browser";
 
 let client: LanguageClient;
 
@@ -10,7 +11,7 @@ let client: LanguageClient;
 export function activate(context: ExtensionContext) {
 
 	// Register the server for all document types
-	const documentSelector = [{ language: 'openfga' }];
+	const documentSelector = [{ language: "openfga" }];
 
 	// Options to control the language client
 	const clientOptions: LanguageClientOptions = {
@@ -24,7 +25,7 @@ export function activate(context: ExtensionContext) {
   client.start();
 
 
-	const transformCommand = commands.registerCommand('openfga.commands.transformToJson', async () => {
+	const transformCommand = commands.registerCommand("openfga.commands.transformToJson", async () => {
 		const activeEditor = window.activeTextEditor;
 		if (!activeEditor) {
 			return;
@@ -53,9 +54,9 @@ export function deactivate(): Thenable<void> | undefined {
 
 function createWorkerLanguageClient(context: ExtensionContext, clientOptions: LanguageClientOptions) {
 	// Create a worker. The worker main file implements the language server.
-	const serverMain = Uri.joinPath(context.extensionUri, 'server/out/server.browser.js');
+	const serverMain = Uri.joinPath(context.extensionUri, "server/out/server.browser.js");
 	const worker = new Worker(serverMain.toString(true));
 
 	// create the language server client to communicate with the server running in the worker
-	return new LanguageClient('openfgaLanguageServer', 'OpenFGA Language Server', clientOptions, worker);
+	return new LanguageClient("openfgaLanguageServer", "OpenFGA Language Server", clientOptions, worker);
 }
