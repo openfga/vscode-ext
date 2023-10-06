@@ -10,6 +10,12 @@ import {
 	TextDocumentSyncKind,
 	InitializeResult,
 	_Connection,
+	HoverParams,
+	Hover,
+	MarkupContent,
+	MarkupKind,
+	Range,
+	Position,
 } from "vscode-languageserver";
 
 import {
@@ -17,6 +23,8 @@ import {
 } from "vscode-languageserver-textdocument";
 
 import { validator, errors } from "@openfga/syntax-transformer";
+
+import { defaultDocumentationMap } from "./documentation";
 
 export function startServer(connection: _Connection) {
 
@@ -56,7 +64,8 @@ export function startServer(connection: _Connection) {
 				// Tell the client that this server supports code completion.
 				completionProvider: {
 					resolveProvider: false
-				}
+				},
+				hoverProvider: true
 			}
 		};
 		if (hasWorkspaceFolderCapability) {
@@ -85,7 +94,6 @@ export function startServer(connection: _Connection) {
 			});
 		}
 	});
-
 
 	connection.onDidChangeConfiguration(_change => {
 		// Revalidate all open text documents
@@ -142,6 +150,59 @@ export function startServer(connection: _Connection) {
 				console.error("Unhandled Exception: " + err);
 			}
 		}
+	}
+
+	connection.onHover((params: HoverParams): Hover | undefined => {
+		const doc = documents.get(params.textDocument.uri);
+
+		if (doc === undefined) {
+			return;
+		}
+
+		const range = getRangeOfWord(doc, params.position);
+		const symbol = doc.getText(range);
+		const docSummary = defaultDocumentationMap[symbol];
+
+		if (!docSummary) {
+			return;
+		}
+
+    const contents: MarkupContent = {
+        kind: MarkupKind.Markdown,
+        value: `**${symbol}**  \n${docSummary.summary}  \n[Link to documentation](${docSummary.link}])`,
+    };
+    return {
+        contents,
+				range
+    };
+	});
+
+	function getRangeOfWord(document: TextDocument, position: Position): Range {
+		const text = document.getText();
+
+		let pointerStart = document.offsetAt(position);
+		let pointerEnd = document.offsetAt(position);
+
+		while (text.charAt(pointerStart).match(/\w/)) {
+			pointerStart--;
+		}
+
+		while (text.charAt(pointerEnd).match(/\w/)) {
+			pointerEnd++;
+		}
+
+		let start = document.positionAt(pointerStart + 1);
+		let end = document.positionAt(pointerEnd);
+
+		if (document.getText({ start, end }) === "but" &&
+			document.getText({ start, end: document.positionAt(pointerEnd + 4) }) === "but not") {
+				end = document.positionAt(pointerEnd + 4);
+		} else if (document.getText({ start, end }) === "not" &&
+			document.getText({ start: document.positionAt(pointerStart -3), end }) === "but not") {
+				start = document.positionAt(pointerStart - 3);
+		}
+
+		return { start, end };
 	}
 
 	connection.onDidChangeWatchedFiles(_change => {
