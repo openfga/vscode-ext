@@ -16,6 +16,9 @@ import {
 	MarkupKind,
 	Range,
 	Position,
+	CodeActionParams,
+	CodeAction,
+	DocumentUri,
 } from "vscode-languageserver";
 
 import {
@@ -25,6 +28,7 @@ import {
 import { validator, errors } from "@openfga/syntax-transformer";
 
 import { defaultDocumentationMap } from "./documentation";
+import { getDuplicationFix, getMissingDefinitionFix, getReservedTypeNameFix } from "./code-action";
 
 export function startServer(connection: _Connection) {
 
@@ -65,7 +69,8 @@ export function startServer(connection: _Connection) {
 				completionProvider: {
 					resolveProvider: false
 				},
-				hoverProvider: true
+				hoverProvider: true,
+				codeActionProvider : true,
 			}
 		};
 		if (hasWorkspaceFolderCapability) {
@@ -82,6 +87,7 @@ export function startServer(connection: _Connection) {
 
 		return result;
 	});
+
 
 	connection.onInitialized(() => {
 		if (hasConfigurationCapability) {
@@ -112,12 +118,17 @@ export function startServer(connection: _Connection) {
 			let characters;
 			let source;
 
+			let code = errors.ValidationError.InvalidSyntax;
+
 			if (e instanceof errors.DSLSyntaxSingleError) {
 				characters = e.getColumn();
 				source = "SyntaxError";
 			} else if (e instanceof errors.ModelValidationSingleError) {
 				characters = e.getColumn(-1);
 				source = "ModelValidationError";
+				if (e.metadata?.errorType) {
+					code = e.metadata.errorType;
+				}
 			} else {
 				throw new Error("Unhandled Exception: " + JSON.stringify(e, null, 4));
 			}
@@ -130,6 +141,8 @@ export function startServer(connection: _Connection) {
 					end: { line: lines.end, character: characters.end },
 				},
 				source,
+				code,
+				data: e.metadata,
 			};
 		}) || [];
 	};
@@ -150,6 +163,48 @@ export function startServer(connection: _Connection) {
 				console.error("Unhandled Exception: " + err);
 			}
 		}
+	}
+
+	connection.onCodeAction((params: CodeActionParams) => {
+		const diagnostics = params.context.diagnostics;
+
+		const codeActions: CodeAction[] = [];
+
+		for(const d of diagnostics) {
+			if (d.code) {
+				const fix = lookupFixes(params.textDocument.uri, d);
+				if (fix) {
+					codeActions.push(fix);
+				}
+			}
+		}
+
+		return codeActions;
+	});
+
+	function lookupFixes(docUri: DocumentUri, diagnostic: Diagnostic): CodeAction | undefined {
+		// If doc doesnt exist, we can exit now.
+		const doc = documents.get(docUri);
+		if (!doc) {
+			return;
+		}
+
+		switch(diagnostic.code) {
+			case errors.ValidationError.MissingDefinition:
+				// Indent configurable, but set to 2 spaces for now
+				return getMissingDefinitionFix({ docUri, diagnostic }, "  ",
+					getLineContent(docUri, diagnostic.range.start.line) || "");
+			case errors.ValidationError.DuplicatedError:
+				return getDuplicationFix({ docUri, diagnostic });
+			case errors.ValidationError.ReservedTypeKeywords:
+				return getReservedTypeNameFix({ docUri, diagnostic });
+			default:
+				return undefined;
+		}
+	}
+
+	function getLineContent(doc: DocumentUri, line: number): string | undefined {
+		return documents.get(doc)?.getText().split("\n")[line];
 	}
 
 	connection.onHover((params: HoverParams): Hover | undefined => {
@@ -195,10 +250,12 @@ export function startServer(connection: _Connection) {
 		let end = document.positionAt(pointerEnd);
 
 		if (document.getText({ start, end }) === "but" &&
+			// If we've hovered "but", track forward and check if there is a matching "not"
 			document.getText({ start, end: document.positionAt(pointerEnd + 4) }) === "but not") {
 				end = document.positionAt(pointerEnd + 4);
 		} else if (document.getText({ start, end }) === "not" &&
-			document.getText({ start: document.positionAt(pointerStart -3), end }) === "but not") {
+		// If we've hovered "not", track backward and check if there is a matching "but"
+			document.getText({ start: document.positionAt(pointerStart - 3), end }) === "but not") {
 				start = document.positionAt(pointerStart - 3);
 		}
 
