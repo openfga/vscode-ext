@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.2.4
+
+### [0.2.4](https://github.com/openfga/vscode-ext/compare/v0.2.3...v0.2.4) (2023-10-10)
+
+- feat: Hover descriptions for model keywords
+- feat: Code actions for quickfixing some common errors
+
 ## v0.2.3
 
 ### [0.2.3](https://github.com/openfga/vscode-ext/compare/v0.2.2...v0.2.3) (2023-9-29)
