@@ -74,6 +74,16 @@
 				"language": "openfga",
 				"scopeName": "source.openfga",
 				"path": "./syntaxes/openfga.tmLanguage.json"
+			},
+			{
+				"path": "./syntaxes/injection.json",
+				"scopeName": "openfga-yaml.injection",
+				"injectTo": [
+					"source.yaml"
+				],
+				"embeddedLanguages": {
+					"meta.embedded.inline.openfga": "openfga"
+				}
 			}
 		],
 		"themes": [
@@ -98,6 +108,10 @@
 			]
 		}
 	},
+	"activationEvents": [
+		"onLanguage:openfga",
+		"onLanguage:yaml"
+	],
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
 		"compile": "webpack",

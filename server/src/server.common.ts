@@ -29,6 +29,8 @@ import { validator, errors } from "@openfga/syntax-transformer";
 
 import { defaultDocumentationMap } from "./documentation";
 import { getDuplicationFix, getMissingDefinitionFix, getReservedTypeNameFix } from "./code-action";
+import { LineCounter, parseDocument } from "yaml";
+import { rangeFromLinePos } from "./yaml-schema";
 
 export function startServer(connection: _Connection) {
 
@@ -41,6 +43,7 @@ export function startServer(connection: _Connection) {
 	let hasConfigurationCapability = false;
 	let hasWorkspaceFolderCapability = false;
 	let hasDiagnosticRelatedInformationCapability = false;
+
 
 	connection.onInitialize((params: InitializeParams) => {
 
@@ -70,7 +73,7 @@ export function startServer(connection: _Connection) {
 					resolveProvider: false
 				},
 				hoverProvider: true,
-				codeActionProvider : true,
+				codeActionProvider: true,
 			}
 		};
 		if (hasWorkspaceFolderCapability) {
@@ -147,7 +150,7 @@ export function startServer(connection: _Connection) {
 		}) || [];
 	};
 
-	async function validateTextDocument(textDocument: TextDocument): Promise<void> {
+	function validateDSL(textDocument: TextDocument): void {
 		connection.sendDiagnostics({
 			uri: textDocument.uri,
 			diagnostics: [],
@@ -165,12 +168,44 @@ export function startServer(connection: _Connection) {
 		}
 	}
 
+	function validateYAML(textDocument: TextDocument): void {
+		connection.sendDiagnostics({
+			uri: textDocument.uri,
+			diagnostics: [],
+		});
+
+		const diagnostics: Diagnostic[] = [];
+
+		const lineCounter = new LineCounter();
+		const doc = parseDocument(textDocument.getText(), {
+			lineCounter,
+			keepSourceTokens: true,
+			uniqueKeys: false // Uniqueness is validated by the template reader
+		});
+
+		console.log(doc);
+		for (const err of doc.errors) {
+			diagnostics.push({ message: err.message, range: rangeFromLinePos(err.linePos) });
+		}
+
+		connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });
+	}
+
+
+	function validateTextDocument(textDocument: TextDocument): void {
+		if (textDocument.languageId === "openfga") {
+			validateDSL(textDocument);
+		} else if (textDocument.languageId === "yaml") {
+			validateYAML(textDocument);
+		}
+	}
+
 	connection.onCodeAction((params: CodeActionParams) => {
 		const diagnostics = params.context.diagnostics;
 
 		const codeActions: CodeAction[] = [];
 
-		for(const d of diagnostics) {
+		for (const d of diagnostics) {
 			if (d.code) {
 				const fix = lookupFixes(params.textDocument.uri, d);
 				if (fix) {
@@ -189,7 +224,7 @@ export function startServer(connection: _Connection) {
 			return;
 		}
 
-		switch(diagnostic.code) {
+		switch (diagnostic.code) {
 			case errors.ValidationError.MissingDefinition:
 				// Indent configurable, but set to 2 spaces for now
 				return getMissingDefinitionFix({ docUri, diagnostic }, "  ",
@@ -222,14 +257,14 @@ export function startServer(connection: _Connection) {
 			return;
 		}
 
-    const contents: MarkupContent = {
-        kind: MarkupKind.Markdown,
-        value: `**${symbol}**  \n${docSummary.summary}  \n[Link to documentation](${docSummary.link}])`,
-    };
-    return {
-        contents,
-				range
-    };
+		const contents: MarkupContent = {
+			kind: MarkupKind.Markdown,
+			value: `**${symbol}**  \n${docSummary.summary}  \n[Link to documentation](${docSummary.link}])`,
+		};
+		return {
+			contents,
+			range
+		};
 	});
 
 	function getRangeOfWord(document: TextDocument, position: Position): Range {
@@ -252,11 +287,11 @@ export function startServer(connection: _Connection) {
 		if (document.getText({ start, end }) === "but" &&
 			// If we've hovered "but", track forward and check if there is a matching "not"
 			document.getText({ start, end: document.positionAt(pointerEnd + 4) }) === "but not") {
-				end = document.positionAt(pointerEnd + 4);
+			end = document.positionAt(pointerEnd + 4);
 		} else if (document.getText({ start, end }) === "not" &&
-		// If we've hovered "not", track backward and check if there is a matching "but"
+			// If we've hovered "not", track backward and check if there is a matching "but"
 			document.getText({ start: document.positionAt(pointerStart - 3), end }) === "but not") {
-				start = document.positionAt(pointerStart - 3);
+			start = document.positionAt(pointerStart - 3);
 		}
 
 		return { start, end };
