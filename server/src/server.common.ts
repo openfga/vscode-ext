@@ -31,6 +31,7 @@ import { defaultDocumentationMap } from "./documentation";
 import { getDuplicationFix, getMissingDefinitionFix, getReservedTypeNameFix } from "./code-action";
 import { LineCounter, parseDocument } from "yaml";
 import { rangeFromLinePos } from "./yaml-schema";
+import { BlockMap, SourceToken } from "yaml/dist/parse/cst";
 
 export function startServer(connection: _Connection) {
 
@@ -150,22 +151,27 @@ export function startServer(connection: _Connection) {
 		}) || [];
 	};
 
+	function getDiagnosticsForDsl(dsl: string): Diagnostic[] {
+		try {
+			validator.validateDSL(dsl);
+		} catch (err) {
+			if (err instanceof errors.DSLSyntaxError || err instanceof errors.ModelValidationError) {
+				return createDiagnostics(err);
+			} else {
+				console.error("Unhandled Exception: " + err);
+			}
+		}
+		return [];
+	}
+
 	function validateDSL(textDocument: TextDocument): void {
 		connection.sendDiagnostics({
 			uri: textDocument.uri,
 			diagnostics: [],
 		});
 
-		try {
-			validator.validateDSL(textDocument.getText());
-		} catch (err) {
-			if (err instanceof errors.DSLSyntaxError || err instanceof errors.ModelValidationError) {
-				const diagnostics = createDiagnostics(err);
-				connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });
-			} else {
-				console.error("Unhandled Exception: " + err);
-			}
-		}
+		const diagnostics = getDiagnosticsForDsl(textDocument.getText());
+		connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });
 	}
 
 	function validateYAML(textDocument: TextDocument): void {
@@ -180,12 +186,36 @@ export function startServer(connection: _Connection) {
 		const doc = parseDocument(textDocument.getText(), {
 			lineCounter,
 			keepSourceTokens: true,
-			uniqueKeys: false // Uniqueness is validated by the template reader
+			uniqueKeys: false
 		});
 
-		console.log(doc);
+		// Basic syntax errors
 		for (const err of doc.errors) {
 			diagnostics.push({ message: err.message, range: rangeFromLinePos(err.linePos) });
+		}
+
+		// Get location of model in CST
+		if (doc.has("model")) {
+			let position: {line: number, col: number};
+
+			// Get the model token and find its position
+			(doc.contents?.srcToken as BlockMap).items.forEach(i => {
+				if (i.key?.offset !== undefined && (i.key as SourceToken).source === "model") {
+					position = lineCounter.linePos(i.key?.offset);
+				}
+			});
+
+			// Shift generated diagnostics by line of model, and indent of 2
+			let dslDiagnostics = getDiagnosticsForDsl(doc.get("model") as string);
+			dslDiagnostics = dslDiagnostics.map(d => {
+				const r = d.range;
+				r.start.line += position.line;
+				r.start.character += 2;
+				r.end.line += position.line;
+				r.end.character += 2;
+				return d;
+			});
+			diagnostics.push(...dslDiagnostics);
 		}
 
 		connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });
