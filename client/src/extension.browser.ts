@@ -11,7 +11,7 @@ let client: LanguageClient;
 export function activate(context: ExtensionContext) {
 
 	// Register the server for all document types
-	const documentSelector = [{ language: "openfga" }];
+	const documentSelector = [{ language: "openfga" }, { language: "yaml" }];
 
 	// Options to control the language client
 	const clientOptions: LanguageClientOptions = {

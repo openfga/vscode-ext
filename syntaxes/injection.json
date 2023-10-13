@@ -1,0 +1,61 @@
+{
+  "scopeName": "openfga-yaml.injection",
+  "injectionSelector": "L:source.yaml",
+  "patterns": [
+    {
+      "include": "#openfga-block-scalar"
+    }
+  ],
+  "repository": {
+    "openfga-block-scalar": {
+      "begin": "(?i)(model)(\\:\\s)(?:(\\|)|(>))([1-9])?([-+])?([ \t]*[ \t]*\\n)",
+      "beginCaptures": {
+        "1": {
+          "name": "entity.name.tag.yaml"
+        },
+        "2": {
+          "name": "punctuation.separator.key-value.mapping.yaml"
+        },
+        "3": {
+          "name": "keyword.control.flow.block-scalar.literal.yaml"
+        },
+        "4": {
+          "name": "keyword.control.flow.block-scalar.folded.yaml"
+        },
+        "5": {
+          "name": "constant.numeric.indentation-indicator.yaml"
+        },
+        "6": {
+          "name": "storage.modifier.chomping-indicator.yaml"
+        },
+        "7": {
+          "patterns": [
+            {
+              "begin": "#",
+              "beginCaptures": {
+                "0": {
+                  "name": "punctuation.definition.comment.yaml"
+                }
+              },
+              "end": "\\n"
+            }
+          ],
+          "name": "comment.line.number-sign.yaml"
+        }
+      },
+      "end": "^(?=\\S)|(?!\\G)",
+      "patterns": [
+        {
+          "begin": "^([ ]+)(?! )",
+          "end": "^(?!\\1|\\s*$)",
+          "name": "meta.embedded.inline.openfga",
+          "patterns": [
+            {
+              "include": "source.openfga"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
