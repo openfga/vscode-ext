@@ -1,0 +1,307 @@
+{
+  "$schema": "https://github.com/hmarr/vscode-cel/blob/main/syntaxes/cel.tmLanguage.json",
+  "name": "cel",
+  "scopeName": "source.cel",
+  "patterns": [
+    {
+      "include": "#comments"
+    },
+    {
+      "include": "#expressions"
+    }
+  ],
+  "repository": {
+    "expressions": {
+      "patterns": [
+        {
+          "include": "#reserved-identifiers"
+        },
+        {
+          "include": "#function-calls"
+        },
+        {
+          "include": "#object-constructions"
+        },
+        {
+          "include": "#parens"
+        },
+        {
+          "include": "#lists"
+        },
+        {
+          "include": "#maps"
+        },
+        {
+          "include": "#numbers"
+        },
+        {
+          "include": "#strings"
+        },
+        {
+          "include": "#langauge-constants"
+        },
+        {
+          "include": "#operators"
+        }
+      ]
+    },
+    "reserved-identifiers": {
+      "patterns": [
+        {
+          "name": "invalid.illegal.cel",
+          "match": "\\b(as|break|const|continue|else|for|function|if|import|let|loop|package|namespace|return|var|void|while)\\b"
+        }
+      ]
+    },
+    "function-calls": {
+      "match": "([_a-zA-Z][_a-zA-Z0-9]+)(?=\\()",
+      "captures": {
+        "1": {
+          "name": "variable.function.cel"
+        }
+      }
+    },
+    "object-constructions": {
+      "name": "meta.structure.object.cel",
+      "begin": "([_a-zA-Z][_a-zA-Z0-9]+)(\\{)",
+      "beginCaptures": {
+        "1": {
+          "name": "variable.object.cel"
+        },
+        "2": {
+          "name": "punctuation.definition.object.begin.cel"
+        }
+      },
+      "end": "\\}",
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.object.end.cel"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#object-kv"
+        }
+      ]
+    },
+    "object-kv": {
+      "begin": "([_a-zA-Z][_a-zA-Z0-9]*:)",
+      "beginCaptures": {
+        "1": {
+          "name": "entity.name.type.attribute-name.cel"
+        }
+      },
+      "end": "(,)|(?=\\})",
+      "endCaptures": {
+        "1": {
+          "name": "punctuation.separator.object.cel"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#expressions"
+        }
+      ]
+    },
+    "parens": {
+      "begin": "\\(",
+      "beginCaptures": {
+        "0": {
+          "name": "punctuation.parenthesis.begin.cel"
+        }
+      },
+      "end": "\\)",
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.parenthesis.end.cel"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#expressions"
+        }
+      ]
+    },
+    "maps": {
+      "name": "meta.structure.map.cel",
+      "begin": "\\{",
+      "beginCaptures": {
+        "0": {
+          "name": "punctuation.definition.map.begin.cel"
+        }
+      },
+      "end": "\\}",
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.map.end.cel"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#expressions"
+        },
+        {
+          "name": "punctuation.separator.map.cel",
+          "match": ",|:"
+        }
+      ]
+    },
+    "lists": {
+      "name": "meta.structure.list.cel",
+      "begin": "\\[",
+      "beginCaptures": {
+        "0": {
+          "name": "punctuation.definition.list.begin.cel"
+        }
+      },
+      "end": "\\]",
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.list.end.cel"
+        }
+      },
+      "patterns": [
+        {
+          "include": "#expressions"
+        },
+        {
+          "name": "punctuation.separator.list.cel",
+          "match": ","
+        }
+      ]
+    },
+    "comments": {
+      "name": "comment.line.double-slash.cel",
+      "begin": "(\\/\\/)",
+      "beginCaptures": {
+        "1": {
+          "name": "punctuation.definition.comment.cel"
+        }
+      },
+      "end": "(?:\\n|$)"
+    },
+    "strings": {
+      "patterns": [
+        {
+          "include": "#string-multi-line"
+        },
+        {
+          "include": "#string-raw-multi-line"
+        },
+        {
+          "include": "#string-single-line"
+        },
+        {
+          "include": "#string-raw-single-line"
+        }
+      ]
+    },
+    "string-single-line": {
+      "comment": "single-line string",
+      "name": "string.quoted.single.cel",
+      "begin": "(['\"])",
+      "end": "(\\1|$)",
+      "patterns": [
+        {
+          "include": "#string-escape-sequence"
+        }
+      ]
+    },
+    "string-raw-single-line": {
+      "comment": "raw single-line double-quoted string",
+      "name": "string.quoted.single.cel",
+      "begin": "([rR])(['\"])",
+      "beginCaptures": {
+        "1": {
+          "name": "storage.type.raw-string.cel"
+        }
+      },
+      "end": "(\\2|$)"
+    },
+    "string-multi-line": {
+      "comment": "multi-line string",
+      "name": "string.quoted.triple.cel",
+      "begin": "(['\"]{3})",
+      "end": "(\\1)",
+      "patterns": [
+        {
+          "include": "#string-escape-sequence"
+        }
+      ]
+    },
+    "string-raw-multi-line": {
+      "comment": "raw multi-line double-quoted string",
+      "name": "string.quoted.triple.cel",
+      "begin": "([rR])(['\"]{3})",
+      "beginCaptures": {
+        "1": {
+          "name": "storage.type.raw-string.cel"
+        }
+      },
+      "end": "(\\2)"
+    },
+    "string-escape-sequence": {
+      "patterns": [
+        {
+          "name": "constant.character.escape.cel",
+          "match": "\\\\[bfnrt\"'\\\\]"
+        },
+        {
+          "name": "constant.character.escape.cel",
+          "match": "\\\\u[0-9a-fA-F]{4}"
+        },
+        {
+          "name": "constant.character.escape.cel",
+          "match": "\\\\U[0-9a-fA-F]{8}"
+        },
+        {
+          "name": "constant.character.escape.cel",
+          "match": "\\\\[xX][0-9a-fA-F]{2}"
+        },
+        {
+          "name": "constant.character.escape.cel",
+          "match": "\\\\0[0-8]{3}"
+        }
+      ]
+    },
+    "numbers": {
+      "patterns": [
+        {
+          "comment": "float literal with decimals",
+          "name": "constant.numeric.floating-point.cel",
+          "match": "([0-9]*\\.[0-9]+([eE][+-]?[0-9]+)?)"
+        },
+        {
+          "comment": "float literal with exponent",
+          "name": "constant.numeric.floating-point.cel",
+          "match": "([0-9]+[eE][+-]?[0-9]+)"
+        },
+        {
+          "comment": "int or uint literal",
+          "name": "constant.numeric.integer.cel",
+          "match": "([0-9]+|0x[0-9a-fA-F]+)[uU]?"
+        }
+      ]
+    },
+    "langauge-constants": {
+      "name": "constant.language.cel",
+      "match": "\\b(true|false|null)\\b"
+    },
+    "operators": {
+      "patterns": [
+        {
+          "name": "keyword.operator.logical.cel",
+          "match": "(&&|\\|\\|)"
+        },
+        {
+          "name": "keyword.operator.comparison.cel",
+          "match": "(<=|<|>=|>|==|!=|(?<=[^A-Za-z_])in\\b)"
+        },
+        {
+          "name": "keyword.operator.arithmetic.cel",
+          "match": "(\\+|\\-|\\*|\\/|\\%|\\!)"
+        }
+      ]
+    }
+  }
+}

@@ -61,6 +61,13 @@
 					".openfga"
 				],
 				"configuration": "./language-configuration.json"
+			},
+			{
+				"id": "cel",
+				"aliases": [
+					"CEL",
+					"cel"
+				]
 			}
 		],
 		"snippets": [
@@ -71,12 +78,27 @@
 		],
 		"grammars": [
 			{
+				"language": "cel",
+				"scopeName": "source.cel",
+				"path": "./syntaxes/cel.tmLanguage.json"
+			},
+			{
+				"path": "./syntaxes/cel.injection.json",
+				"scopeName": "cel-openfga.injection",
+				"injectTo": [
+					"source.openfga"
+				],
+				"embeddedLanguages": {
+					"meta.embedded.inline.cel": "cel"
+				}
+			},
+			{
 				"language": "openfga",
 				"scopeName": "source.openfga",
 				"path": "./syntaxes/openfga.tmLanguage.json"
 			},
 			{
-				"path": "./syntaxes/injection.json",
+				"path": "./syntaxes/openfga.injection.json",
 				"scopeName": "openfga-yaml.injection",
 				"injectTo": [
 					"source.yaml"

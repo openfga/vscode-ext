@@ -65,6 +65,10 @@
 				{
 					"name": "keyword.operator.word.exclusion.openfga",
 					"match": "\\bbut\\snot\\b"
+				},
+				{
+					"name": "keyword.operator.word.with.openfga",
+					"match": "\\bwith\\b"
 				}
 			]
 		},

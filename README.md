@@ -140,6 +140,9 @@ See the [DEVELOPMENT](./docs/DEVELOPMENT.md) and [CONTRIBUTING](https://github.c
 
 [OpenFGA](https://github.com/openfga)
 
+## Acknowledgments
+- CEL Textmate Grammar was taken from [vscode-cel](https://github.com/hmarr/vscode-cel)
+
 ## License
 
 This project is licensed under the Apache-2.0 license. See the [LICENSE](https://github.com/openfga/vscode-ext/blob/main/LICENSE) file for more info.
