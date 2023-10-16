@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.2.5
+
+### [0.2.5](https://github.com/openfga/vscode-ext/compare/v0.2.4...v0.2.5) (2023-10-16)
+
+- feat: syntax support for OpenFGA models embedded in YAML for testing
+- feat: validation of OpenFGA models embedded in YAML for testing
+
 ## v0.2.4
 
 ### [0.2.4](https://github.com/openfga/vscode-ext/compare/v0.2.3...v0.2.4) (2023-10-10)
