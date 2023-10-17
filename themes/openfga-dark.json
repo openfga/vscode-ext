@@ -32,6 +32,7 @@
         "keyword.operator.word.intersection.openfga",
         "keyword.operator.word.exclusion.openfga",
         "keyword.operator.word.union.openfga",
+        "keyword.condition.openfga",
         "computed.relation.value.openfga"
       ],
       "settings": {
@@ -45,7 +46,8 @@
         "computed.relation.value.openfga",
         "computed.tupletouserset.relation.value.openfga",
         "tupleset.tupletouserset.relation.value.openfga",
-        "schema.value.openfga"
+        "schema.value.openfga",
+        "variable.parameter.type.condition.openfga"
       ],
       "settings": {
         "foreground": "#AAAAAA"
@@ -69,14 +71,20 @@
     },
     {
       "name": "Type",
-      "scope": ["support.class.type.name.value.openfga"],
+      "scope": [
+        "support.class.type.name.value.openfga",
+        "entity.name.function.condition.openfga"
+      ],
       "settings": {
         "foreground": "#79ED83"
       }
     },
     {
       "name": "Relation",
-      "scope": ["entity.name.function.member.relation.name.openfga"],
+      "scope": [
+        "entity.name.function.member.relation.name.openfga",
+        "variable.parameter.name.condition.openfga"
+      ],
       "settings": {
         "foreground": "#20F1F5"
       }
