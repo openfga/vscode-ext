@@ -3,7 +3,10 @@ on:
 
 name: Dryrun Publish Extension
 jobs:
+  test:
+    uses: ./.github/workflows/main.yaml
   dryrun-publish:
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout

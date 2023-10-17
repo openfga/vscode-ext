@@ -6,7 +6,10 @@ on:
 
 name: Publish Extension
 jobs:
+  test:
+    uses: ./.github/workflows/main.yaml
   publish:
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
