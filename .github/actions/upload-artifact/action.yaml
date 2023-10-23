@@ -1,0 +1,32 @@
+description: Generate and upload the vscode VSIX file
+name: Upload VSIX
+outputs:
+  location:
+    description: "VSIX location"
+    value: ${{ steps.upload-vsix.outputs.location }}
+runs:
+  using: "composite"
+  steps:
+    - name: Install Node.js
+      uses: actions/setup-node@e33196f7422957bea03ed53f6fbb155025ffc7b8 # 3.7.0
+      with:
+        node-version: 20.x
+        registry-url: 'https://registry.npmjs.org'
+        scope: '@openfga'
+        always-auth: false
+        cache: 'npm'
+        cache-dependency-path: ./package-lock.json
+    - run: npm ci
+      shell: bash
+    - run: npm install @vscode/vsce
+      shell: bash
+    - run: npx vsce package -o openfga-latest.vsix
+      shell: bash
+    - uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # 3.1.2
+      with:
+        name: openfga-latest.vsix
+        path: ./openfga-latest.vsix
+        if-no-files-found: error
+    - id: upload-vsix
+      run: echo "location=./openfga-latest.vsix" >> $GITHUB_OUTPUT
+      shell: bash
