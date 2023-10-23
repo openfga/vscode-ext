@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.2.6
+
+### [0.2.6](https://github.com/openfga/vscode-ext/compare/v0.2.5...v0.2.6) (2023-10-23)
+
+- feat: syntax highlighting for conditions
+
 ## v0.2.5
 
 ### [0.2.5](https://github.com/openfga/vscode-ext/compare/v0.2.4...v0.2.5) (2023-10-16)
