@@ -142,6 +142,7 @@ See the [DEVELOPMENT](./docs/DEVELOPMENT.md) and [CONTRIBUTING](https://github.c
 
 ## Acknowledgments
 - CEL Textmate Grammar was taken from [vscode-cel](https://github.com/hmarr/vscode-cel)
+- Range conversion from `yaml` to `vscode` from [actions/languageservices](https://github.com/actions/languageservices/blob/4280a967a8aa058dd3c8825349b90bc932d82283/workflow-parser/src/workflows/yaml-object-reader.ts#L220)
 
 ## License
 

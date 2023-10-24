@@ -4,7 +4,6 @@ import {
 	Diagnostic,
 	DiagnosticSeverity,
 	InitializeParams,
-	DidChangeConfigurationNotification,
 	CompletionItem,
 	TextDocumentPositionParams,
 	TextDocumentSyncKind,
@@ -30,8 +29,10 @@ import { validator, errors } from "@openfga/syntax-transformer";
 import { defaultDocumentationMap } from "./documentation";
 import { getDuplicationFix, getMissingDefinitionFix, getReservedTypeNameFix } from "./code-action";
 import { LineCounter, parseDocument } from "yaml";
-import { rangeFromLinePos } from "./yaml-schema";
 import { BlockMap, SourceToken } from "yaml/dist/parse/cst";
+import { YAMLSourceMap, rangeFromLinePos } from "./yaml-utils";
+import Ajv, { ErrorObject, ValidateFunction } from "ajv";
+import { OPENFGA_YAML_SCHEMA } from "./openfga-yaml-schema";
 
 export function startServer(connection: _Connection) {
 
@@ -45,6 +46,7 @@ export function startServer(connection: _Connection) {
 	let hasWorkspaceFolderCapability = false;
 	let hasDiagnosticRelatedInformationCapability = false;
 
+	let schemaValidator: ValidateFunction;
 
 	connection.onInitialize((params: InitializeParams) => {
 
@@ -94,10 +96,10 @@ export function startServer(connection: _Connection) {
 
 
 	connection.onInitialized(() => {
-		if (hasConfigurationCapability) {
-			// Register for all configuration changes.
-			connection.client.register(DidChangeConfigurationNotification.type, undefined);
-		}
+
+		// Once initialized, setup validator
+		schemaValidator = new Ajv().compile(OPENFGA_YAML_SCHEMA);
+
 		if (hasWorkspaceFolderCapability) {
 			connection.workspace.onDidChangeWorkspaceFolders(_event => {
 				connection.console.log("Workspace folder change event received.");
@@ -181,6 +183,89 @@ export function startServer(connection: _Connection) {
 		connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });
 	}
 
+	function validateYamlSyntaxAndModel(textDocument: TextDocument): Diagnostic[] {
+		const diagnostics: Diagnostic[] = [];
+
+		const lineCounter = new LineCounter();
+		const yamlDoc = parseDocument(textDocument.getText(), {
+			lineCounter,
+			keepSourceTokens: true,
+		});
+
+		const map = new YAMLSourceMap();
+		map.doMap(yamlDoc.contents);
+
+		// Basic syntax errors
+		for (const err of yamlDoc.errors) {
+			diagnostics.push({ message: err.message, range: rangeFromLinePos(err.linePos) });
+		}
+
+		// If no diagnostics, continue parsing.
+		if (!diagnostics.length && !schemaValidator(yamlDoc.toJSON())) {
+			schemaValidator.errors?.forEach((e: ErrorObject) => {
+				console.error(JSON.stringify(e as ErrorObject, null, 2));
+
+				let start = { line: 0, character: 0 };
+				let end = { line: 0, character: 0 };
+				let message;
+
+				if (e.keyword === "additionalProperties") {
+					// If we've got invalid keys, mark them
+					let key = e.params["additionalProperty"];
+					if (e.instancePath) {
+						const path = e.instancePath.substring(1).replace(/\//g, ".");
+						key = path.concat(".", key);
+					}
+					const range = map.nodes.get(key);
+					if (range) {
+						start = textDocument.positionAt(range?.[0]);
+						end = textDocument.positionAt(range?.[1]);
+					}
+					message = key + " is not a recognized key.";
+				} else {
+					// All other schema errors
+					const key = e.instancePath.substring(1).replace(/\//g, ".");
+					const range = map.nodes.get(key);
+					if (range) {
+						start = textDocument.positionAt(range?.[0]);
+						end = textDocument.positionAt(range?.[1]);
+					}
+					message = key + " " + e.message;
+				}
+				diagnostics.push({ message: message, range: { start, end } });
+			});
+		}
+
+		// Finally validate openfga model
+		if (!diagnostics.length) {
+			// Get location of model in CST
+			if (yamlDoc.has("model")) {
+				let position: { line: number, col: number };
+
+				// Get the model token and find its position
+				(yamlDoc.contents?.srcToken as BlockMap).items.forEach(i => {
+					if (i.key?.offset !== undefined && (i.key as SourceToken).source === "model") {
+						position = lineCounter.linePos(i.key?.offset);
+					}
+				});
+
+				// Shift generated diagnostics by line of model, and indent of 2
+				let dslDiagnostics = getDiagnosticsForDsl(yamlDoc.get("model") as string);
+				dslDiagnostics = dslDiagnostics.map(d => {
+					const r = d.range;
+					r.start.line += position.line;
+					r.start.character += 2;
+					r.end.line += position.line;
+					r.end.character += 2;
+					return d;
+				});
+				diagnostics.push(...dslDiagnostics);
+			}
+		}
+
+		return diagnostics;
+	}
+
 	function validateYAML(textDocument: TextDocument): void {
 		connection.sendDiagnostics({
 			uri: textDocument.uri,
@@ -189,50 +274,15 @@ export function startServer(connection: _Connection) {
 
 		const diagnostics: Diagnostic[] = [];
 
-		const lineCounter = new LineCounter();
-		const doc = parseDocument(textDocument.getText(), {
-			lineCounter,
-			keepSourceTokens: true,
-			uniqueKeys: false
-		});
-
-		// Basic syntax errors
-		for (const err of doc.errors) {
-			diagnostics.push({ message: err.message, range: rangeFromLinePos(err.linePos) });
-		}
-
-		// Get location of model in CST
-		if (doc.has("model")) {
-			let position: {line: number, col: number};
-
-			// Get the model token and find its position
-			(doc.contents?.srcToken as BlockMap).items.forEach(i => {
-				if (i.key?.offset !== undefined && (i.key as SourceToken).source === "model") {
-					position = lineCounter.linePos(i.key?.offset);
-				}
-			});
-
-			// Shift generated diagnostics by line of model, and indent of 2
-			let dslDiagnostics = getDiagnosticsForDsl(doc.get("model") as string);
-			dslDiagnostics = dslDiagnostics.map(d => {
-				const r = d.range;
-				r.start.line += position.line;
-				r.start.character += 2;
-				r.end.line += position.line;
-				r.end.character += 2;
-				return d;
-			});
-			diagnostics.push(...dslDiagnostics);
-		}
+		diagnostics.push(...validateYamlSyntaxAndModel(textDocument));
 
 		connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });
 	}
 
-
 	function validateTextDocument(textDocument: TextDocument): void {
 		if (textDocument.languageId === "openfga") {
 			validateDSL(textDocument);
-		} else if (textDocument.languageId === "yaml") {
+		} else if (textDocument.languageId === "yaml-store-openfga") {
 			validateYAML(textDocument);
 		}
 	}
