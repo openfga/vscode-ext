@@ -116,6 +116,13 @@ export function startServer(connection: _Connection) {
 		validateTextDocument(change.document);
 	});
 
+	documents.onDidClose(change => {
+		connection.sendDiagnostics({
+			uri: change.document.uri,
+			diagnostics: [],
+		});
+	});
+
 	const createDiagnostics = (err: errors.DSLSyntaxError | errors.ModelValidationError): Diagnostic[] => {
 		return err.errors.map((e: errors.DSLSyntaxSingleError | errors.ModelValidationSingleError) => {
 			const lines = e.getLine(-1);
