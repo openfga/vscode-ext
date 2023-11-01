@@ -68,6 +68,16 @@
 					"CEL",
 					"cel"
 				]
+			},
+			{
+				"id": "yaml-store-openfga",
+				"aliases": [
+					"YAML (OpenFGA)"
+				],
+				"extensions": [
+					".fga.yaml",
+					".openfga.yaml"
+				]
 			}
 		],
 		"snippets": [
@@ -101,12 +111,17 @@
 				"path": "./syntaxes/openfga.injection.json",
 				"scopeName": "openfga-yaml.injection",
 				"injectTo": [
-					"source.yaml"
+					"source.yaml-store-openfga"
 				],
 				"embeddedLanguages": {
 					"meta.embedded.inline.openfga": "openfga"
 				}
-			}
+			},
+			{
+        "language": "yaml-store-openfga",
+        "scopeName": "source.yaml-store-openfga",
+        "path": "./syntaxes/yaml.tmLanguage.json"
+      }
 		],
 		"themes": [
 			{
@@ -132,7 +147,7 @@
 	},
 	"activationEvents": [
 		"onLanguage:openfga",
-		"onLanguage:yaml"
+		"onLanguage:yaml-store-openfga"
 	],
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
