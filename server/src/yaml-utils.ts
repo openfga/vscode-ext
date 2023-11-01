@@ -1,6 +1,6 @@
 import { Range, Position } from "vscode-languageserver";
 
-import { Range as TokenRange, isCollection, isDocument, isMap, isNode, isPair, isScalar, isSeq } from "yaml";
+import { Range as TokenRange, isMap, isPair, isScalar, isSeq } from "yaml";
 import { LinePos } from "yaml/dist/errors";
 
 export function rangeFromLinePos(linePos: [LinePos] | [LinePos, LinePos] | undefined): Range {
@@ -38,7 +38,7 @@ export class YAMLSourceMap {
 		if (isPair(node) && isScalar(node.key) && node.key.source) {
 			localPath.push(node.key.source);
 			this.doMap(node.key, localPath);
-			
+
 			if (isSeq(node.value)) {
 				for (const n in node.value.items) {
 					localPath.push(n);

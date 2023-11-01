@@ -118,10 +118,10 @@
 				}
 			},
 			{
-        "language": "yaml-store-openfga",
-        "scopeName": "source.yaml-store-openfga",
-        "path": "./syntaxes/yaml.tmLanguage.json"
-      }
+				"language": "yaml-store-openfga",
+				"scopeName": "source.yaml-store-openfga",
+				"path": "./syntaxes/yaml.tmLanguage.json"
+			}
 		],
 		"themes": [
 			{
@@ -160,25 +160,27 @@
 		"test-web-headless": "vscode-test-web --browserType=chromium --headless --extensionDevelopmentPath=. --extensionTestsPath=./client/out/test/index.browser.js ./client/testFixture",
 		"test": "npm run test-node && npm run test-web-headless",
 		"lint": "eslint ./client/src ./server/src --ext .ts,.tsx",
+		"format:fix": "npx prettier --write .",
 		"postinstall": "cd client && npm install && cd ../server && npm install && cd .."
 	},
 	"devDependencies": {
-		"@types/mocha": "^10.0.1",
-		"@types/node": "^18.16.3",
-		"@types/webpack-env": "^1.18.2",
-		"@typescript-eslint/eslint-plugin": "^5.59.2",
-		"@typescript-eslint/parser": "^5.59.2",
-		"@vscode/test-web": "^0.0.45",
-		"@vscode/vsce": "^2.21.1",
+		"@types/mocha": "^10.0.3",
+		"@types/node": "^20.8.10",
+		"@types/webpack-env": "^1.18.3",
+		"@typescript-eslint/eslint-plugin": "^6.9.1",
+		"@typescript-eslint/parser": "^6.9.1",
+		"@vscode/test-web": "^0.0.48",
+		"@vscode/vsce": "^2.22.0",
 		"assert-browserify": "^2.0.0",
-		"eslint": "^8.39.0",
+		"eslint": "^8.52.0",
 		"eslint-config-prettier": "^9.0.0",
-		"eslint-plugin-import": "^2.28.1",
+		"eslint-plugin-import": "^2.29.0",
 		"mocha": "^10.2.0",
 		"path-browserify": "^1.0.1",
+		"prettier": "^3.0.3",
 		"process": "^0.11.10",
-		"ts-loader": "^9.4.4",
-		"webpack": "^5.88.2",
+		"ts-loader": "^9.5.0",
+		"webpack": "^5.89.0",
 		"webpack-cli": "^5.1.4"
 	}
 }

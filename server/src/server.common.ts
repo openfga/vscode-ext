@@ -4,8 +4,6 @@ import {
 	Diagnostic,
 	DiagnosticSeverity,
 	InitializeParams,
-	CompletionItem,
-	TextDocumentPositionParams,
 	TextDocumentSyncKind,
 	InitializeResult,
 	_Connection,
@@ -28,7 +26,7 @@ import { validator, errors } from "@openfga/syntax-transformer";
 
 import { defaultDocumentationMap } from "./documentation";
 import { getDuplicationFix, getMissingDefinitionFix, getReservedTypeNameFix } from "./code-action";
-import { LineCounter, Node, YAMLMap, parseDocument } from "yaml";
+import { LineCounter, Node, parseDocument } from "yaml";
 import { BlockMap, SourceToken } from "yaml/dist/parse/cst";
 import { YAMLSourceMap, rangeFromLinePos } from "./yaml-utils";
 import Ajv, { ErrorObject, ValidateFunction } from "ajv";
@@ -99,15 +97,9 @@ export function startServer(connection: _Connection) {
 
 		// Once initialized, setup validator
 		schemaValidator = new Ajv().compile(OPENFGA_YAML_SCHEMA);
-
-		if (hasWorkspaceFolderCapability) {
-			connection.workspace.onDidChangeWorkspaceFolders(_event => {
-				connection.console.log("Workspace folder change event received.");
-			});
-		}
 	});
 
-	connection.onDidChangeConfiguration(_change => {
+	connection.onDidChangeConfiguration(() => {
 		// Revalidate all open text documents
 		documents.all().forEach(validateTextDocument);
 	});
@@ -399,21 +391,6 @@ export function startServer(connection: _Connection) {
 
 		return { start, end };
 	}
-
-	connection.onDidChangeWatchedFiles(_change => {
-		// Monitored files have change in VSCode
-		console.log("We received an file change event");
-	});
-
-	// This handler provides the initial list of the completion items.
-	connection.onCompletion(
-		(_textDocumentPosition: TextDocumentPositionParams): CompletionItem[] => {
-			// The pass parameter contains the position of the text document in
-			// which code complete got requested. For the example we ignore this
-			// info and always provide the same completion items.
-			return [];
-		}
-	);
 
 	// Make the text document manager listen on the connection
 	// for open, change and close text document events
