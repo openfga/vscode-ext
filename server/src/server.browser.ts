@@ -1,9 +1,4 @@
-
-import {
-	BrowserMessageReader,
-	BrowserMessageWriter,
-	createConnection,
-} from "vscode-languageserver/browser";
+import { BrowserMessageReader, BrowserMessageWriter, createConnection } from "vscode-languageserver/browser";
 
 import { startServer } from "./server.common";
 

@@ -53,4 +53,4 @@ Initial Release
 
 - feat: Syntax highlighting for OpenFGA files
 - feat: Custom OpenFGA dark theme
-- feat: command to transform OpenFGA DSL to JSON 
+- feat: command to transform OpenFGA DSL to JSON

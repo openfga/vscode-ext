@@ -1,11 +1,10 @@
 import * as mocha from "mocha/mocha";
 
 export function run(): Promise<void> {
-
   return new Promise((c, e) => {
     mocha.setup({
       ui: "tdd",
-      reporter: undefined
+      reporter: undefined,
     });
     mocha.timeout(30000);
 
@@ -15,7 +14,7 @@ export function run(): Promise<void> {
 
     try {
       // Run the mocha test
-      mocha.run(failures => {
+      mocha.run((failures) => {
         if (failures > 0) {
           e(new Error(`${failures} tests failed.`));
         } else {

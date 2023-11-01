@@ -1,28 +1,18 @@
 {
-	"model": {
-		"prefix": "model",
-		"body": [
-			"model",
-			"  schema 1.1"
-		]
-	},
-	"type": {
-		"prefix": "type",
-		"body": [
-			"type $0"
-		]
-	},
-	"relations": {
-		"prefix": "relations",
-		"body": [
-			"relations",
-			"\tdefine $1: $0"
-		]
-	},
-	"define": {
-		"prefix": "define",
-		"body": [
-			"define $1: $0"
-		]
-	}
+  "model": {
+    "prefix": "model",
+    "body": ["model", "  schema 1.1"]
+  },
+  "type": {
+    "prefix": "type",
+    "body": ["type $0"]
+  },
+  "relations": {
+    "prefix": "relations",
+    "body": ["relations", "\tdefine $1: $0"]
+  },
+  "define": {
+    "prefix": "define",
+    "body": ["define $1: $0"]
+  }
 }

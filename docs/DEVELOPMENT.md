@@ -11,7 +11,7 @@ Read the [OpenFGA Contribution Process](https://github.com/openfga/.github/blob/
 
 To generate an installable build of this extension, you can do the following:
 
-- Run `npm install --global @vscode/vsce` to get the latest version of `vsce` for packaging 
+- Run `npm install --global @vscode/vsce` to get the latest version of `vsce` for packaging
 - Run `vsce package` to generate an installable `VISX` artifact for testing or distribution
 
 ## Structure
@@ -54,10 +54,10 @@ To generate an installable build of this extension, you can do the following:
 
 1. Use `mkcert` to generate a certificate for localhost
 2. Use `serve` to startup a minimal web server
-![Using serve as a websever](images/serve.png)
+   ![Using serve as a websever](images/serve.png)
 3. Open the command palette and choose:
-    >Developer: Install Extension from location
+   > Developer: Install Extension from location
 4. Enter your serve url and select intstall
-![Install extension from location](images/install-location.png)
+   ![Install extension from location](images/install-location.png)
 5. Extension will install, and be ready to test
-![Installed extension](images/installed-extension.png)
+   ![Installed extension](images/installed-extension.png)

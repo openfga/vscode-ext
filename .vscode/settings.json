@@ -1,12 +1,12 @@
 {
-	"editor.insertSpaces": false,
-	"typescript.tsc.autoDetect": "off",
-	"typescript.preferences.quoteStyle": "single",
-	"editor.codeActionsOnSave": {
-		"source.fixAll.eslint": true
-	},
-	"[openfga]": {
-		"editor.tabSize": 2,
-		"editor.insertSpaces": true
-	 }
+  "editor.insertSpaces": false,
+  "typescript.tsc.autoDetect": "off",
+  "typescript.preferences.quoteStyle": "single",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "[openfga]": {
+    "editor.tabSize": 2,
+    "editor.insertSpaces": true
+  }
 }
