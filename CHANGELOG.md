@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.2.7
+
+### [0.2.7](https://github.com/openfga/vscode-ext/compare/v0.2.6...v0.2.7) (2023-11-01)
+
+- feat: validation for `.fga.yaml` files
+- fix: Remove diagnostics when closing an associated file
+
 ## v0.2.6
 
 ### [0.2.6](https://github.com/openfga/vscode-ext/compare/v0.2.5...v0.2.6) (2023-10-23)
