@@ -1,6 +1,8 @@
 
 export const OPENFGA_YAML_SCHEMA = {
 	type: "object",
+	required: ["tests"],
+	additionalProperties: false,
 	properties: {
 		name: {
 			type: "string",
@@ -22,6 +24,7 @@ export const OPENFGA_YAML_SCHEMA = {
 			items: {
 				type: "object",
 				additionalProperties: false,
+				required: ["user", "relation", "object"],
 				properties: {
 					user: {
 						type: "string",
@@ -38,6 +41,7 @@ export const OPENFGA_YAML_SCHEMA = {
 					condition: {
 						type: "object",
 						additionalProperties: false,
+						required: ["name"],
 						properties: {
 							name: {
 								type: "string",
@@ -55,6 +59,7 @@ export const OPENFGA_YAML_SCHEMA = {
 			items: {
 				type: "object",
 				additionalProperties: false,
+				required: ["name", "check", "list_objects"],
 				properties: {
 					name: {
 						type: "string",
@@ -72,6 +77,7 @@ export const OPENFGA_YAML_SCHEMA = {
 						items: {
 							type: "object",
 							additionalProperties: false,
+							required: ["user", "relation", "object"],
 							properties: {
 								user: {
 									type: "string",
@@ -96,6 +102,7 @@ export const OPENFGA_YAML_SCHEMA = {
 						items: {
 							type: "object",
 							additionalProperties: false,
+							required: ["user", "object", "assertions"],
 							properties: {
 								user: {
 									type: "string",
@@ -124,6 +131,7 @@ export const OPENFGA_YAML_SCHEMA = {
 						items: {
 							type: "object",
 							additionalProperties: false,
+							required: ["user", "type", "assertions"],
 							properties: {
 								user: {
 									type: "string",
@@ -157,7 +165,5 @@ export const OPENFGA_YAML_SCHEMA = {
 				}
 			}
 		}
-	},
-	required: ["tests"],
-	additionalProperties: false,
+	}
 };

@@ -8,7 +8,7 @@
   ],
   "repository": {
     "openfga-block-scalar": {
-      "begin": "(?i)(^model)(:)\\s(\\|)\\n",
+      "begin": "(?i)(^model)(:)\\s+(\\|)\\s*\\n",
       "beginCaptures": {
         "1": {
           "name": "entity.name.tag.yaml"
