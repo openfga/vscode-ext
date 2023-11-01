@@ -8,6 +8,11 @@ updates:
      dependencies:
         patterns:
           - "*"
-    allow:
-      - dependency-type: "production"
-      
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+     dependencies:
+        patterns:
+          - "*"
