@@ -28,7 +28,7 @@ import { validator, errors } from "@openfga/syntax-transformer";
 
 import { defaultDocumentationMap } from "./documentation";
 import { getDuplicationFix, getMissingDefinitionFix, getReservedTypeNameFix } from "./code-action";
-import { LineCounter, parseDocument } from "yaml";
+import { LineCounter, Node, YAMLMap, parseDocument } from "yaml";
 import { BlockMap, SourceToken } from "yaml/dist/parse/cst";
 import { YAMLSourceMap, rangeFromLinePos } from "./yaml-utils";
 import Ajv, { ErrorObject, ValidateFunction } from "ajv";
@@ -222,6 +222,22 @@ export function startServer(connection: _Connection) {
 						end = textDocument.positionAt(range?.[1]);
 					}
 					message = key + " is not a recognized key.";
+				} else if (e.keyword === "required") {
+					const key = e.instancePath.substring(1).split("/");
+					let range;
+					if (/^\d+$/.test(key[key.length - 1])) {
+						// We have an array if the key is a number
+						const value = yamlDoc.getIn(key);
+						range = (value as Node).range;
+					} else {
+						range = map.nodes.get(key.join("."));
+					}
+					if (range) {
+						start = textDocument.positionAt(range?.[0]);
+						end = textDocument.positionAt(range?.[1]);
+					}
+
+					message = key.join(".") + " " + e.message;
 				} else {
 					// All other schema errors
 					const key = e.instancePath.substring(1).replace(/\//g, ".");
