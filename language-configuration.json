@@ -1,6 +1,6 @@
 {
   "comments": {
-    "lineComment": "#",
+    "lineComment": "#"
   },
   "brackets": [
     ["{", "}"],
@@ -10,16 +10,14 @@
   "autoClosingPairs": [
     { "open": "{", "close": "}" },
     { "open": "[", "close": "]" },
-    { "open": "(", "close": ")" },
+    { "open": "(", "close": ")" }
   ],
   "surroundingPairs": [
     ["{", "}"],
     ["[", "]"],
-    ["(", ")"],
+    ["(", ")"]
   ],
-  "indentationRules": {
-   
-  },
+  "indentationRules": {},
   "onEnterRules": [
     {
       "beforeText": "^model$",
@@ -31,7 +29,7 @@
     },
     {
       "beforeText": "^\\s{2}schema 1\\.[01]$",
-      "action": { "indent": "outdent" },
+      "action": { "indent": "outdent" }
     }
   ]
 }

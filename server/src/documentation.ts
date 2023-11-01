@@ -1,6 +1,7 @@
+/* eslint-disable max-len */
 import OpenFGAParser from "@openfga/syntax-transformer/dist/gen/OpenFGAParser";
 
-  // Lookup and return the corresponding literal from the parser, without quotes
+// Lookup and return the corresponding literal from the parser, without quotes
 function getSymbol(symbol: number): string {
   return OpenFGAParser.literalNames[symbol]!.replace(/'/g, "");
 }

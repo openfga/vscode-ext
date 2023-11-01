@@ -32,7 +32,7 @@ You can install the OpenFGA VS Code plugin from:
 - [OpenFGA on the OpenVSX Registry](https://open-vsx.org/extension/OpenFGA/openfga-vscode)
 - [The VSIX releases on GitHub](https://github.com/openfga/vscode-ext/releases) for manual installation
 
-	![Installing from VSIX file](resources/vsix-install.png)
+  ![Installing from VSIX file](resources/vsix-install.png)
 
 ## Usage
 
@@ -40,22 +40,22 @@ The extension currently offers 4 core features, with more to come.
 
 - Syntax Highlighting for OpenFGA files
 - A unique theme for OpenFGA for VS Code
-	- Once installed, go to your extensions
-	- Click on `OpenFGA` and click `Set Color Scheme`
-	- Click on `OpenFGA Dark` in the prompt
+  - Once installed, go to your extensions
+  - Click on `OpenFGA` and click `Set Color Scheme`
+  - Click on `OpenFGA Dark` in the prompt
 
 ![Prompt to set OpenFGA Dark color scheme](resources/set-color-scheme.png)
 
 - A command to transform `.fga` OpenFGA files to `JSON`
-	- Open a `.fga` OpenFGA file in the editor 
-	- Open the `Command Pallette` using Ctrl+Shift+P (Windows) or Command+Shift+P (OSX)
-	- Select `OpenFGA: Transform DSL to JSON`
-	- A new tab will open with the transformed code
+  - Open a `.fga` OpenFGA file in the editor
+  - Open the `Command Pallette` using Ctrl+Shift+P (Windows) or Command+Shift+P (OSX)
+  - Select `OpenFGA: Transform DSL to JSON`
+  - A new tab will open with the transformed code
 
 ![Prompt to execute OpenFGA: Transform DSL to JSON command](resources/transform-command-select.png)
 
 - Validation of OpenFGA's `.fga` files
-	- As you type in a `.fga` OpenFGA file in the editor, the extension will highlight errors that make your models invalid 
+  - As you type in a `.fga` OpenFGA file in the editor, the extension will highlight errors that make your models invalid
 
 ![Errors being highlighted with validation](resources/validation_example.gif)
 
@@ -124,6 +124,7 @@ tests: # required
 ```
 
 When ready to test, from the terminal, and while inside your working directory, run:
+
 ```shell
 fga model test --tests=./store.yaml
 ```
@@ -141,6 +142,7 @@ See the [DEVELOPMENT](./docs/DEVELOPMENT.md) and [CONTRIBUTING](https://github.c
 [OpenFGA](https://github.com/openfga)
 
 ## Acknowledgments
+
 - CEL Textmate Grammar was taken from [vscode-cel](https://github.com/hmarr/vscode-cel)
 - Range conversion from `yaml` to `vscode` from [actions/languageservices](https://github.com/actions/languageservices/blob/4280a967a8aa058dd3c8825349b90bc932d82283/workflow-parser/src/workflows/yaml-object-reader.ts#L220)
 

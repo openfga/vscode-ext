@@ -56,7 +56,7 @@
     {
       "name": "Type Restrictions",
       "scope": [
-		    "variable.parameter.type-restrictions.openfga",
+        "variable.parameter.type-restrictions.openfga",
         "relation.type-restrictions.value.openfga",
         "type.type-restrictions.value.openfga",
         "wildcard.type-restrictions.value.openfga",
@@ -71,20 +71,14 @@
     },
     {
       "name": "Type",
-      "scope": [
-        "support.class.type.name.value.openfga",
-        "entity.name.function.condition.openfga"
-      ],
+      "scope": ["support.class.type.name.value.openfga", "entity.name.function.condition.openfga"],
       "settings": {
         "foreground": "#79ED83"
       }
     },
     {
       "name": "Relation",
-      "scope": [
-        "entity.name.function.member.relation.name.openfga",
-        "variable.parameter.name.condition.openfga"
-      ],
+      "scope": ["entity.name.function.member.relation.name.openfga", "variable.parameter.name.condition.openfga"],
       "settings": {
         "foreground": "#20F1F5"
       }
