@@ -27,11 +27,11 @@ jobs:
           cache-dependency-path: ./package-lock.json
       - run: npm ci
       - name: Publish to Open VSX Registry
-        uses: HaaLeo/publish-vscode-extension@dfe4f6ad46624424fe24cb5bca79839183399045 # 1.4.0
+        uses: HaaLeo/publish-vscode-extension@65512ae7dcf96159b51fdd7ed73eb17d5cacad33 # 1.5.0
         with:
           pat: ${{ secrets.OPEN_VSX_TOKEN }}
       - name: Publish to Visual Studio Marketplace
-        uses: HaaLeo/publish-vscode-extension@dfe4f6ad46624424fe24cb5bca79839183399045 # 1.4.0
+        uses: HaaLeo/publish-vscode-extension@65512ae7dcf96159b51fdd7ed73eb17d5cacad33 # 1.5.0
         with:
           pat: ${{ secrets.VS_MARKETPLACE_TOKEN }}
           registryUrl: https://marketplace.visualstudio.com/
@@ -42,7 +42,7 @@ jobs:
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608 # v4.1.0
+      - uses: actions/checkout@b4ffde65f46336ab88eb53be808477a3936bae11 # v4.1.1
       - uses: Roang-zero1/github-create-release-action@57eb9bdce7a964e48788b9e78b5ac766cb684803 # v3.0.1
         with:
           version_regex: ^v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+
