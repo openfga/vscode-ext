@@ -60,10 +60,6 @@ export function startServer(connection: _Connection) {
     const result: InitializeResult = {
       capabilities: {
         textDocumentSync: TextDocumentSyncKind.Incremental,
-        // Tell the client that this server supports code completion.
-        completionProvider: {
-          resolveProvider: false,
-        },
         hoverProvider: true,
         codeActionProvider: true,
       },
@@ -186,7 +182,6 @@ export function startServer(connection: _Connection) {
     // If no diagnostics, continue parsing.
     if (!diagnostics.length && !schemaValidator(yamlDoc.toJSON())) {
       schemaValidator.errors?.forEach((e: ErrorObject) => {
-        console.error(JSON.stringify(e as ErrorObject, null, 2));
 
         let start = { line: 0, character: 0 };
         let end = { line: 0, character: 0 };

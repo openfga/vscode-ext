@@ -58,7 +58,6 @@ export const OPENFGA_YAML_SCHEMA = {
       items: {
         type: "object",
         additionalProperties: false,
-        required: ["name", "check", "list_objects"],
         properties: {
           name: {
             type: "string",

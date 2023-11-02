@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.2.8
+
+### [0.2.8](https://github.com/openfga/vscode-ext/compare/v0.2.7...v0.2.8) (2023-11-02)
+
+- fix: addressed issues with enforced fields in yaml
+- fix: disabled unimplemented completion
+
 ## v0.2.7
 
 ### [0.2.7](https://github.com/openfga/vscode-ext/compare/v0.2.6...v0.2.7) (2023-11-01)
