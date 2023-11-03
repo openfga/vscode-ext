@@ -1,6 +1,6 @@
 {
   "scopeName": "cel-openfga.injection",
-  "injectionSelector": "L:source.openfga",
+  "injectionSelector": ["L:source.openfga", "L:source.yaml-store-openfga"],
   "patterns": [
     {
       "include": "#condition"
@@ -8,7 +8,7 @@
   ],
   "repository": {
     "condition": {
-      "begin": "(^condition)\\s([_a-zA-Z][_a-zA-Z0-9]+)\\((.*)\\)\\s{",
+      "begin": "(condition)\\s([_a-zA-Z][_a-zA-Z0-9]+)\\((.*)\\)\\s*{",
       "beginCaptures": {
         "1": {
           "name": "keyword.condition.openfga"

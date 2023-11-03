@@ -96,7 +96,8 @@
         "path": "./syntaxes/cel.injection.json",
         "scopeName": "cel-openfga.injection",
         "injectTo": [
-          "source.openfga"
+          "source.openfga",
+          "source.yaml-store-openfga"
         ],
         "embeddedLanguages": {
           "meta.embedded.inline.cel": "cel"
