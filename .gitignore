@@ -6,3 +6,5 @@ client/server
 .vscode-test-web
 .DS_Store
 .idea/
+
+*.vsix

@@ -30,7 +30,7 @@ export function activate(context: ExtensionContext) {
     }
     const text = activeEditor.document.getText();
 
-    const modelInApiFormat = transformer.transformDSLToJSON(text);
+    const modelInApiFormat = transformer.transformDSLToJSONObject(text);
 
     const doc = await workspace.openTextDocument({
       content: JSON.stringify(modelInApiFormat, null, "  "),
