@@ -5,21 +5,23 @@ export const OPENFGA_YAML_SCHEMA = {
   properties: {
     name: {
       type: "string",
-      description: "The store name",
+      description: "the store name",
     },
     model_file: {
       type: "string",
-      description: "The Authorization Model",
+      description: "the authorization model file path",
     },
     model: {
       type: "string",
-      description: "The Authorization Model",
+      description: "the authorization model (takes precedence over model_file)",
     },
     tuples_file: {
       type: "string",
+      description: "the tuples file path",
     },
     tuples: {
       type: "array",
+      description: "the tuples (takes precedence over tuples_file)",
       items: {
         type: "object",
         additionalProperties: false,
@@ -27,15 +29,15 @@ export const OPENFGA_YAML_SCHEMA = {
         properties: {
           user: {
             type: "string",
-            description: "The user",
+            description: "the user",
           },
           relation: {
             type: "string",
-            description: "The relation",
+            description: "the relation",
           },
           object: {
             type: "string",
-            description: "The object",
+            description: "the object",
           },
           condition: {
             type: "object",
@@ -61,17 +63,19 @@ export const OPENFGA_YAML_SCHEMA = {
         properties: {
           name: {
             type: "string",
-            description: "The test name",
+            description: "the test name",
           },
           description: {
             type: "string",
-            description: "The test description",
+            description: "the test description",
           },
           tuples_file: {
             type: "string",
+            description: "the tuples file with additional tuples for this test",
           },
           tuples: {
             type: "array",
+            description: "the additional tuples for this test (takes precedence over tuples_file)",
             items: {
               type: "object",
               additionalProperties: false,
@@ -79,18 +83,28 @@ export const OPENFGA_YAML_SCHEMA = {
               properties: {
                 user: {
                   type: "string",
-                  description: "The user",
+                  description: "the user",
                 },
                 relation: {
                   type: "string",
-                  description: "The relation",
+                  description: "the relation",
                 },
                 object: {
                   type: "string",
-                  description: "The object",
+                  description: "the object",
                 },
-                context: {
+                condition: {
                   type: "object",
+                  additionalProperties: false,
+                  required: ["name"],
+                  properties: {
+                    name: {
+                      type: "string",
+                    },
+                    context: {
+                      type: "object",
+                    },
+                  },
                 },
               },
             },
@@ -104,11 +118,11 @@ export const OPENFGA_YAML_SCHEMA = {
               properties: {
                 user: {
                   type: "string",
-                  description: "The user",
+                  description: "the user",
                 },
                 object: {
                   type: "string",
-                  description: "The object",
+                  description: "the object",
                 },
                 assertions: {
                   type: "object",
@@ -133,15 +147,15 @@ export const OPENFGA_YAML_SCHEMA = {
               properties: {
                 user: {
                   type: "string",
-                  description: "The user",
+                  description: "the user",
                 },
                 relation: {
                   type: "string",
-                  description: "The relation",
+                  description: "the relation",
                 },
                 type: {
                   type: "string",
-                  description: "The object type",
+                  description: "the object type",
                 },
                 assertions: {
                   type: "object",
