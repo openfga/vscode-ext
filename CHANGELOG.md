@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.2.9
+
+### [0.2.9](https://github.com/openfga/vscode-ext/compare/v0.2.8...v0.2.9) (2023-11-03)
+
+- feat: improved conditions support in the dsl
+- fix: fix the store yaml schema causing improper validations
+
 ## v0.2.8
 
 ### [0.2.8](https://github.com/openfga/vscode-ext/compare/v0.2.7...v0.2.8) (2023-11-02)
