@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.2.10
+
+### [0.2.10](https://github.com/openfga/vscode-ext/compare/v0.2.9...v0.2.10) (2023-11-03)
+
+- fix: syntax highlighting for conditions in yaml
+
 ## v0.2.9
 
 ### [0.2.9](https://github.com/openfga/vscode-ext/compare/v0.2.8...v0.2.9) (2023-11-03)
