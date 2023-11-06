@@ -14,9 +14,38 @@
     },
     {
       "include": "#symbols"
+    },
+    {
+      "include": "#condition"
     }
   ],
   "repository": {
+    "condition": {
+      "match": "(condition)\\s([_a-zA-Z][_a-zA-Z0-9]+)\\((.*)\\)\\s*",
+      "captures": {
+        "1": {
+          "name": "keyword.condition.openfga"
+        },
+        "2": {
+          "name": "entity.name.function.condition.openfga"
+        },
+        "3": {
+          "patterns": [
+            {
+              "match": "([_a-zA-Z][_a-zA-Z0-9]+)\\:\\s([_a-zA-Z][_a-zA-Z0-9]+),?",
+              "captures": {
+                "1": {
+                  "name": "variable.parameter.name.condition.openfga"
+                },
+                "2": {
+                  "name": "variable.parameter.type.condition.openfga"
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
     "comments": {
       "patterns": [
         {

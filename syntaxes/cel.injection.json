@@ -8,22 +8,7 @@
   ],
   "repository": {
     "condition": {
-      "begin": "(condition)\\s([_a-zA-Z][_a-zA-Z0-9]+)\\((.*)\\)\\s*{",
-      "beginCaptures": {
-        "1": {
-          "name": "keyword.condition.openfga"
-        },
-        "2": {
-          "name": "entity.name.function.condition.openfga"
-        },
-        "3": {
-          "patterns": [
-            {
-              "include": "#cel-prama"
-            }
-          ]
-        }
-      },
+      "begin": "{",
       "end": "}",
       "patterns": [
         {
@@ -35,17 +20,6 @@
           ]
         }
       ]
-    },
-    "cel-prama": {
-      "match": "([_a-zA-Z][_a-zA-Z0-9]+)\\:\\s([_a-zA-Z][_a-zA-Z0-9]+),?",
-      "captures": {
-        "1": {
-          "name": "variable.parameter.name.condition.openfga"
-        },
-        "2": {
-          "name": "variable.parameter.type.condition.openfga"
-        }
-      }
     }
   }
 }
