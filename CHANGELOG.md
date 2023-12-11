@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.2.11
+
+### [0.2.11](https://github.com/openfga/vscode-ext/compare/v0.2.10...v0.2.11) (2023-12-11)
+
+- feat: Initial limited support for mixing operators
+
 ## v0.2.10
 
 ### [0.2.10](https://github.com/openfga/vscode-ext/compare/v0.2.9...v0.2.10) (2023-11-03)
