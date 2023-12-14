@@ -11,7 +11,7 @@
     "zanzibar"
   ],
   "license": "Apache-2.0",
-  "version": "0.2.9",
+  "version": "0.2.12",
   "publisher": "openfga",
   "repository": {
     "type": "git",
@@ -21,7 +21,7 @@
     "vscode": "^1.75.0"
   },
   "dependencies": {
-    "@openfga/syntax-transformer": "^0.2.0-beta.6",
+    "@openfga/syntax-transformer": "^0.2.0-beta.7",
     "vscode-languageclient": "^9.0.1"
   },
   "devDependencies": {
