@@ -182,7 +182,6 @@ export function startServer(connection: _Connection) {
     // If no diagnostics, continue parsing.
     if (!diagnostics.length && !schemaValidator(yamlDoc.toJSON())) {
       schemaValidator.errors?.forEach((e: ErrorObject) => {
-
         let start = { line: 0, character: 0 };
         let end = { line: 0, character: 0 };
         let message;

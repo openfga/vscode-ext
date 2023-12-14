@@ -1,7 +1,7 @@
 {
   "name": "openfga-lsp-server",
   "description": "Language server in node.",
-  "version": "0.2.9",
+  "version": "0.2.12",
   "author": "openfga",
   "license": "Apache-2.0",
   "engines": {
@@ -12,7 +12,7 @@
     "url": "https://github.com/openfga/vscode-ext"
   },
   "dependencies": {
-    "@openfga/syntax-transformer": "^0.2.0-beta.6",
+    "@openfga/syntax-transformer": "^0.2.0-beta.7",
     "ajv": "^8.12.0",
     "vscode-languageserver": "^9.0.1",
     "vscode-languageserver-textdocument": "^1.0.11",

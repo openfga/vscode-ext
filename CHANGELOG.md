@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.2.12
+
+### [0.2.12](https://github.com/openfga/vscode-ext/compare/v0.2.11...v0.2.12) (2023-12-13)
+
+- fix: error when validating some valid models (error details: https://github.com/openfga/language/issues/120)
+
 ## v0.2.11
 
 ### [0.2.11](https://github.com/openfga/vscode-ext/compare/v0.2.10...v0.2.11) (2023-12-11)
