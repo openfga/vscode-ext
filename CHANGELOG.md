@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.2.13
+
+### [0.2.13](https://github.com/openfga/vscode-ext/compare/v0.2.12...v0.2.13) (2023-12-21)
+
+- feat: validate tuples in the fga yaml document match the model
+- fix: model validates in yaml when there are structural errors
+
 ## v0.2.12
 
 ### [0.2.12](https://github.com/openfga/vscode-ext/compare/v0.2.11...v0.2.12) (2023-12-13)
