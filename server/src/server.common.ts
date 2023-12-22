@@ -21,7 +21,7 @@ import { validator, errors, transformer } from "@openfga/syntax-transformer";
 
 import { defaultDocumentationMap } from "./documentation";
 import { getDuplicationFix, getMissingDefinitionFix, getReservedTypeNameFix } from "./code-action";
-import { LineCounter, Node, parseDocument } from "yaml";
+import { LineCounter, Node, YAMLSeq, parseDocument } from "yaml";
 import { BlockMap, SourceToken } from "yaml/dist/parse/cst";
 import { YAMLSourceMap, rangeFromLinePos } from "./yaml-utils";
 import { ErrorObject, ValidateFunction } from "ajv";
@@ -174,6 +174,28 @@ export function startServer(connection: _Connection) {
     const map = new YAMLSourceMap();
     map.doMap(yamlDoc.contents);
 
+    // Dont validate if a document contains over a 1000 tuples.
+    if (yamlDoc.has("tuples") && (yamlDoc.get("tuples") as YAMLSeq).items.length > 1000) {
+
+      let start = { line: 0, character: 0 };
+      let end = { line: 0, character: 0 };
+
+      const range = map.nodes.get("tuples");
+      if (range) {
+        start = textDocument.positionAt(range?.[0]);
+        end = textDocument.positionAt(range?.[1]);
+      }
+
+      diagnostics.push({
+        message: "Tuple limit of 1,000 has been reached. Validation is disabled.",
+        severity: DiagnosticSeverity.Warning,
+        range: { start, end },
+      });
+
+      connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });
+      return;
+    }
+
     // Basic syntax errors
     for (const err of yamlDoc.errors) {
       diagnostics.push({ message: err.message, range: rangeFromLinePos(err.linePos) });
@@ -210,8 +232,18 @@ export function startServer(connection: _Connection) {
           let start = { line: 0, character: 0 };
           let end = { line: 0, character: 0 };
           let message;
+          let severity: DiagnosticSeverity = DiagnosticSeverity.Error;
 
-          if (e.keyword === "additionalProperties") {
+          if (e.keyword === "valid_store_warning") {
+            severity = DiagnosticSeverity.Warning;
+            const key = e.instancePath.substring(1).replace(/\//g, ".");
+            const range = map.nodes.get(key);
+            if (range) {
+              start = textDocument.positionAt(range?.[0]);
+              end = textDocument.positionAt(range?.[1]);
+            }
+            message = "warning: " + e.message;
+          } else if (e.keyword === "additionalProperties") {
             // If we've got invalid keys, mark them
             let key = e.params["additionalProperty"];
             if (e.instancePath) {
@@ -249,9 +281,11 @@ export function startServer(connection: _Connection) {
             }
             message = key + " " + e.message;
           }
-          diagnostics.push({ message: message, range: { start, end } });
+          diagnostics.push({ message: message, range: { start, end }, severity });
         });
       }
+    } catch (err) {
+      console.error("Failed validator:" + err);
     } finally {
       connection.sendDiagnostics({ uri: textDocument.uri, diagnostics });
     }
