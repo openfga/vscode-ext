@@ -78,8 +78,7 @@ export function startServer(connection: _Connection) {
     return result;
   });
 
-  connection.onInitialized(() => {
-  });
+  connection.onInitialized(() => {});
 
   connection.onDidChangeConfiguration(() => {
     // Revalidate all open text documents
@@ -204,7 +203,6 @@ export function startServer(connection: _Connection) {
     }
 
     try {
-
       const jsonModel = transformer.transformDSLToJSONObject(yamlDoc.get("model") as string);
 
       if (jsonModel && !schemaValidator.call({ jsonModel }, yamlDoc.toJSON())) {

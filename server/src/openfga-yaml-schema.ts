@@ -23,7 +23,9 @@ const relationMustExistOnType = (relation: string, type: string, instancePath: s
 const userNotTypeRestriction = (user: string, tuple: TupleKey, instancePath: string) => {
   return {
     keyword: "valid_tuple",
-    message: `'${user}' is not a type restriction on relation '${tuple.relation}' of type '${tuple.object.split(":")[0]}'.`,
+    message: `'${user}' is not a type restriction on relation '${tuple.relation}' of type '${
+      tuple.object.split(":")[0]
+    }'.`,
     instancePath: instancePath + "/user",
   };
 };
@@ -43,7 +45,6 @@ const notAParameter = (param: string, tuple: TupleKey, instancePath: string) => 
     instancePath: instancePath + `/condition/context/${param}`,
   };
 };
-
 
 // Format enforcement
 
@@ -103,10 +104,7 @@ function validateTypes(tuple: TupleKey, types: string[], instancePath: string): 
 }
 
 // Validate Relation
-function validateRelation(
-  tuple: TupleKey,
-  typeDefs: TypeDefinition[],
-  instancePath: string): boolean {
+function validateRelation(tuple: TupleKey, typeDefs: TypeDefinition[], instancePath: string): boolean {
   const errors = [];
 
   // Check if relation exists on given type
@@ -174,22 +172,25 @@ function validateTypeRestrictions(
   tuple: TupleKey,
   typeDefs: TypeDefinition[],
   conditions: { [key: string]: Condition } | undefined,
-  instancePath: string): boolean {
-
+  instancePath: string,
+): boolean {
   validateTuple.errors = validateTuple.errors || [];
 
   const mappedTuple = mapTuple(tuple);
   const object = tuple.object.split(":")[0];
-  const type = typeDefs.filter(t => t.type === object)[0];
+  const type = typeDefs.filter((t) => t.type === object)[0];
 
   const userTypes = type?.metadata?.relations?.[tuple.relation].directly_related_user_types;
 
-  if (!userTypes?.filter(
-    userType => userType.type === mappedTuple.type // type matches
-      && (!!mappedTuple.wildcard === !!userType.wildcard) // and the wildcard matches (either both true or both false)
-      && userType.relation === mappedTuple.relation // and the relation matches
-      && userType.condition === mappedTuple.condition // and the condition matches
-  ).length) {
+  if (
+    !userTypes?.filter(
+      (userType) =>
+        userType.type === mappedTuple.type && // type matches
+        !!mappedTuple.wildcard === !!userType.wildcard && // and the wildcard matches (either both true or both false)
+        userType.relation === mappedTuple.relation && // and the relation matches
+        userType.condition === mappedTuple.condition, // and the condition matches
+    ).length
+  ) {
     validateTuple.errors.push(userNotTypeRestriction(getRelationReferenceString(mappedTuple), tuple, instancePath));
     return false;
   }
@@ -201,7 +202,11 @@ function validateTypeRestrictions(
   return true;
 }
 
-function validateConditionExists(tuple: TupleKey, conditions: { [key: string]: Condition; } | undefined, instancePath: string): boolean {
+function validateConditionExists(
+  tuple: TupleKey,
+  conditions: { [key: string]: Condition } | undefined,
+  instancePath: string,
+): boolean {
   if (!tuple.condition) {
     return true;
   }
@@ -219,9 +224,9 @@ function validateConditionExists(tuple: TupleKey, conditions: { [key: string]: C
 function validateConditionParams(
   tuple: TupleKey,
   condition: string,
-  conditions: { [key: string]: Condition; },
-  instancePath: string): boolean {
-
+  conditions: { [key: string]: Condition },
+  instancePath: string,
+): boolean {
   validateTuple.errors = validateTuple.errors || [];
 
   if (tuple.condition && tuple.condition.context && conditions[condition].parameters) {
@@ -236,7 +241,11 @@ function validateConditionParams(
 }
 
 // Validation for tuples
-const validateTuple: SchemaValidateFunction = function (this: { jsonModel: AuthorizationModel }, tuple: TupleKey, cxt: { instancePath: string }): boolean {
+const validateTuple: SchemaValidateFunction = function (
+  this: { jsonModel: AuthorizationModel },
+  tuple: TupleKey,
+  cxt: { instancePath: string },
+): boolean {
   validateTuple.errors = validateTuple.errors || [];
 
   if (!tuple.user || !tuple.relation || !tuple.object) {
@@ -246,7 +255,7 @@ const validateTuple: SchemaValidateFunction = function (this: { jsonModel: Autho
   const jsonModel: AuthorizationModel = this.jsonModel;
 
   // Validate
-  const types = jsonModel.type_definitions.map(d => d.type);
+  const types = jsonModel.type_definitions.map((d) => d.type);
   return (
     validateTypes(tuple, types, cxt.instancePath) &&
     validateRelation(tuple, jsonModel.type_definitions, cxt.instancePath) &&
