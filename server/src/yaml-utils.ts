@@ -20,6 +20,7 @@ export class YAMLSourceMap {
     this.nodes = new Map<string, TokenRange>();
   }
 
+  /* eslint-disable  @typescript-eslint/no-explicit-any */
   public doMap(node: any | null, path: string[] = []) {
     const localPath = [...path];
 
