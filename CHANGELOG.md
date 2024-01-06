@@ -1,5 +1,14 @@
 # Changelog
 
+
+## v0.2.14
+
+### [0.2.14](https://github.com/openfga/vscode-ext/compare/v0.2.13...v0.2.14) (2024-1-5)
+
+- feat: added validation for test tuples declared in the fga yaml
+- feat: validation for check tests and list_objects fields
+- feat: warnings now issued for check test and list_object user fields that dont match declared tuples
+
 ## v0.2.13
 
 ### [0.2.13](https://github.com/openfga/vscode-ext/compare/v0.2.12...v0.2.13) (2023-12-21)
