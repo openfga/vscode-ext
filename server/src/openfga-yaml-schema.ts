@@ -1,39 +1,46 @@
-import { AuthorizationModel, CheckRequestTupleKey, Condition, ListObjectsRequest, RelationReference, TupleKey, TypeDefinition } from "@openfga/sdk";
+import {
+  AuthorizationModel,
+  CheckRequestTupleKey,
+  Condition,
+  ListObjectsRequest,
+  RelationReference,
+  TupleKey,
+  TypeDefinition,
+} from "@openfga/sdk";
 import Ajv, { Schema, ValidateFunction, SchemaValidateFunction } from "ajv";
 
-
 type Store = {
-  name: string
-  model_file?: string
-  model?: string
-  tuple_files?: string
-  tuples: TupleKey[]
-  tests: Test[]
-}
+  name: string;
+  model_file?: string;
+  model?: string;
+  tuple_files?: string;
+  tuples: TupleKey[];
+  tests: Test[];
+};
 
 type Test = {
-  tuples: TupleKey[]
-  check: CheckTest[]
-  list_objects: ListObjectTest[]
-}
+  tuples: TupleKey[];
+  check: CheckTest[];
+  list_objects: ListObjectTest[];
+};
 
 type CheckTest = Omit<CheckRequestTupleKey, "relation"> & {
-  assertions: Record<string, boolean>
-  context: Record<string, any>
-}
+  assertions: Record<string, boolean>;
+  context: Record<string, any>;
+};
 
 type ListObjectTest = Omit<ListObjectsRequest, "relation"> & {
-  assertions: Record<string, boolean>
-}
+  assertions: Record<string, boolean>;
+};
 
-type BaseError = { keyword: string; message: string; instancePath: string; }
+type BaseError = { keyword: string; message: string; instancePath: string };
 
 // Errors for tuples validation
 const invalidTuple = (message: string, instancePath: string): BaseError => {
   return {
     keyword: "valid_tuple",
     message,
-    instancePath
+    instancePath,
   };
 };
 
@@ -46,7 +53,10 @@ const relationMustExistOnType = (relation: string, type: string, instancePath: s
 };
 
 const userNotTypeRestriction = (user: string, tuple: TupleKey, instancePath: string) => {
-  return invalidTuple(`'${user}' is not a type restriction on relation '${tuple.relation}' of type '${tuple.object.split(":")[0]}'.`, instancePath + "/user");
+  return invalidTuple(
+    `'${user}' is not a type restriction on relation '${tuple.relation}' of type '${tuple.object.split(":")[0]}'.`,
+    instancePath + "/user",
+  );
 };
 
 const conditionDoesntExist = (tuple: TupleKey, instancePath: string) => {
@@ -54,7 +64,10 @@ const conditionDoesntExist = (tuple: TupleKey, instancePath: string) => {
 };
 
 const notAParameter = (param: string, tuple: TupleKey, instancePath: string) => {
-  return invalidTuple(`'${param}' is not a parameter on condition '${tuple.condition?.name}'.`, instancePath + `/condition/context/${param}`);
+  return invalidTuple(
+    `'${param}' is not a parameter on condition '${tuple.condition?.name}'.`,
+    instancePath + `/condition/context/${param}`,
+  );
 };
 
 // Errors for store validation
@@ -80,8 +93,10 @@ const invalidTypeUser = (type: string, types: string[], instancePath: string) =>
 
 const nonMatchingRelationType = (relation: string, user: string, values: string[], instancePath: string) => {
   if (values.length) {
-    return invalidStore(`\`${relation}\` is not a relation on \`${user}\`, and does not exist in model - valid relations are [${values}].`, instancePath);
-
+    return invalidStore(
+      `\`${relation}\` is not a relation on \`${user}\`, and does not exist in model - valid relations are [${values}].`,
+      instancePath,
+    );
   }
   return invalidStore(`\`${relation}\` is not a relation on \`${user}\`, and does not exist in model.`, instancePath);
 };
@@ -91,14 +106,17 @@ const invalidAssertion = (assertion: string, object: string, instancePath: strin
 };
 
 const unidentifiedTestParam = (testParam: string, instancePath: string) => {
-  return invalidStore(`\`${testParam}\` is not a recognized paramaeter for any condition defined in the model.`, instancePath);
+  return invalidStore(
+    `\`${testParam}\` is not a recognized paramaeter for any condition defined in the model.`,
+    instancePath,
+  );
 };
 
-const undefinedUserTuple = (user: string, instancePath: string) => {
+const undefinedTypeTuple = (user: string, instancePath: string) => {
   return {
     keyword: "valid_store_warning",
     message: `${user} does not match any existing tuples; the check is still valid - but double check to ensure this is intended.`,
-    instancePath: instancePath + "/user"
+    instancePath,
   };
 };
 
@@ -335,27 +353,42 @@ function validateUserField(model: AuthorizationModel, types: string[], userField
   if (userField.includes("#")) {
     const [type, relation] = userField.split("#");
 
-    const userRelations = model.type_definitions.filter(typeDef => typeDef.type === user).flatMap((typeDef) => {
-      const relationArray: string[] = [];
-      for(const rel in typeDef.relations) {
-        relationArray.push(type + "#" + rel);
-      }
-      return relationArray;
-    });
+    const userRelations = model.type_definitions
+      .filter((typeDef) => typeDef.type === user)
+      .flatMap((typeDef) => {
+        const relationArray: string[] = [];
+        for (const rel in typeDef.relations) {
+          relationArray.push(type + "#" + rel);
+        }
+        return relationArray;
+      });
 
     if (!userRelations.includes(userField)) {
-      errors.push(nonMatchingRelationType(relation, user, userRelations.map(rel => rel.split("#")[1]), instancePath + "/user"));
+      errors.push(
+        nonMatchingRelationType(
+          relation,
+          user,
+          userRelations.map((rel) => rel.split("#")[1]),
+          instancePath + "/user",
+        ),
+      );
     }
-
   }
   return errors;
 }
 
-function validateAssertionField(model: AuthorizationModel, typeField: string, assertions: Record<string, any>, instancePath: string) {
+function validateAssertionField(
+  model: AuthorizationModel,
+  typeField: string,
+  assertions: Record<string, any>,
+  instancePath: string,
+) {
   const errors = [];
 
   // Validate assertions exist as relations
-  const typesRelations = model.type_definitions.filter(tuple => tuple.type === typeField).map(tuple => tuple.relations);
+  const typesRelations = model.type_definitions
+    .filter((tuple) => tuple.type === typeField)
+    .map((tuple) => tuple.relations);
   for (const assertion in assertions) {
     for (const relation in typesRelations) {
       if (!typesRelations[relation]?.[assertion]) {
@@ -368,55 +401,75 @@ function validateAssertionField(model: AuthorizationModel, typeField: string, as
 }
 
 // Validate Check Tuple
-function validateCheck(model: AuthorizationModel, checkTest: CheckTest, tuples: TupleKey[], params: string[], instancePath: string) {
-  const errors = [];
+function validateCheck(
+  model: AuthorizationModel,
+  checkTest: CheckTest,
+  tuples: TupleKey[],
+  params: string[],
+  instancePath: string,
+) {
+  const userErrors = [];
 
-  const types = model.type_definitions.map(d => d.type);
+  const types = model.type_definitions.map((d) => d.type);
 
   const checkUser = checkTest.user;
   const checkObject = checkTest.object;
 
-  errors.push(...validateUserField(model, types, checkUser, instancePath));
+  userErrors.push(...validateUserField(model, types, checkUser, instancePath));
 
-  if (!errors.length ) {
-    if(!tuples.map(tuple => tuple.user).filter(user => user === checkUser).length) {
-      errors.push(undefinedUserTuple(checkUser, instancePath));
+  if (!userErrors.length) {
+    if (!tuples.map((tuple) => tuple.user).filter((user) => user === checkUser).length) {
+      userErrors.push(undefinedTypeTuple(checkUser, instancePath + "/user"));
     }
   }
+
+  const objectErrors = [];
 
   const object = checkObject.split(":")[0];
 
   // Ensure valid type of object
   if (!types.includes(object)) {
-    errors.push(invalidTypeUser(object, types, instancePath + "/object"));
+    objectErrors.push(invalidTypeUser(object, types, instancePath + "/object"));
   }
 
-  errors.push(...validateAssertionField(model, object, checkTest.assertions, instancePath));
+  if (!objectErrors.length) {
+    if (!tuples.map((tuple) => tuple.object).filter((object) => object === checkObject).length) {
+      objectErrors.push(undefinedTypeTuple(checkObject, instancePath + "/object"));
+    }
+  }
+
+  objectErrors.push(...validateAssertionField(model, object, checkTest.assertions, instancePath));
 
   const context = checkTest.context;
   for (const testParam in context) {
     if (!params.includes(testParam)) {
-      errors.push(unidentifiedTestParam(testParam, instancePath + `/context/${testParam}`));
+      objectErrors.push(unidentifiedTestParam(testParam, instancePath + `/context/${testParam}`));
     }
   }
 
-  return errors;
+  return [...userErrors, ...objectErrors];
 }
 
 // Validate List Object
-function validateListObject(model: AuthorizationModel, listObjects: ListObjectTest, tuples: TupleKey[], params: string[], instancePath: string) {
+function validateListObject(
+  model: AuthorizationModel,
+  listObjects: ListObjectTest,
+  tuples: TupleKey[],
+  params: string[],
+  instancePath: string,
+) {
   const errors = [];
 
-  const types = model.type_definitions.map(d => d.type);
+  const types = model.type_definitions.map((d) => d.type);
 
   const listUser = listObjects.user;
   const listType = listObjects.type;
 
   errors.push(...validateUserField(model, types, listUser, instancePath));
 
-  if (!errors.length ) {
-    if(!tuples.map(tuple => tuple.user).filter(user => user === listUser).length) {
-      errors.push(undefinedUserTuple(listUser, instancePath));
+  if (!errors.length) {
+    if (!tuples.map((tuple) => tuple.user).filter((user) => user === listUser).length) {
+      errors.push(undefinedTypeTuple(listUser, instancePath + "/user"));
     }
   }
 
@@ -467,7 +520,15 @@ function validateTestTypes(store: Store, model: AuthorizationModel, instancePath
       if (!test.check[checkNo].user || !test.check[checkNo].object) {
         return false;
       }
-      errors.push(...validateCheck(model, test.check[checkNo], tuples, params, instancePath + `/tests/${testNo}/check/${checkNo}`));
+      errors.push(
+        ...validateCheck(
+          model,
+          test.check[checkNo],
+          tuples,
+          params,
+          instancePath + `/tests/${testNo}/check/${checkNo}`,
+        ),
+      );
     }
 
     // Validate list objects
@@ -475,7 +536,15 @@ function validateTestTypes(store: Store, model: AuthorizationModel, instancePath
       if (!test.list_objects[listNo].user || !test.list_objects[listNo].type) {
         return false;
       }
-      errors.push(...validateListObject(model, test.list_objects[listNo], tuples, params, instancePath + `/tests/${testNo}/list_objects/${listNo}`));
+      errors.push(
+        ...validateListObject(
+          model,
+          test.list_objects[listNo],
+          tuples,
+          params,
+          instancePath + `/tests/${testNo}/list_objects/${listNo}`,
+        ),
+      );
     }
   }
 
@@ -486,7 +555,11 @@ function validateTestTypes(store: Store, model: AuthorizationModel, instancePath
   return true;
 }
 
-const validateStore: SchemaValidateFunction = function (this: { jsonModel: AuthorizationModel }, store: Store, cxt: { instancePath: string }): boolean {
+const validateStore: SchemaValidateFunction = function (
+  this: { jsonModel: AuthorizationModel },
+  store: Store,
+  cxt: { instancePath: string },
+): boolean {
   validateStore.errors = validateStore.errors || [];
 
   // Require model or model_file
