@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.2.15
+
+### [0.2.15](https://github.com/openfga/vscode-ext/compare/v0.2.14...v0.2.15) (2024-1-8)
+
+- feat: warnings now issued for check objects that dont match declared tuples
 
 ## v0.2.14
 
