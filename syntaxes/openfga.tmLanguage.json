@@ -13,7 +13,7 @@
       "include": "#identifiers"
     },
     {
-      "include": "#symbols"
+      "include": "#define"
     },
     {
       "include": "#condition"
@@ -32,7 +32,7 @@
         "3": {
           "patterns": [
             {
-              "match": "([_a-zA-Z][_a-zA-Z0-9]+)\\:\\s([_a-zA-Z][_a-zA-Z0-9]+),?",
+              "match": "([_a-zA-Z][_a-zA-Z0-9]+)\\:\\s*([_a-zA-Z][_a-zA-Z0-9]+),?",
               "captures": {
                 "1": {
                   "name": "variable.parameter.name.condition.openfga"
@@ -51,6 +51,10 @@
         {
           "name": "comment.openfga",
           "match": "^(\\s*)#.*"
+        },
+        {
+          "name": "comment.openfga",
+          "match": "(\\s+)#.*"
         }
       ]
     },
@@ -91,10 +95,6 @@
         {
           "name": "keyword.operator.word.exclusion.openfga",
           "match": "\\bbut\\snot\\b"
-        },
-        {
-          "name": "keyword.operator.word.with.openfga",
-          "match": "\\bwith\\b"
         }
       ]
     },
@@ -113,24 +113,46 @@
         }
       ]
     },
-    "symbols": {
+    "direct_types": {
       "patterns": [
         {
-          "match": "\\b(define)\\s+([a-zA-Z0-9-_]+)\\s+(as)\\s+",
+          "match": "([a-zA-Z0-9-_:#*]+)(\\s+(with)\\s+([a-zA-Z0-9-_]+)?)?(,\\s*)?",
           "captures": {
             "1": {
-              "name": "keyword.define.openfga"
-            },
-            "2": {
-              "name": "entity.name.function.member.relation.name.openfga"
+              "name": "variable.parameter.type-restrictions.openfga"
             },
             "3": {
-              "name": "keyword.as.openfga"
+              "name": "keyword.operator.word.with.openfga"
+            },
+            "4": {
+              "name": "variable.parameter.type-restrictions.openfga"
             }
           }
-        },
+        }
+      ]
+    },
+    "relation": {
+      "patterns": [
         {
-          "match": "\\b(define)\\s+([a-zA-Z0-9-_]+)\\s*(:)\\s*(\\[\\s*([a-zA-Z0-9-_:#*]|,\\s*)+\\s*])?",
+          "match": "(\\[)([^\\]]+)(\\])",
+          "captures": {
+            "1": {
+              "name": "type-restrictions.bracket.delimiter.openfga"
+            },
+            "2": {
+              "patterns": [{ "include": "#direct_types" }]
+            },
+            "3": {
+              "name": "type-restrictions.bracket.delimiter.openfga"
+            }
+          }
+        }
+      ]
+    },
+    "define": {
+      "patterns": [
+        {
+          "match": "\\b(define)\\s+([a-zA-Z0-9-_]+)\\s*(:)\\s*([^\n]+)",
           "captures": {
             "1": {
               "name": "keyword.define.openfga"
@@ -142,7 +164,12 @@
               "name": "colon.define.delimiter.openfga"
             },
             "4": {
-              "name": "variable.parameter.type-restrictions.openfga"
+              "patterns": [
+                { "include": "#relation" },
+                { "include": "#keywords" },
+                { "include": "#types" },
+                { "include": "#comments" }
+              ]
             }
           }
         }
@@ -153,6 +180,14 @@
         {
           "match": "$?[a-zA-Z0-9-_]",
           "name": "string.unquoted.openfga"
+        }
+      ]
+    },
+    "types": {
+      "patterns": [
+        {
+          "name": "computed.relation.value.openfga",
+          "match": "\\b([a-zA-Z0-9-_]+)\\b"
         }
       ]
     }
