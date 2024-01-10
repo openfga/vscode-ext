@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.2.16
+
+### [0.2.16](https://github.com/openfga/vscode-ext/compare/v0.2.15...v0.2.16) (2024-1-9)
+
+- fixes "with" syntax not highlighting correctly
+- fixes direct assignment not correctly highlighting when surrounded by brackets
+- fixes Improper highlighting of comments at the end of a line
+
 ## v0.2.15
 
 ### [0.2.15](https://github.com/openfga/vscode-ext/compare/v0.2.14...v0.2.15) (2024-1-8)
