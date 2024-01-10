@@ -33,17 +33,24 @@
         "keyword.operator.word.exclusion.openfga",
         "keyword.operator.word.union.openfga",
         "keyword.condition.openfga",
-        "computed.relation.value.openfga"
       ],
       "settings": {
         "foreground": "#AAAAAA"
       }
     },
     {
+      "name": "Definition",
+      "scope": [
+        "computed.relation.value.openfga"
+      ],
+      "settings": {
+        "foreground": "#FFFFFF",
+      }
+    },
+    {
       "name": "Value",
       "scope": [
         "relation-definition.bracket.delimiter.openfga",
-        "computed.relation.value.openfga",
         "computed.tupletouserset.relation.value.openfga",
         "tupleset.tupletouserset.relation.value.openfga",
         "schema.value.openfga",
