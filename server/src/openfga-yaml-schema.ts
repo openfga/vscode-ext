@@ -8,17 +8,19 @@ import {
   TypeDefinition,
 } from "@openfga/sdk";
 import Ajv, { Schema, ValidateFunction, SchemaValidateFunction } from "ajv";
+import { isStringValue } from "./yaml-utils";
 
 type Store = {
   name: string;
   model_file?: string;
   model?: string;
-  tuple_files?: string;
-  tuples: TupleKey[];
+  tuple_file?: string;
+  tuples?: TupleKey[];
   tests: Test[];
 };
 
 type Test = {
+  tuple_file?: string;
   tuples: TupleKey[];
   check: CheckTest[];
   list_objects: ListObjectTest[];
@@ -150,6 +152,32 @@ function formatType(type: string): boolean {
   return formatField(type, `^${identifier}$`, 256);
 }
 
+// Helpers
+
+function isValidTuple(tuple: TupleKey): boolean {
+  if (
+    !tuple.user ||
+    !isStringValue(tuple.user) ||
+    !tuple.object ||
+    !isStringValue(tuple.object) ||
+    !tuple.relation ||
+    !isStringValue(tuple.relation)
+  ) {
+    return false;
+  }
+
+  return true;
+}
+
+function mapTuple(tuple: TupleKey): RelationReference {
+  return {
+    type: tuple.user.split(":")[0],
+    relation: tuple.user.includes("#") ? tuple.user.split("#")[1] : undefined,
+    wildcard: tuple.user.includes(":*") ? {} : undefined,
+    condition: tuple.condition?.name,
+  };
+}
+
 // Validation for Types
 
 function validateTypes(tuple: TupleKey, types: string[], instancePath: string): boolean {
@@ -216,15 +244,6 @@ function validateRelation(tuple: TupleKey, typeDefs: TypeDefinition[], instanceP
     return false;
   }
   return true;
-}
-
-function mapTuple(tuple: TupleKey): RelationReference {
-  return {
-    type: tuple.user.split(":")[0],
-    relation: tuple.user.includes("#") ? tuple.user.split("#")[1] : undefined,
-    wildcard: tuple.user.includes(":*") ? {} : undefined,
-    condition: tuple.condition?.name,
-  };
 }
 
 function getRelationReferenceString(relationReference: RelationReference) {
@@ -322,7 +341,7 @@ const validateTuple: SchemaValidateFunction = function (
 ): boolean {
   validateTuple.errors = validateTuple.errors || [];
 
-  if (!tuple.user || !tuple.relation || !tuple.object) {
+  if (!isValidTuple(tuple)) {
     return false;
   }
 
@@ -412,33 +431,35 @@ function validateCheck(
 
   const types = model.type_definitions.map((d) => d.type);
 
-  const checkUser = checkTest.user;
-  const checkObject = checkTest.object;
-
-  userErrors.push(...validateUserField(model, types, checkUser, instancePath));
-
-  if (!userErrors.length) {
-    if (!tuples.map((tuple) => tuple.user).filter((user) => user === checkUser).length) {
-      userErrors.push(undefinedTypeTuple(checkUser, instancePath + "/user"));
+  if (checkTest.user && isStringValue(checkTest.user)) {
+    const checkUser = checkTest.user;
+    userErrors.push(...validateUserField(model, types, checkUser, instancePath));
+    if (!userErrors.length) {
+      if (!tuples.map((tuple) => tuple.user).filter((user) => user === checkUser).length) {
+        userErrors.push(undefinedTypeTuple(checkUser, instancePath + "/user"));
+      }
     }
   }
 
   const objectErrors = [];
 
-  const object = checkObject.split(":")[0];
+  if (checkTest.object && isStringValue(checkTest.object)) {
+    const checkObject = checkTest.object;
+    const object = checkObject.split(":")[0];
 
-  // Ensure valid type of object
-  if (!types.includes(object)) {
-    objectErrors.push(invalidTypeUser(object, types, instancePath + "/object"));
-  }
-
-  if (!objectErrors.length) {
-    if (!tuples.map((tuple) => tuple.object).filter((object) => object === checkObject).length) {
-      objectErrors.push(undefinedTypeTuple(checkObject, instancePath + "/object"));
+    // Ensure valid type of object
+    if (!types.includes(object)) {
+      objectErrors.push(invalidTypeUser(object, types, instancePath + "/object"));
     }
-  }
 
-  objectErrors.push(...validateAssertionField(model, object, checkTest.assertions, instancePath));
+    if (!objectErrors.length) {
+      if (!tuples.map((tuple) => tuple.object).filter((object) => object === checkObject).length) {
+        objectErrors.push(undefinedTypeTuple(checkObject, instancePath + "/object"));
+      }
+    }
+
+    objectErrors.push(...validateAssertionField(model, object, checkTest.assertions, instancePath));
+  }
 
   const context = checkTest.context;
   for (const testParam in context) {
@@ -462,24 +483,29 @@ function validateListObject(
 
   const types = model.type_definitions.map((d) => d.type);
 
-  const listUser = listObjects.user;
-  const listType = listObjects.type;
+  if (listObjects.user && isStringValue(listObjects.user)) {
+    const listUser = listObjects.user;
 
-  errors.push(...validateUserField(model, types, listUser, instancePath));
+    errors.push(...validateUserField(model, types, listUser, instancePath));
 
-  if (!errors.length) {
-    if (!tuples.map((tuple) => tuple.user).filter((user) => user === listUser).length) {
-      errors.push(undefinedTypeTuple(listUser, instancePath + "/user"));
+    if (!errors.length) {
+      if (!tuples.map((tuple) => tuple.user).filter((user) => user === listUser).length) {
+        errors.push(undefinedTypeTuple(listUser, instancePath + "/user"));
+      }
     }
   }
 
-  // Ensure valid type of object
-  if (!types.includes(listType)) {
-    errors.push(invalidTypeUser(listType, types, instancePath + "/type"));
-  }
+  if (listObjects.type && isStringValue(listObjects.type)) {
+    const listType = listObjects.type;
 
-  // Validate assertions exist as relations
-  errors.push(...validateAssertionField(model, listType, listObjects.assertions, instancePath));
+    // Ensure valid type of object
+    if (!types.includes(listType)) {
+      errors.push(invalidTypeUser(listType, types, instancePath + "/type"));
+    }
+
+    // Validate assertions exist as relations
+    errors.push(...validateAssertionField(model, listType, listObjects.assertions, instancePath));
+  }
 
   const context = listObjects.context;
   for (const testParam in context) {
@@ -510,14 +536,21 @@ function validateTestTypes(store: Store, model: AuthorizationModel, instancePath
     }
 
     const test = store.tests[testNo];
+    if (!test) {
+      continue;
+    }
 
     if (test.tuples && test.tuples.length) {
       tuples.push(...test.tuples);
     }
 
+    if (!test.check) {
+      continue;
+    }
+
     // Validate check
     for (const checkNo in test.check) {
-      if (!test.check[checkNo].user || !test.check[checkNo].object) {
+      if (!test.check[checkNo] || !test.check[checkNo].user || !test.check[checkNo].object) {
         return false;
       }
       errors.push(
@@ -531,9 +564,13 @@ function validateTestTypes(store: Store, model: AuthorizationModel, instancePath
       );
     }
 
+    if (!test.list_objects) {
+      continue;
+    }
+
     // Validate list objects
     for (const listNo in test.list_objects) {
-      if (!test.list_objects[listNo].user || !test.list_objects[listNo].type) {
+      if (!test.list_objects[listNo] || !test.list_objects[listNo].user || !test.list_objects[listNo].type) {
         return false;
       }
       errors.push(
@@ -569,6 +606,79 @@ const validateStore: SchemaValidateFunction = function (
   }
 
   return validateTestTypes(store, this.jsonModel, cxt.instancePath);
+};
+
+// YAML validation using ajv
+export function YamlTuplesValidator(): ValidateFunction {
+  return new Ajv({
+    allErrors: true,
+    verbose: true,
+    passContext: true,
+    $data: true,
+  })
+    .addFormat("user", {
+      validate: formatUser,
+    })
+    .addFormat("relation", {
+      validate: formatRelation,
+    })
+    .addFormat("object", {
+      validate: formatObject,
+    })
+    .addFormat("condition", {
+      validate: formatCondition,
+    })
+    .addKeyword({
+      keyword: "valid_tuple",
+      type: "object",
+      schema: false,
+      errors: true,
+      validate: validateTuple,
+    })
+    .compile(OPENFGA_TUPLES_SCHEMA);
+}
+
+// YAML tuple validation
+const OPENFGA_TUPLES_SCHEMA: Schema = {
+  type: "array",
+  description: "the tuples (takes precedence over tuples_file)",
+  items: {
+    type: "object",
+    additionalProperties: false,
+    required: ["user", "relation", "object"],
+    valid_tuple: true,
+    properties: {
+      user: {
+        type: "string",
+        format: "user",
+        description: "the user",
+      },
+      relation: {
+        type: "string",
+        format: "relation",
+        description: "the relation",
+      },
+      object: {
+        type: "string",
+        format: "object",
+        description: "the object",
+      },
+      condition: {
+        type: "object",
+        additionalProperties: false,
+        required: ["name"],
+        properties: {
+          name: {
+            type: "string",
+            format: "condition",
+          },
+          context: {
+            type: "object",
+          },
+        },
+      },
+    },
+  },
 };
 
 // YAML validation using ajv
@@ -630,51 +740,11 @@ const OPENFGA_YAML_SCHEMA: Schema = {
       type: "string",
       description: "the authorization model (takes precedence over model_file)",
     },
-    tuples_file: {
+    tuple_file: {
       type: "string",
-      description: "the tuples file path",
+      description: "the tuple file path",
     },
-    tuples: {
-      type: "array",
-      description: "the tuples (takes precedence over tuples_file)",
-      items: {
-        type: "object",
-        additionalProperties: false,
-        required: ["user", "relation", "object"],
-        valid_tuple: true,
-        properties: {
-          user: {
-            type: "string",
-            format: "user",
-            description: "the user",
-          },
-          relation: {
-            type: "string",
-            format: "relation",
-            description: "the relation",
-          },
-          object: {
-            type: "string",
-            format: "object",
-            description: "the object",
-          },
-          condition: {
-            type: "object",
-            additionalProperties: false,
-            required: ["name"],
-            properties: {
-              name: {
-                type: "string",
-                format: "condition",
-              },
-              context: {
-                type: "object",
-              },
-            },
-          },
-        },
-      },
-    },
+    tuples: OPENFGA_TUPLES_SCHEMA,
     tests: {
       type: "array",
       items: {
@@ -689,51 +759,11 @@ const OPENFGA_YAML_SCHEMA: Schema = {
             type: "string",
             description: "the test description",
           },
-          tuples_file: {
+          tuple_file: {
             type: "string",
-            description: "the tuples file with additional tuples for this test",
+            description: "the tuple file with additional tuples for this test",
           },
-          tuples: {
-            type: "array",
-            description: "the additional tuples for this test (takes precedence over tuples_file)",
-            items: {
-              type: "object",
-              additionalProperties: false,
-              required: ["user", "relation", "object"],
-              valid_tuple: true,
-              properties: {
-                user: {
-                  type: "string",
-                  format: "user",
-                  description: "the user",
-                },
-                relation: {
-                  type: "string",
-                  format: "relation",
-                  description: "the relation",
-                },
-                object: {
-                  type: "string",
-                  format: "object",
-                  description: "the object",
-                },
-                condition: {
-                  type: "object",
-                  additionalProperties: false,
-                  required: ["name"],
-                  properties: {
-                    name: {
-                      type: "string",
-                      format: "condition",
-                    },
-                    context: {
-                      type: "object",
-                    },
-                  },
-                },
-              },
-            },
-          },
+          tuples: OPENFGA_TUPLES_SCHEMA,
           check: {
             type: "array",
             items: {
