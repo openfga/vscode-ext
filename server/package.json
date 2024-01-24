@@ -1,7 +1,7 @@
 {
   "name": "openfga-lsp-server",
   "description": "Language server in node.",
-  "version": "0.2.12",
+  "version": "0.2.17",
   "author": "openfga",
   "license": "Apache-2.0",
   "engines": {
