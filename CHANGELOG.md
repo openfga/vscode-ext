@@ -1,22 +1,28 @@
 # Changelog
 
+## v0.2.17
+
+### [0.2.17](https://github.com/openfga/vscode-ext/compare/v0.2.16...v0.2.17) (2024-01-24)
+
+- fix: `list` and `map` are now allowed as relation names
+
 ## v0.2.16
 
-### [0.2.16](https://github.com/openfga/vscode-ext/compare/v0.2.15...v0.2.16) (2024-1-9)
+### [0.2.16](https://github.com/openfga/vscode-ext/compare/v0.2.15...v0.2.16) (2024-01-09)
 
-- fixes "with" syntax not highlighting correctly
-- fixes direct assignment not correctly highlighting when surrounded by brackets
-- fixes Improper highlighting of comments at the end of a line
+- fix: "with" syntax not highlighting correctly
+- fix: direct assignment not correctly highlighting when surrounded by brackets
+- fix: Improper highlighting of comments at the end of a line
 
 ## v0.2.15
 
-### [0.2.15](https://github.com/openfga/vscode-ext/compare/v0.2.14...v0.2.15) (2024-1-8)
+### [0.2.15](https://github.com/openfga/vscode-ext/compare/v0.2.14...v0.2.15) (2024-01-08)
 
 - feat: warnings now issued for check objects that dont match declared tuples
 
 ## v0.2.14
 
-### [0.2.14](https://github.com/openfga/vscode-ext/compare/v0.2.13...v0.2.14) (2024-1-5)
+### [0.2.14](https://github.com/openfga/vscode-ext/compare/v0.2.13...v0.2.14) (2024-01-05)
 
 - feat: added validation for test tuples declared in the fga yaml
 - feat: validation for check tests and list_objects fields
