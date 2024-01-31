@@ -4,9 +4,107 @@ import * as assert from "assert";
 import { getDocUri, activate } from "./helper";
 
 suite("Should get diagnostics", () => {
-  const docUri = getDocUri("diagnostics.openfga");
+  test("Diagnoses validation errors in an fga.yaml file using `model_file` field", async () => {
+    const docUri = getDocUri("diagnostics/model-file-diagnsotic.openfga.yaml");
 
-  test("Diagnoses validation errors", async () => {
+    await testDiagnostics(docUri, [
+      {
+        message: "tests.0.tuples.0.relation relation 'owner' is not a relation on type 'folder'.",
+        range: toRange(14, 8, 14, 16),
+        severity: vscode.DiagnosticSeverity.Error,
+        source: "OpenFGAYamlValidationError",
+      },
+      {
+        message: "tests.1.tuples.0.relation relation 'owner' is not a relation on type 'folder'.",
+        range: toRange(40, 8, 40, 16),
+        severity: vscode.DiagnosticSeverity.Error,
+        source: "OpenFGAYamlValidationError",
+      },
+      {
+        message: "tests.0.check.0.assertions.can_write `can_write` is not a relationship for type `folder`.",
+        range: toRange(22, 10, 22, 19),
+        severity: vscode.DiagnosticSeverity.Error,
+        source: "OpenFGAYamlValidationError",
+      },
+      {
+        message: "tests.0.check.0.assertions.can_share `can_share` is not a relationship for type `folder`.",
+        range: toRange(23, 10, 23, 19),
+        severity: vscode.DiagnosticSeverity.Error,
+        source: "OpenFGAYamlValidationError",
+      },
+      {
+        message: "tests.0.list_objects.0.assertions.can_write `can_write` is not a relationship for type `folder`.",
+        range: toRange(32, 10, 32, 19),
+        severity: vscode.DiagnosticSeverity.Error,
+        source: "OpenFGAYamlValidationError",
+      },
+      {
+        message: "tests.0.list_objects.0.assertions.can_share `can_share` is not a relationship for type `folder`.",
+        range: toRange(35, 10, 35, 19),
+        severity: vscode.DiagnosticSeverity.Error,
+        source: "OpenFGAYamlValidationError",
+      },
+    ]);
+  });
+
+  test("Diagnoses validation errors in an fga.yaml file", async () => {
+    const docUri = getDocUri("diagnostics/diagnostics.fga.yaml");
+
+    await testDiagnostics(docUri, [
+      {
+        message: "the relation `owner` does not exist.",
+        range: toRange(10, 29, 10, 34),
+        severity: vscode.DiagnosticSeverity.Error,
+        source: "ModelValidationError",
+      },
+      {
+        message: "the relation `owner` does not exist.",
+        range: toRange(12, 23, 12, 28),
+        severity: vscode.DiagnosticSeverity.Error,
+        source: "ModelValidationError",
+      },
+      {
+        message: "tests.0.tuples.0.relation relation 'owner' is not a relation on type 'folder'.",
+        range: toRange(22, 8, 22, 16),
+        severity: vscode.DiagnosticSeverity.Error,
+        source: "OpenFGAYamlValidationError",
+      },
+      {
+        message: "tests.1.tuples.0.relation relation 'owner' is not a relation on type 'folder'.",
+        range: toRange(48, 8, 48, 16),
+        severity: vscode.DiagnosticSeverity.Error,
+        source: "OpenFGAYamlValidationError",
+      },
+      {
+        message: "tests.0.check.0.assertions.can_write `can_write` is not a relationship for type `folder`.",
+        range: toRange(30, 10, 30, 19),
+        severity: vscode.DiagnosticSeverity.Error,
+        source: "OpenFGAYamlValidationError",
+      },
+      {
+        message: "tests.0.check.0.assertions.can_share `can_share` is not a relationship for type `folder`.",
+        range: toRange(31, 10, 31, 19),
+        severity: vscode.DiagnosticSeverity.Error,
+        source: "OpenFGAYamlValidationError",
+      },
+      {
+        message: "tests.0.list_objects.0.assertions.can_write `can_write` is not a relationship for type `folder`.",
+        range: toRange(40, 10, 40, 19),
+        severity: vscode.DiagnosticSeverity.Error,
+        source: "OpenFGAYamlValidationError",
+      },
+      {
+        message: "tests.0.list_objects.0.assertions.can_share `can_share` is not a relationship for type `folder`.",
+        range: toRange(43, 10, 43, 19),
+        severity: vscode.DiagnosticSeverity.Error,
+        source: "OpenFGAYamlValidationError",
+      },
+    ]);
+  });
+
+  test("Diagnoses validation errors in an openfga file", async () => {
+    const docUri = getDocUri("diagnostics/diagnostics.openfga");
+
     await testDiagnostics(docUri, [
       {
         message: "`user` is not a valid type.",

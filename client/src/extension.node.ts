@@ -1,6 +1,6 @@
 import * as path from "path";
 // eslint-disable-next-line import/no-unresolved
-import { window, workspace, ExtensionContext, commands } from "vscode";
+import { window, workspace, ExtensionContext, commands, Uri } from "vscode";
 import { transformer } from "@openfga/syntax-transformer";
 
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from "vscode-languageclient/node";
@@ -20,8 +20,7 @@ export function activate(context: ExtensionContext) {
     // Register the server for all document types
     documentSelector: [{ language: "openfga" }, { language: "yaml-store-openfga" }],
     synchronize: {
-      // Notify the server about file changes to '.clientrc files contained in the workspace
-      fileEvents: workspace.createFileSystemWatcher("**/.clientrc"),
+      fileEvents: workspace.createFileSystemWatcher("**/*.{fga.yaml,fga,openfga,openfga.yaml,yaml,json,csv}"),
     },
   };
 
@@ -46,6 +45,10 @@ export function activate(context: ExtensionContext) {
     });
 
     return (await window.showTextDocument(doc)).document;
+  });
+
+  client.onRequest("getFileContents", async (uri) => {
+    return (await workspace.fs.readFile(Uri.parse(uri))).toString();
   });
 
   context.subscriptions.push(transformCommand);

@@ -1,0 +1,8 @@
+model
+	schema 1.1
+type user
+type folder
+	relations
+		define owne: [user] or owner
+		define parent: [folder]
+		define can_view: owner

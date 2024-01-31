@@ -15,7 +15,9 @@ export function activate(context: ExtensionContext) {
   // Options to control the language client
   const clientOptions: LanguageClientOptions = {
     documentSelector,
-    synchronize: {},
+    synchronize: {
+      fileEvents: workspace.createFileSystemWatcher("**/*.{fga.yaml,fga,openfga,openfga.yaml,yaml,json,csv}"),
+    },
     initializationOptions: {},
   };
 
@@ -38,6 +40,11 @@ export function activate(context: ExtensionContext) {
     });
 
     return (await window.showTextDocument(doc)).document;
+  });
+
+  client.onRequest("getFileContents", async (uri) => {
+    const doc = await workspace.fs.readFile(Uri.parse(uri));
+    return new TextDecoder("utf8").decode(doc);
   });
 
   context.subscriptions.push(transformCommand);
