@@ -21,7 +21,7 @@ import { TextDocument } from "vscode-languageserver-textdocument";
 import { errors, transformer } from "@openfga/syntax-transformer";
 import { defaultDocumentationMap } from "./documentation";
 import { getDuplicationFix, getMissingDefinitionFix, getReservedTypeNameFix } from "./code-action";
-import { LineCounter, YAMLSeq, parseDocument } from "yaml";
+import { LineCounter, YAMLSeq, parseDocument, isScalar, visitAsync, Scalar, Pair, Document, visit } from "yaml";
 import {
   YAMLSourceMap,
   YamlStoreValidateResults,
@@ -31,6 +31,7 @@ import {
   validateYamlStore,
   getFieldPosition,
   getRangeFromToken,
+  DocumentLoc,
 } from "./yaml-utils";
 import { getRangeOfWord } from "./helpers";
 import { getDiagnosticsForDsl as validateDSL } from "./dsl-utils";
@@ -100,15 +101,108 @@ export function startServer(connection: _Connection) {
     connection.languages.diagnostics.refresh();
   });
 
-  async function validateYamlSyntaxAndModel(textDocument: TextDocument): Promise<YamlStoreValidateResults> {
-    const diagnostics: Diagnostic[] = [];
-    const modelDiagnostics: Diagnostic[] = [];
-
+  async function parseYamlStore(
+    textDocument: TextDocument,
+  ): Promise<{ yamlDoc: Document; lineCounter: LineCounter; parsedDiagnostics: Diagnostic[] }> {
     const lineCounter = new LineCounter();
     const yamlDoc = parseDocument(textDocument.getText(), {
       lineCounter,
       keepSourceTokens: true,
     });
+
+    const parsedDiagnostics: Diagnostic[] = [];
+
+    // Basic syntax errors
+    for (const err of yamlDoc.errors) {
+      parsedDiagnostics.push({ message: err.message, range: rangeFromLinePos(err.linePos) });
+    }
+
+    const importedDocs = new Map<string, DocumentLoc>();
+
+    await visitAsync(yamlDoc, {
+      async Pair(_, pair) {
+        if (!isScalar(pair.key) || !isScalar(pair.value) || pair.key.value !== "tuple_file" || !pair.value.source) {
+          return;
+        }
+
+        const originalRange = pair.key.range;
+        try {
+          const result = await getFileContents(URI.parse(textDocument.uri), pair.value.source);
+          if (pair.value.source.match(/.yaml$/)) {
+            const file = parseDocument(result.contents);
+
+            const diagnosticFromInclusion: Diagnostic[] = [];
+
+            diagnosticFromInclusion.push(
+              ...file.errors.map((err) => {
+                return {
+                  source: "ParseError",
+                  message: "error with external file: " + err.message,
+                  range: getRangeFromToken(originalRange, textDocument),
+                };
+              }),
+            );
+
+            if (diagnosticFromInclusion.length) {
+              parsedDiagnostics.push(...diagnosticFromInclusion);
+              return undefined;
+            }
+
+            if (originalRange) {
+              importedDocs.set(pair.value.source, { range: originalRange, doc: file });
+            }
+            return visit.SKIP;
+          }
+        } catch (err) {
+          parsedDiagnostics.push({
+            range: getRangeFromToken(originalRange, textDocument),
+            message: "error with external file: " + (err as Error).message,
+            source: "ParseError",
+          });
+        }
+      },
+    });
+
+    // Override all tuples with new location
+    for (const p of importedDocs.entries()) {
+      visit(p[1].doc.contents, {
+        Scalar(key, node) {
+          node.range = p[1].range;
+        },
+      });
+    }
+
+    // Prepare final virtual doc
+    visit(yamlDoc, {
+      Pair(_, pair) {
+        if (!isScalar(pair.key) || !isScalar(pair.value) || pair.key.value !== "tuple_file" || !pair.value.source) {
+          return;
+        }
+
+        const value = importedDocs.get(pair.value.source);
+
+        if (value) {
+          // Import tuples, and point range at where file field used to exist
+          const scalar = new Scalar("tuples");
+          scalar.source = "tuples";
+          scalar.range = value?.range;
+
+          return new Pair(scalar, value?.doc.contents);
+        }
+      },
+    });
+    return { yamlDoc, lineCounter, parsedDiagnostics };
+  }
+
+  async function validateYamlSyntaxAndModel(textDocument: TextDocument): Promise<YamlStoreValidateResults> {
+    const diagnostics: Diagnostic[] = [];
+    const modelDiagnostics: Diagnostic[] = [];
+
+    const { yamlDoc, lineCounter, parsedDiagnostics } = await parseYamlStore(textDocument);
+
+    if (parsedDiagnostics.length) {
+      return { diagnostics: parsedDiagnostics };
+    }
 
     const map = new YAMLSourceMap();
     map.doMap(yamlDoc.contents);
@@ -117,25 +211,6 @@ export function startServer(connection: _Connection) {
     if ((yamlDoc.get("tuples") as YAMLSeq)?.items?.length > 1000) {
       diagnostics.push(getTooManyTuplesException(map, textDocument));
       return { diagnostics };
-    }
-
-    // Basic syntax errors
-    for (const err of yamlDoc.errors) {
-      diagnostics.push({ message: err.message, range: rangeFromLinePos(err.linePos) });
-    }
-
-    const keys = [...map.nodes.keys()].filter((key) => key.includes("tuple_file"));
-    for (const fileField of keys) {
-      const fileName = yamlDoc.getIn(fileField.split(".")) as string;
-      try {
-        await getFileContents(URI.parse(textDocument.uri), fileName);
-      } catch (err) {
-        diagnostics.push({
-          range: getRangeFromToken(map.nodes.get(fileField), textDocument),
-          message: "error with external file: " + (err as Error).message,
-          source: "ParseError",
-        });
-      }
     }
 
     let model,
@@ -147,7 +222,7 @@ export function startServer(connection: _Connection) {
         diagnostics.push(...parseYamlModel(yamlDoc, lineCounter));
         diagnostics.push(...validateYamlStore(yamlDoc.get("model") as string, yamlDoc, textDocument, map));
       } else if (yamlDoc.has("model_file")) {
-        const position = getFieldPosition(yamlDoc, lineCounter, "model_file");
+        const position = getFieldPosition(yamlDoc, lineCounter, "model_file")[0];
         const modelFile = yamlDoc.get("model_file") as string;
 
         try {

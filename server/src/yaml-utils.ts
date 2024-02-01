@@ -1,14 +1,30 @@
 import { Range, Position, Diagnostic, DiagnosticSeverity } from "vscode-languageserver";
 
-import { Document, LineCounter, Node, Range as TokenRange, isMap, isPair, isScalar, isSeq } from "yaml";
+import {
+  Document,
+  LineCounter,
+  Node,
+  Pair,
+  Range as TokenRange,
+  isMap,
+  isPair,
+  isScalar,
+  isSeq,
+  parseDocument,
+  visit,
+} from "yaml";
 import { LinePos } from "yaml/dist/errors";
-import { BlockMap, SourceToken } from "yaml/dist/parse/cst";
 import { getDiagnosticsForDsl } from "./dsl-utils";
 import { ErrorObject, ValidateFunction } from "ajv";
 import { transformer } from "@openfga/syntax-transformer";
 import { YamlStoreValidator } from "./openfga-yaml-schema";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { URI } from "vscode-uri";
+
+export type DocumentLoc = {
+  range: TokenRange;
+  doc: Document;
+};
 
 export type YamlStoreValidateResults = {
   diagnostics: Diagnostic[];
@@ -32,22 +48,31 @@ export function rangeFromLinePos(linePos: [LinePos] | [LinePos, LinePos] | undef
   return { start, end };
 }
 
-// Only gets the line of 1st depth. This should be deprecated and replaced.
+export function parseDocumentWithFixedRange(contents: string, range: TokenRange): Document {
+  const doc = parseDocument(contents);
+  visit(doc, (key, node) => {
+    if (isPair(node) && isScalar(node.key)) {
+      node.key.range = range;
+
+      return new Pair(node);
+    }
+  });
+  return doc;
+}
+
 export function getFieldPosition(
   yamlDoc: Document,
   lineCounter: LineCounter,
   field: string,
-): { line: number; col: number } {
-  let position: { line: number; col: number } = { line: 0, col: 0 };
-
-  // Get the model token and find its position
-  (yamlDoc.contents?.srcToken as BlockMap).items.forEach((i) => {
-    if (i.key?.offset !== undefined && (i.key as SourceToken).source === field) {
-      position = lineCounter.linePos(i.key?.offset);
+): { line: number; col: number }[] {
+  const positions: { line: number; col: number }[] = [];
+  visit(yamlDoc, (key, node) => {
+    if (isPair(node) && isScalar(node.key) && node.key.value === field && node.key.srcToken?.offset) {
+      positions.push(lineCounter.linePos(node.key.srcToken?.offset));
     }
   });
 
-  return position;
+  return positions;
 }
 
 export function validateYamlStore(
@@ -115,7 +140,7 @@ export function validateYamlStore(
 }
 
 export function parseYamlModel(yamlDoc: Document, lineCounter: LineCounter): Diagnostic[] {
-  const position = getFieldPosition(yamlDoc, lineCounter, "model");
+  const position = getFieldPosition(yamlDoc, lineCounter, "model")[0];
 
   // Shift generated diagnostics by line of model, and indent of 2
   let dslDiagnostics = getDiagnosticsForDsl(yamlDoc.get("model") as string);
@@ -172,7 +197,6 @@ export class YAMLSourceMap {
 
     if (isScalar(node) && node.source && node.range) {
       this.nodes.set(localPath.join("."), node.range);
-      return;
     }
   }
 }
