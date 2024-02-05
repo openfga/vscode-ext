@@ -166,10 +166,10 @@
   },
   "devDependencies": {
     "@types/mocha": "^10.0.6",
-    "@types/node": "^20.11.10",
+    "@types/node": "^20.11.16",
     "@types/webpack-env": "^1.18.4",
-    "@typescript-eslint/eslint-plugin": "^6.20.0",
-    "@typescript-eslint/parser": "^6.20.0",
+    "@typescript-eslint/eslint-plugin": "^6.21.0",
+    "@typescript-eslint/parser": "^6.21.0",
     "@vscode/test-web": "^0.0.51",
     "@vscode/vsce": "^2.23.0",
     "assert-browserify": "^2.0.0",
@@ -178,10 +178,10 @@
     "eslint-plugin-import": "^2.29.1",
     "mocha": "^10.2.0",
     "path-browserify": "^1.0.1",
-    "prettier": "^3.2.4",
+    "prettier": "^3.2.5",
     "process": "^0.11.10",
     "ts-loader": "^9.5.1",
-    "webpack": "^5.90.0",
+    "webpack": "^5.90.1",
     "webpack-cli": "^5.1.4"
   }
 }
