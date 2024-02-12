@@ -21,7 +21,7 @@ import { TextDocument } from "vscode-languageserver-textdocument";
 import { errors, transformer } from "@openfga/syntax-transformer";
 import { defaultDocumentationMap } from "./documentation";
 import { getDuplicationFix, getMissingDefinitionFix, getReservedTypeNameFix } from "./code-action";
-import { LineCounter, YAMLSeq, parseDocument } from "yaml";
+import { LineCounter, Scalar, YAMLSeq, isSeq, parseDocument } from "yaml";
 import {
   YAMLSourceMap,
   YamlStoreValidateResults,
@@ -203,6 +203,61 @@ export function startServer(connection: _Connection) {
     return { contents, uri };
   }
 
+  async function validateFgaMod(textDocument: TextDocument): Promise<Diagnostic[]> {
+    const diagnostics: Diagnostic[] = [];
+
+    const lineCounter = new LineCounter();
+    const yamlDoc = parseDocument(textDocument.getText(), {
+      lineCounter,
+      keepSourceTokens: true,
+    });
+
+    const map = new YAMLSourceMap();
+    map.doMap(yamlDoc.contents);
+
+    // Basic syntax errors
+    for (const err of yamlDoc.errors) {
+      diagnostics.push({ message: err.message, range: rangeFromLinePos(err.linePos) });
+    }
+
+    const rangeTop = { start: { line: 0, character: 0 }, end: { line: 0, character: 0 } };
+
+    if (!yamlDoc.has("schema")) {
+      diagnostics.push({ message: "missing schema field", range: rangeTop });
+    } else if (yamlDoc.get("schema") != "1.2") {
+      diagnostics.push({
+        message: "unsupported schema version, fga.mod only supported in `1.2`",
+        range: getRangeFromToken(map.nodes.get("schema"), textDocument),
+      });
+    }
+
+    if (!yamlDoc.has("contents")) {
+      diagnostics.push({ message: "missing contents field", range: rangeTop });
+    } else if (yamlDoc.has("contents") && !isSeq(yamlDoc.get("contents"))) {
+      diagnostics.push({
+        message: "contents is expected to be an array of strings",
+        range: getRangeFromToken(map.nodes.get("contents"), textDocument),
+      });
+    } else {
+      const contentsItems = (yamlDoc.get("contents") as YAMLSeq).items;
+
+      for (const item in contentsItems) {
+        const file = (contentsItems[item] as Scalar).value as string;
+
+        try {
+          await getFileContents(URI.parse(textDocument.uri), file);
+        } catch (err: any) {
+          diagnostics.push({
+            message: `unable to retrieve contents of \`${file}\`; ${err.message}`,
+            range: getRangeFromToken(map.nodes.get(`contents.${item}`), textDocument),
+          });
+        }
+      }
+    }
+
+    return diagnostics;
+  }
+
   // Respond to request for diagnostics from server
   connection.languages.diagnostics.on(async (params: DocumentDiagnosticParams): Promise<DocumentDiagnosticReport> => {
     try {
@@ -210,6 +265,10 @@ export function startServer(connection: _Connection) {
 
       if (!doc) {
         return { items: [], kind: "full" };
+      }
+
+      if (doc.uri.match("fga.mod$")) {
+        return { items: await validateFgaMod(doc), kind: "full" };
       }
 
       if (doc.uri.match(".(fga|openfga)$")) {
