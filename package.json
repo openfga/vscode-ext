@@ -63,6 +63,15 @@
         "configuration": "./language-configuration.json"
       },
       {
+        "id": "fga-mod",
+        "aliases": [
+          "FGA Module File"
+        ],
+        "filenames": [
+          "fga.mod"
+        ]
+      },
+      {
         "id": "cel",
         "aliases": [
           "CEL",
@@ -70,16 +79,13 @@
         ]
       },
       {
-        "id": "yaml-store-openfga",
+        "id": "yaml-openfga",
         "aliases": [
           "YAML (OpenFGA)"
         ],
         "extensions": [
           ".fga.yaml",
           ".openfga.yaml"
-        ],
-        "filenames": [
-          "fga.mod"
         ]
       }
     ],
@@ -100,7 +106,7 @@
         "scopeName": "cel-openfga.injection",
         "injectTo": [
           "source.openfga",
-          "source.yaml-store-openfga"
+          "source.yaml-openfga"
         ],
         "embeddedLanguages": {
           "meta.embedded.inline.cel": "cel"
@@ -115,15 +121,20 @@
         "path": "./syntaxes/openfga.injection.json",
         "scopeName": "openfga-yaml.injection",
         "injectTo": [
-          "source.yaml-store-openfga"
+          "source.yaml-openfga"
         ],
         "embeddedLanguages": {
           "meta.embedded.inline.openfga": "openfga"
         }
       },
+       {
+        "language": "fga-mod",
+        "scopeName": "source.yaml-openfga",
+        "path": "./syntaxes/yaml.tmLanguage.json"
+       },
       {
-        "language": "yaml-store-openfga",
-        "scopeName": "source.yaml-store-openfga",
+        "language": "yaml-openfga",
+        "scopeName": "source.yaml-openfga",
         "path": "./syntaxes/yaml.tmLanguage.json"
       }
     ],
@@ -151,7 +162,8 @@
   },
   "activationEvents": [
     "onLanguage:openfga",
-    "onLanguage:yaml-store-openfga"
+    "onLanguage:fga-mod",
+    "onLanguage:yaml-openfga"
   ],
   "scripts": {
     "vscode:prepublish": "npm run compile",

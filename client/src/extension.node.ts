@@ -18,9 +18,9 @@ export function activate(context: ExtensionContext) {
   // Options to control the language client
   const clientOptions: LanguageClientOptions = {
     // Register the server for all document types
-    documentSelector: [{ language: "openfga" }, { language: "yaml-store-openfga" }],
+    documentSelector: [{ language: "openfga" }, { language: "yaml-openfga" }, { language: "fga-mod" }],
     synchronize: {
-      fileEvents: workspace.createFileSystemWatcher("**/*.{fga.yaml,fga,openfga,openfga.yaml,yaml,json,csv}"),
+      fileEvents: workspace.createFileSystemWatcher("**/?(fga.mod|*.{fga.yaml,fga,openfga,openfga.yaml,yaml,json,csv})"),
     },
   };
 
@@ -47,8 +47,12 @@ export function activate(context: ExtensionContext) {
     return (await window.showTextDocument(doc)).document;
   });
 
-  client.onRequest("getFileContents", async (uri) => {
+  client.onRequest("getFileContents", async (uri: string) => {
     return (await workspace.fs.readFile(Uri.parse(uri))).toString();
+  });
+
+  client.onRequest("findFile", async (fileNamePattern: string) => {
+    return await workspace.findFiles(`**/${fileNamePattern}`);
   });
 
   context.subscriptions.push(transformCommand);

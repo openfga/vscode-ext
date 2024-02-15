@@ -10,13 +10,15 @@ let client: LanguageClient;
 // this method is called when vs code is activated
 export function activate(context: ExtensionContext) {
   // Register the server for all document types
-  const documentSelector = [{ language: "openfga" }, { language: "yaml-store-openfga" }];
+  const documentSelector = [{ language: "openfga" }, { language: "yaml-openfga" }, { language: "fga-mod" }];
 
   // Options to control the language client
   const clientOptions: LanguageClientOptions = {
     documentSelector,
     synchronize: {
-      fileEvents: workspace.createFileSystemWatcher("**/*.{fga.yaml,fga,openfga,openfga.yaml,yaml,json,csv}"),
+      fileEvents: workspace.createFileSystemWatcher(
+        "**/?(fga.mod|*.{fga.yaml,fga,openfga,openfga.yaml,yaml,json,csv})",
+      ),
     },
     initializationOptions: {},
   };

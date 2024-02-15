@@ -6,7 +6,7 @@
   ],
   "version": "https://github.com/textmate/yaml.tmbundle/commit/e54ceae3b719506dba7e481a77cea4a8b576ae46",
   "name": "YAML (OpenFGA)",
-  "scopeName": "source.yaml-store-openfga",
+  "scopeName": "source.yaml-openfga",
   "patterns": [
     {
       "include": "#comment"
