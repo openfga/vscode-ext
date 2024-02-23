@@ -21,7 +21,7 @@ import { TextDocument } from "vscode-languageserver-textdocument";
 import { errors, transformer } from "@openfga/syntax-transformer";
 import { defaultDocumentationMap } from "./documentation";
 import { getDuplicationFix, getMissingDefinitionFix, getReservedTypeNameFix } from "./code-action";
-import { LineCounter, Scalar, YAMLSeq, isSeq, parseDocument } from "yaml";
+import { LineCounter, Scalar, YAMLSeq, isScalar, isSeq, parseDocument, visitAsync } from "yaml";
 import {
   YAMLSourceMap,
   YamlStoreValidateResults,
@@ -124,19 +124,22 @@ export function startServer(connection: _Connection) {
       diagnostics.push({ message: err.message, range: rangeFromLinePos(err.linePos) });
     }
 
-    const keys = [...map.nodes.keys()].filter((key) => key.includes("tuple_file"));
-    for (const fileField of keys) {
-      const fileName = yamlDoc.getIn(fileField.split(".")) as string;
-      try {
-        await getFileContents(URI.parse(textDocument.uri), fileName);
-      } catch (err) {
-        diagnostics.push({
-          range: getRangeFromToken(map.nodes.get(fileField), textDocument),
-          message: "error with external file: " + (err as Error).message,
-          source: "ParseError",
-        });
-      }
-    }
+    await visitAsync(yamlDoc, {
+      async Pair(_, pair) {
+        if (pair.key && isScalar(pair.key) && pair.key.value === "tuple_file" && isScalar(pair.value)) {
+          const fileName = pair.value;
+          try {
+            await getFileContents(URI.parse(textDocument.uri), fileName.value as string);
+          } catch (err) {
+            diagnostics.push({
+              range: getRangeFromToken(fileName.range, textDocument),
+              message: "error with external file: " + (err as Error).message,
+              source: "ParseError",
+            });
+          }
+        }
+      },
+    });
 
     let model,
       modelUri = undefined;
