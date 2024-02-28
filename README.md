@@ -6,7 +6,7 @@ VS Code extension that provides syntax highlighting for the [OpenFGA](https://op
 [![Open VSX Version](https://img.shields.io/open-vsx/v/OpenFGA/openfga-vscode)](https://open-vsx.org/extension/OpenFGA/openfga-vscode)
 [![Release](https://img.shields.io/github/v/release/openfga/vscode-ext?sort=semver&color=green)](https://github.com/openfga/vscode-ext/releases)
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://github.com/openfga/vscode-ext/blob/main/LICENSE)
-[![Discord Community](https://img.shields.io/discord/759188666072825867?color=7289da&logo=discord "Discord Community")](https://discord.gg/8naAwJfWN6)
+[![Join our community](https://img.shields.io/badge/slack-cncf_%23openfga-40abb8.svg?logo=slack)](https://openfga.dev/community)
 [![Twitter](https://img.shields.io/twitter/follow/openfga?color=%23179CF0&logo=twitter&style=flat-square "@openfga on Twitter")](https://twitter.com/openfga)
 
 ## About
@@ -20,7 +20,7 @@ OpenFGA is designed to make it easy for application builders to model their perm
 - [OpenFGA Documentation](https://openfga.dev/docs)
 - [OpenFGA API Documentation](https://openfga.dev/api/service)
 - [OpenFGA on Twitter](https://twitter.com/openfga)
-- [Discord Community](https://discord.gg/8naAwJfWN6)
+- [OpenFGA Community](https://openfga.dev/community)
 - [Zanzibar Academy](https://zanzibar.academy)
 - [Google's Zanzibar Paper (2019)](https://research.google/pubs/pub48190/)
 
