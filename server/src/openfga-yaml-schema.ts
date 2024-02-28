@@ -124,6 +124,7 @@ const undefinedTypeTuple = (user: string, instancePath: string) => {
 
 // Format enforcement
 const identifier = "[a-zA-Z0-9]([a-zA-Z0-9_-]*[a-zA-Z0-9])?";
+const id = "[a-zA-Z0-9/_-]+";
 
 const formatField = (field: string, regex: string, length: number) => {
   if (!field.match(new RegExp(regex) || field.length > length)) {
@@ -133,7 +134,7 @@ const formatField = (field: string, regex: string, length: number) => {
 };
 
 function formatUser(user: string): boolean {
-  return formatField(user, `^${identifier}:(\\*|${identifier}(#${identifier})?)$`, 512);
+  return formatField(user, `^${identifier}:(\\*|${id}(#${identifier})?)$`, 512);
 }
 
 function formatRelation(relation: string): boolean {
@@ -141,7 +142,7 @@ function formatRelation(relation: string): boolean {
 }
 
 function formatObject(object: string): boolean {
-  return formatField(object, `^${identifier}:${identifier}$`, 256);
+  return formatField(object, `^${identifier}:${id}$`, 256);
 }
 
 function formatCondition(condition: string): boolean {
