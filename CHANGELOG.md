@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.2.19
+
+### [0.2.19](https://github.com/openfga/vscode-ext/compare/v0.2.18...v0.2.19) (2024-02-27)
+
+- fix: user & object formatter to allow '/' in ids
+
 ## v0.2.18
 
 ### [0.2.18](https://github.com/openfga/vscode-ext/compare/v0.2.17...v0.2.18) (2024-02-09)
