@@ -18,10 +18,11 @@ import {
 
 import { TextDocument } from "vscode-languageserver-textdocument";
 
+//import { errors, transformer } from "/Users/daniel.jeffery/VSCodeProjects/language/pkg/js/dist/index";
 import { errors, transformer } from "@openfga/syntax-transformer";
 import { defaultDocumentationMap } from "./documentation";
 import { getDuplicationFix, getMissingDefinitionFix, getReservedTypeNameFix } from "./code-action";
-import { LineCounter, Scalar, YAMLSeq, isScalar, isSeq, parseDocument, visitAsync } from "yaml";
+import { LineCounter, YAMLSeq, isScalar, parseDocument, visitAsync } from "yaml";
 import {
   YAMLSourceMap,
   YamlStoreValidateResults,
@@ -208,53 +209,34 @@ export function startServer(connection: _Connection) {
 
   async function validateFgaMod(textDocument: TextDocument): Promise<Diagnostic[]> {
     const diagnostics: Diagnostic[] = [];
+    let yamlDoc;
 
-    const lineCounter = new LineCounter();
-    const yamlDoc = parseDocument(textDocument.getText(), {
-      lineCounter,
-      keepSourceTokens: true,
-    });
-
-    const map = new YAMLSourceMap();
-    map.doMap(yamlDoc.contents);
-
-    // Basic syntax errors
-    for (const err of yamlDoc.errors) {
-      diagnostics.push({ message: err.message, range: rangeFromLinePos(err.linePos) });
-    }
-
-    const rangeTop = { start: { line: 0, character: 0 }, end: { line: 0, character: 0 } };
-
-    if (!yamlDoc.has("schema")) {
-      diagnostics.push({ message: "missing schema field", range: rangeTop });
-    } else if (yamlDoc.get("schema") != "1.2") {
-      diagnostics.push({
-        message: "unsupported schema version, fga.mod only supported in `1.2`",
-        range: getRangeFromToken(map.nodes.get("schema"), textDocument),
+    try {
+      yamlDoc = transformer.transformModFileToJSON(textDocument.getText());
+    } catch (err: any) {
+      return err.errors.map((error: any): Diagnostic => {
+        const props = error.properties;
+        return {
+          message: props.msg,
+          range: {
+            start: { line: props.line.start - 1, character: props.column.start - 1 },
+            end: { line: props.line.end - 1, character: props.column.end - 1 },
+          },
+        };
       });
     }
 
-    if (!yamlDoc.has("contents")) {
-      diagnostics.push({ message: "missing contents field", range: rangeTop });
-    } else if (yamlDoc.has("contents") && !isSeq(yamlDoc.get("contents"))) {
-      diagnostics.push({
-        message: "contents is expected to be an array of strings",
-        range: getRangeFromToken(map.nodes.get("contents"), textDocument),
-      });
-    } else {
-      const contentsItems = (yamlDoc.get("contents") as YAMLSeq).items;
-
-      for (const item in contentsItems) {
-        const file = (contentsItems[item] as Scalar).value as string;
-
-        try {
-          await getFileContents(URI.parse(textDocument.uri), file);
-        } catch (err: any) {
-          diagnostics.push({
-            message: `unable to retrieve contents of \`${file}\`; ${err.message}`,
-            range: getRangeFromToken(map.nodes.get(`contents.${item}`), textDocument),
-          });
-        }
+    for (const file of yamlDoc.contents) {
+      try {
+        await getFileContents(URI.parse(textDocument.uri), file);
+      } catch (err: any) {
+        diagnostics.push({
+          message: `unable to retrieve contents of \`${file}\`; ${err.message}`,
+          range: {
+            start: { line: 1, character: 0 },
+            end: { line: 1, character: 0 },
+          },
+        });
       }
     }
 

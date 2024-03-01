@@ -22,7 +22,6 @@ export const createDiagnostics = (err: errors.DSLSyntaxError | errors.ModelValid
       const charactersStart = e.column?.start || 1;
       const charactersEnd = e.column?.end || 1;
 
-      let source;
       let code = errors.ValidationError.InvalidSyntax;
 
       if (e instanceof errors.DSLSyntaxSingleError) {
