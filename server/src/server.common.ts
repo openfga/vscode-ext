@@ -18,8 +18,8 @@ import {
 
 import { TextDocument } from "vscode-languageserver-textdocument";
 
-//import { errors, transformer } from "/Users/daniel.jeffery/VSCodeProjects/language/pkg/js/dist/index";
-import { errors, transformer } from "@openfga/syntax-transformer";
+import { errors, transformer } from "/Users/daniel.jeffery/VSCodeProjects/language/pkg/js/dist/index";
+//import { errors, transformer } from "@openfga/syntax-transformer";
 import { defaultDocumentationMap } from "./documentation";
 import { getDuplicationFix, getMissingDefinitionFix, getReservedTypeNameFix } from "./code-action";
 import { LineCounter, YAMLSeq, isScalar, parseDocument, visitAsync } from "yaml";
@@ -209,10 +209,10 @@ export function startServer(connection: _Connection) {
 
   async function validateFgaMod(textDocument: TextDocument): Promise<Diagnostic[]> {
     const diagnostics: Diagnostic[] = [];
-    let yamlDoc;
+    let fgaModeDoc;
 
     try {
-      yamlDoc = transformer.transformModFileToJSON(textDocument.getText());
+      fgaModeDoc = transformer.transformModFileToJSON(textDocument.getText());
     } catch (err: any) {
       return err.errors.map((error: any): Diagnostic => {
         const props = error.properties;
@@ -226,15 +226,18 @@ export function startServer(connection: _Connection) {
       });
     }
 
-    for (const file of yamlDoc.contents) {
+    for (const fileIndex in fgaModeDoc.contents.value) {
+      const node = fgaModeDoc.contents.value[fileIndex];
+      const fileName = node.value;
+
       try {
-        await getFileContents(URI.parse(textDocument.uri), file);
+        await getFileContents(URI.parse(textDocument.uri), fileName);
       } catch (err: any) {
         diagnostics.push({
-          message: `unable to retrieve contents of \`${file}\`; ${err.message}`,
+          message: `unable to retrieve contents of \`${fileName}\`; ${err.message}`,
           range: {
-            start: { line: 1, character: 0 },
-            end: { line: 1, character: 0 },
+            start: { line: node.line.start - 1, character: node.column.start - 1 },
+            end: { line: node.line.end - 1, character: node.column.end - 1 },
           },
         });
       }
