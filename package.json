@@ -63,6 +63,15 @@
         "configuration": "./language-configuration.json"
       },
       {
+        "id": "mod-openfga",
+        "aliases": [
+          "OpenFGA Module File"
+        ],
+        "filenames": [
+          "fga.mod"
+        ]
+      },
+      {
         "id": "cel",
         "aliases": [
           "CEL",
@@ -77,9 +86,6 @@
         "extensions": [
           ".fga.yaml",
           ".openfga.yaml"
-        ],
-        "filenames": [
-          "fga.mod"
         ]
       }
     ],
@@ -121,6 +127,11 @@
           "meta.embedded.inline.openfga": "openfga"
         }
       },
+       {
+        "language": "mod-openfga",
+        "scopeName": "source.yaml-store-openfga",
+        "path": "./syntaxes/yaml.tmLanguage.json"
+       },
       {
         "language": "yaml-store-openfga",
         "scopeName": "source.yaml-store-openfga",
@@ -151,6 +162,7 @@
   },
   "activationEvents": [
     "onLanguage:openfga",
+    "onLanguage:mod-openfga",
     "onLanguage:yaml-store-openfga"
   ],
   "scripts": {
