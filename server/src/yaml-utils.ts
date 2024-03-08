@@ -178,8 +178,7 @@ export class YAMLSourceMap {
 }
 
 // Exception for too many tuples, notifying validation is disabled
-export function getTooManyTuplesException(map: YAMLSourceMap, textDocument: TextDocument): Diagnostic {
-  const range = map.nodes.get("tuples");
+export function getTooManyTuplesException(range: TokenRange, textDocument: TextDocument): Diagnostic {
   return {
     message: "Tuple limit of 1,000 has been reached. Validation is disabled.",
     severity: DiagnosticSeverity.Warning,
