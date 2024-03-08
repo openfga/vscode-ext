@@ -25,6 +25,8 @@
         "keyword.define.openfga",
         "keyword.from.openfga",
         "keyword.model.openfga",
+        "keyword.module.openfga",
+        "keyword.extend.openfga",
         "keyword.relations.openfga",
         "keyword.schema.openfga",
         "keyword.self.openfga",
@@ -78,7 +80,7 @@
     },
     {
       "name": "Type",
-      "scope": ["support.class.type.name.value.openfga", "entity.name.function.condition.openfga"],
+      "scope": ["support.class.module.name.value.openfga", "support.class.type.name.value.openfga", "entity.name.function.condition.openfga"],
       "settings": {
         "foreground": "#79ED83"
       }
