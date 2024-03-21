@@ -1,6 +1,6 @@
 {
   "scopeName": "cel-openfga.injection",
-  "injectionSelector": ["L:source.openfga", "L:source.yaml-store-openfga"],
+  "injectionSelector": ["L:source.openfga", "L:source.yaml-openfga"],
   "patterns": [
     {
       "include": "#condition"

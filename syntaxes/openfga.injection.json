@@ -1,6 +1,6 @@
 {
   "scopeName": "openfga-yaml.injection",
-  "injectionSelector": "L:source.yaml-store-openfga",
+  "injectionSelector": "L:source.yaml-openfga",
   "patterns": [
     {
       "include": "#openfga-block-scalar"
