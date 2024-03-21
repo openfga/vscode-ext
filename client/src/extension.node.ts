@@ -18,6 +18,10 @@ export function activate(context: ExtensionContext) {
   // Options to control the language client
   const clientOptions: LanguageClientOptions = {
     // Register the server for all document types
+    
+    diagnosticPullOptions: {
+      onChange: true,
+    },
     documentSelector: [{ language: "openfga" }, { language: "yaml-store-openfga" }, { language: "mod-openfga" }],
     synchronize: {
       fileEvents: workspace.createFileSystemWatcher(
