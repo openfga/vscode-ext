@@ -1,29 +1,6 @@
-import { errors, transformer, validator } from "@openfga/syntax-transformer";
+import { errors } from "@openfga/syntax-transformer";
 
 import { Diagnostic, DiagnosticSeverity } from "vscode-languageserver";
-
-export function getDiagnosticsForDsl(dsl: string): Diagnostic[] {
-  try {
-    const transform = transformer.transformDSLToJSONObject(dsl);
-    if (transform.schema_version) {
-      validator.validateDSL(dsl);
-    } else {
-      transformer.transformModularDSLToJSONObject(dsl);
-      // TODO: combine files and validate whole model
-    }
-  } catch (err) {
-    if (
-      err instanceof errors.DSLSyntaxError ||
-      err instanceof errors.ModelValidationError ||
-      err instanceof errors.ModuleTransformationError
-    ) {
-      return createDiagnostics(err);
-    } else {
-      console.error("Unhandled Exception: " + err);
-    }
-  }
-  return [];
-}
 
 export const createDiagnostics = (
   err:

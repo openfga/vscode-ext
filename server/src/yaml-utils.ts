@@ -3,7 +3,6 @@ import { Range, Position, Diagnostic, DiagnosticSeverity } from "vscode-language
 import { Document, LineCounter, Node, Range as TokenRange, isMap, isPair, isScalar, isSeq } from "yaml";
 import { LinePos } from "yaml/dist/errors";
 import { BlockMap, SourceToken } from "yaml/dist/parse/cst";
-import { getDiagnosticsForDsl } from "./dsl-utils";
 import { ErrorObject, ValidateFunction } from "ajv";
 import { transformer } from "@openfga/syntax-transformer";
 import { YamlStoreValidator } from "./openfga-yaml-schema";
@@ -112,22 +111,6 @@ export function validateYamlStore(
     });
   }
   return diagnostics;
-}
-
-export function parseYamlModel(yamlDoc: Document, lineCounter: LineCounter): Diagnostic[] {
-  const position = getFieldPosition(yamlDoc, lineCounter, "model");
-
-  // Shift generated diagnostics by line of model, and indent of 2
-  let dslDiagnostics = getDiagnosticsForDsl(yamlDoc.get("model") as string);
-  dslDiagnostics = dslDiagnostics.map((d) => {
-    const r = d.range;
-    r.start.line += position.line;
-    r.start.character += 2;
-    r.end.line += position.line;
-    r.end.character += 2;
-    return d;
-  });
-  return dslDiagnostics;
 }
 
 export class YAMLSourceMap {
