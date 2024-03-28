@@ -47,6 +47,12 @@ const webClientConfig = /** @type WebpackConfig */ {
           },
         ],
       },
+      {
+        test: /\.m?js$/,
+        resolve: {
+          fullySpecified: false
+        },
+      },
     ],
   },
   plugins: [

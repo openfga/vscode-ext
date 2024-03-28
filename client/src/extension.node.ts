@@ -18,9 +18,15 @@ export function activate(context: ExtensionContext) {
   // Options to control the language client
   const clientOptions: LanguageClientOptions = {
     // Register the server for all document types
-    documentSelector: [{ language: "openfga" }, { language: "yaml-store-openfga" }],
+    
+    diagnosticPullOptions: {
+      onChange: true,
+    },
+    documentSelector: [{ language: "openfga" }, { language: "yaml-store-openfga" }, { language: "mod-openfga" }],
     synchronize: {
-      fileEvents: workspace.createFileSystemWatcher("**/*.{fga.yaml,fga,openfga,openfga.yaml,yaml,json,csv}"),
+      fileEvents: workspace.createFileSystemWatcher(
+        "**/?(fga.mod|*.{fga.yaml,fga,openfga,openfga.yaml,yaml,json,csv})",
+      ),
     },
   };
 

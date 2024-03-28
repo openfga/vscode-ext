@@ -18,23 +18,26 @@ import {
 
 import { TextDocument } from "vscode-languageserver-textdocument";
 
-import { errors, transformer } from "@openfga/syntax-transformer";
+import { errors, transformer, validator } from "@openfga/syntax-transformer";
+
 import { defaultDocumentationMap } from "./documentation";
 import { getDuplicationFix, getMissingDefinitionFix, getReservedTypeNameFix } from "./code-action";
-import { LineCounter, YAMLSeq, parseDocument } from "yaml";
+import { LineCounter, YAMLSeq, isScalar, parseDocument, visitAsync, Document } from "yaml";
 import {
   YAMLSourceMap,
   YamlStoreValidateResults,
   getTooManyTuplesException,
-  parseYamlModel,
   rangeFromLinePos,
   validateYamlStore,
   getFieldPosition,
   getRangeFromToken,
 } from "./yaml-utils";
 import { getRangeOfWord } from "./helpers";
-import { getDiagnosticsForDsl as validateDSL } from "./dsl-utils";
-import { URI, Utils } from "vscode-uri";
+import { createDiagnostics } from "./dsl-utils";
+import { URI } from "vscode-uri";
+
+import { clientUtils } from "./client-utils";
+import { AuthorizationModel } from "@openfga/sdk";
 
 export function startServer(connection: _Connection) {
   console.log = connection.console.log.bind(connection.console);
@@ -42,6 +45,9 @@ export function startServer(connection: _Connection) {
 
   // Create a simple text document manager.
   const documents: TextDocuments<TextDocument> = new TextDocuments(TextDocument);
+
+  // Create utility tool for calls back to the vscode client
+  const clientRequests = clientUtils(connection, documents);
 
   let hasConfigurationCapability = false;
   let hasWorkspaceFolderCapability = false;
@@ -100,43 +106,50 @@ export function startServer(connection: _Connection) {
     connection.languages.diagnostics.refresh();
   });
 
+  // Validate YAML store file
   async function validateYamlSyntaxAndModel(textDocument: TextDocument): Promise<YamlStoreValidateResults> {
-    const diagnostics: Diagnostic[] = [];
-    const modelDiagnostics: Diagnostic[] = [];
-
     const lineCounter = new LineCounter();
     const yamlDoc = parseDocument(textDocument.getText(), {
       lineCounter,
       keepSourceTokens: true,
     });
 
-    const map = new YAMLSourceMap();
-    map.doMap(yamlDoc.contents);
-
     // Dont validate if a document contains over a 1000 tuples.
-    if ((yamlDoc.get("tuples") as YAMLSeq)?.items?.length > 1000) {
-      diagnostics.push(getTooManyTuplesException(map, textDocument));
-      return { diagnostics };
+    if (yamlDoc.has("tuples") && (yamlDoc.get("tuples") as YAMLSeq)?.items?.length > 1000) {
+      const location = (yamlDoc.get("tuples") as YAMLSeq).range;
+      if (location !== null && location !== undefined) {
+        return { diagnostics: [getTooManyTuplesException(location, textDocument)] };
+      }
+      console.error("Tuple limit of 1,000 has been reached. Validation is disabled.");
     }
+
+    const diagnostics: Diagnostic[] = [];
+    const modelDiagnostics: Diagnostic[] = [];
 
     // Basic syntax errors
     for (const err of yamlDoc.errors) {
       diagnostics.push({ message: err.message, range: rangeFromLinePos(err.linePos) });
     }
 
-    const keys = [...map.nodes.keys()].filter((key) => key.includes("tuple_file"));
-    for (const fileField of keys) {
-      const fileName = yamlDoc.getIn(fileField.split(".")) as string;
-      try {
-        await getFileContents(URI.parse(textDocument.uri), fileName);
-      } catch (err) {
-        diagnostics.push({
-          range: getRangeFromToken(map.nodes.get(fileField), textDocument),
-          message: "error with external file: " + (err as Error).message,
-          source: "ParseError",
-        });
-      }
-    }
+    await visitAsync(yamlDoc, {
+      async Pair(_, pair) {
+        if (pair.key && isScalar(pair.key) && pair.key.value === "tuple_file" && isScalar(pair.value)) {
+          const fileName = pair.value;
+          try {
+            await clientRequests.getFileContents(URI.parse(textDocument.uri), fileName.value as string);
+          } catch (err) {
+            diagnostics.push({
+              range: getRangeFromToken(fileName.range, textDocument),
+              message: "error with external file: " + (err as Error).message,
+              source: "ParseError",
+            });
+          }
+        }
+      },
+    });
+
+    const map = new YAMLSourceMap();
+    map.doMap(yamlDoc.contents);
 
     let model,
       modelUri = undefined;
@@ -144,7 +157,7 @@ export function startServer(connection: _Connection) {
     try {
       // Parse model field
       if (yamlDoc.has("model")) {
-        diagnostics.push(...parseYamlModel(yamlDoc, lineCounter));
+        diagnostics.push(...(await parseYamlModel(yamlDoc, lineCounter)));
         diagnostics.push(...validateYamlStore(yamlDoc.get("model") as string, yamlDoc, textDocument, map));
       } else if (yamlDoc.has("model_file")) {
         const position = getFieldPosition(yamlDoc, lineCounter, "model_file");
@@ -162,7 +175,7 @@ export function startServer(connection: _Connection) {
         }
 
         // If we fail model validation, we should return before continuing YAML validation
-        modelDiagnostics.push(...validateDSL(model));
+        modelDiagnostics.push(...(await getDiagnosticsForDsl(model)));
         if (
           modelDiagnostics.some((diagnostic) => {
             return diagnostic.code === errors.ValidationError.InvalidSyntax;
@@ -180,27 +193,127 @@ export function startServer(connection: _Connection) {
     return { diagnostics, modelUri, modelDiagnostics };
   }
 
+  // Check for `model` field, and get diagnsotics
+  async function parseYamlModel(yamlDoc: Document, lineCounter: LineCounter): Promise<Diagnostic[]> {
+    const position = getFieldPosition(yamlDoc, lineCounter, "model");
+
+    // Given model value occurs on the subseqnet line, and at an indent of 2 spaces, we need to compensate
+    // by shifting the position of diagnostics to properly align with the model text
+    let dslDiagnostics = await getDiagnosticsForDsl(yamlDoc.get("model") as string);
+    dslDiagnostics = dslDiagnostics.map((d) => {
+      const r = d.range;
+      r.start.line += position.line;
+      r.start.character += 2;
+      r.end.line += position.line;
+      r.end.character += 2;
+      return d;
+    });
+    return dslDiagnostics;
+  }
+
   // Retrieve external model file
   async function parseExternalModelFile(modelUri: URI, modelFile: string): Promise<[model: string, modelUri: URI]> {
     // Attempt to get file contents, return error otherwise
-    const result = await getFileContents(modelUri, modelFile);
+    const result = await clientRequests.getFileContents(modelUri, modelFile);
+    const path = URI.parse(modelFile).path;
 
     // If model file doesnt match expected extension
-    if (URI.parse(modelFile).path.match(/.*\.json$/)) {
+    if (path.match(/.*\.json$/)) {
       result.contents = transformer.transformJSONStringToDSL(result.contents);
+    } else if (path.match(/fga.mod$/)) {
+      const authModel = await validateFgaMod(result.contents, result.uri.path);
+
+      if (authModel.dsl) {
+        result.contents = transformer.transformJSONToDSL(authModel.dsl);
+      }
     }
     return [result.contents, result.uri];
   }
 
-  // Attempt to get contents of declared file for a given uri
-  async function getFileContents(originalUri: URI, fileUri: string): Promise<{ contents: string; uri: URI }> {
-    const uri = Utils.resolvePath(originalUri, "..", fileUri);
-
-    let contents = documents.get(uri.toString())?.getText() as string;
-    if (!contents) {
-      contents = await connection.sendRequest("getFileContents", uri.toString());
+  // Parse and validate DSL, whether it is a regular or modular model file
+  async function getDiagnosticsForDsl(dsl: string, uri?: string): Promise<Diagnostic[]> {
+    try {
+      const transform = transformer.transformDSLToJSONObject(dsl);
+      if (transform.schema_version) {
+        // If regular module
+        validator.validateDSL(dsl);
+      } else if (uri) {
+        // If a modular model & has a URI, validate against the fga.mod file
+        // Get the closest fga.mod files
+        const fgaModFile = await clientRequests.getFileUp(URI.parse(uri), "fga.mod");
+        if (fgaModFile?.contents && fgaModFile.uri) {
+          // Get path from URI to match diagnostics
+          const modFilePath = fgaModFile.uri.path;
+          const filePath = URI.parse(uri).path.replace(modFilePath.substring(0, modFilePath.lastIndexOf("/") + 1), "");
+          // Return only diagnostics that match the models file path
+          return (await validateFgaMod(fgaModFile.contents, modFilePath)).diagnostics.filter((d) => {
+            return d.data.file === filePath;
+          });
+        }
+      }
+    } catch (err) {
+      if (err instanceof errors.BaseMultiError) {
+        return createDiagnostics(err);
+      } else {
+        console.error("Unhandled Exception: " + err);
+      }
     }
-    return { contents, uri };
+    return [];
+  }
+
+  // Validate a given fga.mod
+  async function validateFgaMod(
+    text: string,
+    uri: string,
+  ): Promise<{
+    diagnostics: Diagnostic[];
+    dsl: Omit<AuthorizationModel, "id"> | undefined;
+    modfile: transformer.ModFile | undefined;
+  }> {
+    const diagnostics: Diagnostic[] = [];
+    let yamlDoc: transformer.ModFile;
+
+    try {
+      yamlDoc = transformer.transformModFileToJSON(text);
+    } catch (err: any) {
+      return {
+        modfile: undefined,
+        dsl: undefined,
+        diagnostics: createDiagnostics(err),
+      };
+    }
+
+    const files: transformer.ModuleFile[] = [];
+
+    for (const file in yamlDoc.contents.value) {
+      const fileValue = yamlDoc.contents.value[file];
+      try {
+        files.push({
+          name: fileValue.value,
+          contents: (await clientRequests.getFileContents(URI.parse(uri), fileValue.value)).contents,
+        });
+      } catch (err: any) {
+        diagnostics.push({
+          message: `unable to retrieve contents of \`${fileValue.value}\`; ${err.message}`,
+          range: {
+            start: { line: fileValue.line.start - 1, character: fileValue.column.start - 1 },
+            end: { line: fileValue.line.end - 1, character: fileValue.column.end - 1 },
+          },
+        });
+      }
+    }
+
+    if (diagnostics.length) {
+      return { modfile: yamlDoc, dsl: undefined, diagnostics };
+    }
+
+    try {
+      const dsl = transformer.transformModuleFilesToModel(files, yamlDoc.schema.value);
+
+      return { modfile: yamlDoc, dsl: dsl, diagnostics: [] };
+    } catch (err: any) {
+      return { modfile: yamlDoc, dsl: undefined, diagnostics: [...createDiagnostics(err)] };
+    }
   }
 
   // Respond to request for diagnostics from server
@@ -212,11 +325,52 @@ export function startServer(connection: _Connection) {
         return { items: [], kind: "full" };
       }
 
-      if (doc.uri.match(".(fga|openfga)$")) {
-        return { items: validateDSL(doc.getText()), kind: "full" };
+      const docName = doc.uri.substring(doc.uri.lastIndexOf("/") + 1);
+
+      if (docName.match("^fga.mod$")) {
+        const { modfile, diagnostics } = await validateFgaMod(doc.getText(), doc.uri);
+
+        if (modfile) {
+          const fgaDiagnostics: Diagnostic[] = [];
+
+          fgaDiagnostics.push(
+            ...diagnostics.filter((diagnostic) => {
+              return !(diagnostic.data && diagnostic.data.file);
+            }),
+          );
+
+          // Map errors from module files to fga manifest
+          fgaDiagnostics.push(
+            ...diagnostics
+              .filter((diagnostic) => {
+                return diagnostic.data && diagnostic.data.file;
+              })
+              .map((diagnostic) => {
+                for (const f of modfile?.contents.value || {}) {
+                  if (diagnostic?.data?.file === f.value) {
+                    diagnostic.message = `error in ${diagnostic.data.file}: ${diagnostic.message}`;
+                    diagnostic.range.start.line = f.line.start - 1;
+                    diagnostic.range.start.character = f.column.start - 1;
+                    diagnostic.range.end.line = f.line.end - 1;
+                    diagnostic.range.end.character = f.column.end - 1;
+                    return diagnostic;
+                  }
+                }
+                return diagnostic;
+              }),
+          );
+
+          return { items: fgaDiagnostics, kind: "full" };
+        } else {
+          return { items: diagnostics, kind: "full" };
+        }
       }
 
-      if (doc.uri.match(".(fga.yaml|openfga.yaml)$")) {
+      if (docName.match(".(fga|openfga)$")) {
+        return { items: await getDiagnosticsForDsl(doc.getText(), doc.uri), kind: "full" };
+      }
+
+      if (docName.match(".(fga.yaml|openfga.yaml)$")) {
         const results = await validateYamlSyntaxAndModel(doc);
         return { items: results.diagnostics, kind: "full" };
       }

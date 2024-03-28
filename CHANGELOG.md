@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.2.20
+
+### [0.2.20](https://github.com/openfga/vscode-ext/compare/v0.2.19...v0.2.20) (2024-03-28)
+
+- feat: initial beta support for [Modular Models](https://github.com/openfga/rfcs/blob/main/20231212-modular-models.md)
+
 ## v0.2.19
 
 ### [0.2.19](https://github.com/openfga/vscode-ext/compare/v0.2.18...v0.2.19) (2024-02-27)

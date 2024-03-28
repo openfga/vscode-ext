@@ -13,7 +13,7 @@
     "zanzibar"
   ],
   "license": "Apache-2.0",
-  "version": "0.2.19",
+  "version": "0.2.20",
   "repository": {
     "type": "git",
     "url": "https://github.com/openfga/vscode-ext"
@@ -61,6 +61,15 @@
           ".openfga"
         ],
         "configuration": "./language-configuration.json"
+      },
+      {
+        "id": "mod-openfga",
+        "aliases": [
+          "OpenFGA Module File"
+        ],
+        "filenames": [
+          "fga.mod"
+        ]
       },
       {
         "id": "cel",
@@ -118,6 +127,11 @@
           "meta.embedded.inline.openfga": "openfga"
         }
       },
+       {
+        "language": "mod-openfga",
+        "scopeName": "source.yaml-store-openfga",
+        "path": "./syntaxes/yaml.tmLanguage.json"
+       },
       {
         "language": "yaml-store-openfga",
         "scopeName": "source.yaml-store-openfga",
@@ -148,6 +162,7 @@
   },
   "activationEvents": [
     "onLanguage:openfga",
+    "onLanguage:mod-openfga",
     "onLanguage:yaml-store-openfga"
   ],
   "scripts": {
