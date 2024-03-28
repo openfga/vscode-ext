@@ -127,11 +127,11 @@
           "meta.embedded.inline.openfga": "openfga"
         }
       },
-       {
+      {
         "language": "mod-openfga",
         "scopeName": "source.yaml-store-openfga",
         "path": "./syntaxes/yaml.tmLanguage.json"
-       },
+      },
       {
         "language": "yaml-store-openfga",
         "scopeName": "source.yaml-store-openfga",
