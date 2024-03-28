@@ -37,6 +37,7 @@ import { createDiagnostics } from "./dsl-utils";
 import { URI } from "vscode-uri";
 
 import { clientUtils } from "./client-utils";
+import { AuthorizationModel } from "@openfga/sdk";
 
 export function startServer(connection: _Connection) {
   console.log = connection.console.log.bind(connection.console);
@@ -220,7 +221,11 @@ export function startServer(connection: _Connection) {
     if (path.match(/.*\.json$/)) {
       result.contents = transformer.transformJSONStringToDSL(result.contents);
     } else if (path.match(/fga.mod$/)) {
-      console.log("Found FGA Mod");
+      const authModel = await validateFgaMod(result.contents, result.uri.path);
+
+      if (authModel.dsl) {
+        result.contents = transformer.transformJSONToDSL(authModel.dsl);
+      }
     }
     return [result.contents, result.uri];
   }
@@ -247,12 +252,7 @@ export function startServer(connection: _Connection) {
         }
       }
     } catch (err) {
-      if (
-        err instanceof errors.DSLSyntaxError ||
-        err instanceof errors.ModelValidationError ||
-        err instanceof errors.ModuleTransformationError ||
-        err instanceof errors.FGAModFileValidationError
-      ) {
+      if (err instanceof errors.BaseMultiError) {
         return createDiagnostics(err);
       } else {
         console.error("Unhandled Exception: " + err);
@@ -265,7 +265,11 @@ export function startServer(connection: _Connection) {
   async function validateFgaMod(
     text: string,
     uri: string,
-  ): Promise<{ diagnostics: Diagnostic[]; modfile: transformer.ModFile | undefined }> {
+  ): Promise<{
+    diagnostics: Diagnostic[];
+    dsl: Omit<AuthorizationModel, "id"> | undefined;
+    modfile: transformer.ModFile | undefined;
+  }> {
     const diagnostics: Diagnostic[] = [];
     let yamlDoc: transformer.ModFile;
 
@@ -274,6 +278,7 @@ export function startServer(connection: _Connection) {
     } catch (err: any) {
       return {
         modfile: undefined,
+        dsl: undefined,
         diagnostics: createDiagnostics(err),
       };
     }
@@ -299,20 +304,16 @@ export function startServer(connection: _Connection) {
     }
 
     if (diagnostics.length) {
-      return { modfile: yamlDoc, diagnostics };
+      return { modfile: yamlDoc, dsl: undefined, diagnostics };
     }
 
     try {
-      transformer.transformModuleFilesToModel(files, yamlDoc.schema.value);
+      const dsl = transformer.transformModuleFilesToModel(files, yamlDoc.schema.value);
+
+      return { modfile: yamlDoc, dsl: dsl, diagnostics: [] };
     } catch (err: any) {
-      diagnostics.push(...createDiagnostics(err));
+      return { modfile: yamlDoc, dsl: undefined, diagnostics: [...createDiagnostics(err)] };
     }
-
-    if (diagnostics.length) {
-      return { modfile: yamlDoc, diagnostics };
-    }
-
-    return { modfile: yamlDoc, diagnostics: [] };
   }
 
   // Respond to request for diagnostics from server
