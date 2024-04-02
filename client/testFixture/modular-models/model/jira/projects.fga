@@ -1,0 +1,10 @@
+module jira
+
+extend type organization
+  relations
+    define can_create_project: member
+
+type project
+  relations
+    define organization: [organization]
+    define viewer: member from organization

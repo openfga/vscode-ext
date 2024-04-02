@@ -1,11 +1,16 @@
-import { transformer } from "@openfga/syntax-transformer";
 // eslint-disable-next-line import/no-unresolved
-import { ExtensionContext, Uri, commands, window, workspace } from "vscode";
+import { ExtensionContext, Uri, commands, workspace } from "vscode";
 import { LanguageClientOptions } from "vscode-languageclient";
 
 import { LanguageClient } from "vscode-languageclient/browser";
 
+import { URI, Utils } from "vscode-uri";
+import { transformDSLCommand } from "./extension.common";
+
 let client: LanguageClient;
+
+// Explination for working with a virtual file system:
+// https://github.com/microsoft/vscode/wiki/Virtual-Workspaces#review-that-the-code-is-ready-for-virtual-resources
 
 // this method is called when vs code is activated
 export function activate(context: ExtensionContext) {
@@ -27,22 +32,18 @@ export function activate(context: ExtensionContext) {
 
   client.start();
 
-  const transformCommand = commands.registerCommand("openfga.commands.transformToJson", async () => {
-    const activeEditor = window.activeTextEditor;
-    if (!activeEditor) {
-      return;
-    }
-    const text = activeEditor.document.getText();
-
-    const modelInApiFormat = transformer.transformDSLToJSONObject(text);
-
-    const doc = await workspace.openTextDocument({
-      content: JSON.stringify(modelInApiFormat, null, "  "),
-      language: "json",
-    });
-
-    return (await window.showTextDocument(doc)).document;
-  });
+  const transformCommand = commands.registerCommand("openfga.commands.transformToJson", async () =>
+    transformDSLCommand(
+      async (
+        uri: URI,
+        file: string,
+        resourceConfig: { scheme: string; authority: string | undefined },
+      ): Promise<string> => {
+        const fileUri = Utils.joinPath(uri, file).with(resourceConfig);
+        return new TextDecoder("utf8").decode(await workspace.fs.readFile(fileUri)).toString();
+      },
+    ),
+  );
 
   client.onRequest("getFileContents", async (uri) => {
     const doc = await workspace.fs.readFile(Uri.parse(uri));
