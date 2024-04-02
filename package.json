@@ -181,7 +181,7 @@
   },
   "devDependencies": {
     "@types/mocha": "^10.0.6",
-    "@types/node": "^20.11.28",
+    "@types/node": "^20.12.2",
     "@types/webpack-env": "^1.18.4",
     "@typescript-eslint/eslint-plugin": "^7.4.0",
     "@typescript-eslint/parser": "^7.4.0",
