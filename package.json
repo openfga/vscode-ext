@@ -60,7 +60,7 @@
           ".fga",
           ".openfga"
         ],
-        "configuration": "./language-configuration.json"
+        "configuration": "./fga.language-configuration.json"
       },
       {
         "id": "mod-openfga",
@@ -86,7 +86,8 @@
         "extensions": [
           ".fga.yaml",
           ".openfga.yaml"
-        ]
+        ],
+        "configuration": "./yaml.language-configuration.json"
       }
     ],
     "snippets": [
