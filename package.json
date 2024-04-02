@@ -156,7 +156,7 @@
       "commandPalette": [
         {
           "command": "openfga.commands.transformToJson",
-          "when": "editorLangId == openfga"
+          "when": "editorLangId == openfga || editorLangId == mod-openfga"
         }
       ]
     }

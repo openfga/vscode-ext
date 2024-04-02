@@ -15,25 +15,26 @@ export const transformDSLCommand = async (readFile: ReadFileFunction) => {
   const text = activeEditor.document.getText();
   const uri = activeEditor.document.uri;
 
-  let modelInApiFormat;
+  if (!uri.path.endsWith("/fga.mod")) {
+    let modelInApiFormat;
+    try {
+      modelInApiFormat = transformer.transformDSLToJSONObject(text);
+    } catch (err) {
+      console.error("Unhandled exception: " + err);
+      return;
+    }
 
-  try {
-    modelInApiFormat = transformer.transformDSLToJSONObject(text);
-  } catch (err) {
-    console.error("Unhandled exception: " + err);
-    return;
-  }
-
-  // Regular model
-  if (modelInApiFormat.schema_version) {
-    return (
-      await window.showTextDocument(
-        await workspace.openTextDocument({
-          content: JSON.stringify(modelInApiFormat, null, "  "),
-          language: "json",
-        }),
-      )
-    ).document;
+    // Regular model
+    if (modelInApiFormat.schema_version) {
+      return (
+        await window.showTextDocument(
+          await workspace.openTextDocument({
+            content: JSON.stringify(modelInApiFormat, null, "  "),
+            language: "json",
+          }),
+        )
+      ).document;
+    }
   }
 
   const resourceConfig = { scheme: uri.scheme, authority: undefined };
