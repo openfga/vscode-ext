@@ -296,8 +296,8 @@ export function startServer(connection: _Connection) {
         diagnostics.push({
           message: `unable to retrieve contents of \`${fileValue.value}\`; ${err.message}`,
           range: {
-            start: { line: fileValue.line.start - 1, character: fileValue.column.start - 1 },
-            end: { line: fileValue.line.end - 1, character: fileValue.column.end - 1 },
+            start: { line: fileValue.line.start, character: fileValue.column.start },
+            end: { line: fileValue.line.end, character: fileValue.column.end },
           },
         });
       }
@@ -349,10 +349,10 @@ export function startServer(connection: _Connection) {
                 for (const f of modfile?.contents.value || {}) {
                   if (diagnostic?.data?.file === f.value) {
                     diagnostic.message = `error in ${diagnostic.data.file}: ${diagnostic.message}`;
-                    diagnostic.range.start.line = f.line.start - 1;
-                    diagnostic.range.start.character = f.column.start - 1;
-                    diagnostic.range.end.line = f.line.end - 1;
-                    diagnostic.range.end.character = f.column.end - 1;
+                    diagnostic.range.start.line = f.line.start;
+                    diagnostic.range.start.character = f.column.start;
+                    diagnostic.range.end.line = f.line.end;
+                    diagnostic.range.end.character = f.column.end;
                     return diagnostic;
                   }
                 }
