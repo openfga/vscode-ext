@@ -1,9 +1,11 @@
 import * as path from "path";
 // eslint-disable-next-line import/no-unresolved
-import { window, workspace, ExtensionContext, commands, Uri } from "vscode";
-import { transformer } from "@openfga/syntax-transformer";
+import { workspace, ExtensionContext, commands, Uri } from "vscode";
 
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from "vscode-languageclient/node";
+
+import { URI, Utils } from "vscode-uri";
+import { transformDSLCommand } from "./extension.common";
 
 let client: LanguageClient;
 
@@ -18,7 +20,7 @@ export function activate(context: ExtensionContext) {
   // Options to control the language client
   const clientOptions: LanguageClientOptions = {
     // Register the server for all document types
-    
+
     diagnosticPullOptions: {
       onChange: true,
     },
@@ -36,22 +38,13 @@ export function activate(context: ExtensionContext) {
   // Start the client. This will also launch the server
   client.start();
 
-  const transformCommand = commands.registerCommand("openfga.commands.transformToJson", async () => {
-    const activeEditor = window.activeTextEditor;
-    if (!activeEditor) {
-      return;
-    }
-    const text = activeEditor.document.getText();
-
-    const modelInApiFormat = transformer.transformDSLToJSONObject(text);
-
-    const doc = await workspace.openTextDocument({
-      content: JSON.stringify(modelInApiFormat, null, "  "),
-      language: "json",
-    });
-
-    return (await window.showTextDocument(doc)).document;
-  });
+  const transformCommand = commands.registerCommand("openfga.commands.transformToJson", async () =>
+    transformDSLCommand(
+      async (uri: URI, file: string, resourceConfig: { scheme: string; authority: string | undefined }) => {
+        return (await workspace.fs.readFile(Utils.joinPath(uri, file).with(resourceConfig))).toString();
+      },
+    ),
+  );
 
   client.onRequest("getFileContents", async (uri) => {
     return (await workspace.fs.readFile(Uri.parse(uri))).toString();
