@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.2.21
+
+### [0.2.21](https://github.com/openfga/vscode-ext/compare/v0.2.20...v0.2.21) (2024-04-04)
+
+- feat: command to transform Modular Models to JSON
+- fix: user & object formatter to allow '|' in ids
+
 ## v0.2.20
 
 ### [0.2.20](https://github.com/openfga/vscode-ext/compare/v0.2.19...v0.2.20) (2024-03-28)
