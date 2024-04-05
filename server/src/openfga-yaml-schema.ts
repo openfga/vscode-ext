@@ -124,7 +124,7 @@ const undefinedTypeTuple = (user: string, instancePath: string) => {
 
 // Format enforcement
 const identifier = "[a-zA-Z0-9]([a-zA-Z0-9_-]*[a-zA-Z0-9])?";
-const id = "[|a-zA-Z0-9/_-]+";
+const id = "[|@a-zA-Z0-9/_-]+";
 
 const formatField = (field: string, regex: string, length: number) => {
   if (!field.match(new RegExp(regex) || field.length > length)) {
