@@ -189,7 +189,7 @@
     "@vscode/test-web": "^0.0.53",
     "@vscode/vsce": "^2.24.0",
     "assert-browserify": "^2.0.0",
-    "eslint": "^9.0.0",
+    "eslint": "^8.57.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.29.1",
     "mocha": "^10.4.0",
