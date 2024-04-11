@@ -131,7 +131,7 @@ fga model test --tests=./store.yaml
 
 ## Roadmap
 
-A rough [roadmap](https://github.com/orgs/openfga/projects/3) for development priorities.
+A rough [roadmap](https://github.com/orgs/openfga/projects/1) for development priorities.
 
 ## Contributing
 
