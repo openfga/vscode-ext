@@ -8,7 +8,7 @@
   ],
   "repository": {
     "openfga-block-scalar": {
-      "begin": "(?i)(^model)(:)\\s+(\\|)\\s*\\n",
+      "begin": "(?i)(^model)(:)\\s+(\\|)([-+])?\\s*\\n",
       "beginCaptures": {
         "1": {
           "name": "entity.name.tag.yaml"
@@ -18,6 +18,9 @@
         },
         "3": {
           "name": "keyword.control.flow.block-scalar.literal.yaml"
+        },
+        "4": {
+          "name": "storage.modifier.chomping-indicator.yaml"
         }
       },
       "end": "^(?=\\S)|(?!\\G)",
