@@ -3,6 +3,7 @@ import {
   CheckRequestTupleKey,
   Condition,
   ListObjectsRequest,
+  ListUsersRequest,
   RelationReference,
   TupleKey,
   TypeDefinition,
@@ -24,6 +25,7 @@ type Test = {
   tuples: TupleKey[];
   check: CheckTest[];
   list_objects: ListObjectTest[];
+  list_users: ListUsersTest[];
 };
 
 type CheckTest = Omit<CheckRequestTupleKey, "relation"> & {
@@ -32,7 +34,13 @@ type CheckTest = Omit<CheckRequestTupleKey, "relation"> & {
 };
 
 type ListObjectTest = Omit<ListObjectsRequest, "relation"> & {
-  assertions: Record<string, boolean>;
+  assertions: Record<string, any>;
+};
+
+type ListUsersTest = Omit<ListUsersRequest, "relation" | "user_filters"> & {
+  object: string;
+  user_filter: Record<string, any>;
+  assertions: Record<string, any>;
 };
 
 type BaseError = { keyword: string; message: string; instancePath: string };
@@ -91,6 +99,10 @@ const invalidUserField = (instancePath: string) => {
 
 const invalidTypeUser = (type: string, types: string[], instancePath: string) => {
   return invalidStore(`invalid type '${type}'. Valid types are [${types}]`, instancePath);
+};
+
+const invalidRelationUser = (relation: string, relations: string[], instancePath: string) => {
+  return invalidStore(`invalid relation '${relation}'. Valid relations are [${relations}]`, instancePath);
 };
 
 const nonMatchingRelationType = (relation: string, user: string, values: string[], instancePath: string) => {
@@ -517,6 +529,102 @@ function validateListObject(
   return errors;
 }
 
+// Validate List User
+function validateListUsers(
+  model: AuthorizationModel,
+  listUsers: ListUsersTest,
+  tuples: TupleKey[],
+  params: string[],
+  instancePath: string,
+) {
+  const errors = [];
+
+  const types = model.type_definitions.map((d) => d.type);
+
+  if (listUsers && isStringValue(listUsers.object)) {
+    const listUserObj = listUsers.object;
+
+    const object = listUserObj.split(":")[0];
+
+    // Ensure valid type of object
+    if (!types.includes(object)) {
+      errors.push(invalidTypeUser(object, types, instancePath + "/object"));
+    }
+
+    if (!errors.length) {
+      if (!tuples.map((tuple) => tuple.object).filter((object) => object === listUserObj).length) {
+        errors.push(undefinedTypeTuple(listUserObj, instancePath + "/object"));
+      }
+    }
+  }
+
+  // Check user fileter
+  if (listUsers.user_filter) {
+    for (const typeNo in listUsers.user_filter) {
+      const listType = listUsers.user_filter[typeNo].type;
+
+      if (listType && isStringValue(listType)) {
+        // Ensure valid type of object
+        if (!types.includes(listType)) {
+          errors.push(invalidTypeUser(listType, types, instancePath + `/user_filter/${typeNo}/type`));
+        }
+      }
+
+      // Check relations if present
+      const relation = listUsers.user_filter[typeNo].relation;
+      if (relation && isStringValue(relation)) {
+        const typeRelations = model.type_definitions.filter((rel) => rel.type === listType).map((rel) => rel.relations);
+
+        if (typeRelations.length && typeRelations[0] && Object.keys(typeRelations[0]).length) {
+          if (!Object.keys(typeRelations[0]).includes(relation)) {
+            errors.push(
+              invalidRelationUser(
+                relation,
+                Object.keys(typeRelations[0]),
+                instancePath + `/user_filter/${typeNo}/relation`,
+              ),
+            );
+          }
+        } else {
+          errors.push(relationMustExistOnType(relation, listType, instancePath + `/user_filter/${typeNo}/relation`));
+        }
+      }
+    }
+
+    // Check assertions
+    if (listUsers.assertions) {
+      for (const assertion of Object.keys(listUsers.assertions)) {
+        if (listUsers.assertions[assertion].users) {
+          for (const user of listUsers.assertions[assertion].users) {
+            if (!tuples.some((tuple) => tuple.user === user)) {
+              errors.push(undefinedTypeTuple(user, instancePath + `/assertions/${assertion}/users`));
+            }
+          }
+        }
+
+        if (listUsers.assertions[assertion].excluded_users) {
+          for (const excludedUser of listUsers.assertions[assertion].excluded_users) {
+            if (!tuples.some((tuple) => tuple.user === excludedUser)) {
+              errors.push(undefinedTypeTuple(excludedUser, instancePath + `/assertions/${assertion}/excluded_users`));
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Check context params
+  if (listUsers.context) {
+    for (const testParam in listUsers.context) {
+      if (!params.includes(testParam)) {
+        errors.push(unidentifiedTestParam(testParam, instancePath + `/context/${testParam}`));
+      }
+    }
+  }
+
+  return errors;
+}
+
 // Validation for types in check
 function validateTestTypes(store: Store, model: AuthorizationModel, instancePath: string): boolean {
   const errors = [];
@@ -545,10 +653,6 @@ function validateTestTypes(store: Store, model: AuthorizationModel, instancePath
       tuples.push(...test.tuples);
     }
 
-    if (!test.check) {
-      continue;
-    }
-
     // Validate check
     for (const checkNo in test.check) {
       if (!test.check[checkNo] || !test.check[checkNo].user || !test.check[checkNo].object) {
@@ -565,10 +669,6 @@ function validateTestTypes(store: Store, model: AuthorizationModel, instancePath
       );
     }
 
-    if (!test.list_objects) {
-      continue;
-    }
-
     // Validate list objects
     for (const listNo in test.list_objects) {
       if (!test.list_objects[listNo] || !test.list_objects[listNo].user || !test.list_objects[listNo].type) {
@@ -581,6 +681,21 @@ function validateTestTypes(store: Store, model: AuthorizationModel, instancePath
           tuples,
           params,
           instancePath + `/tests/${testNo}/list_objects/${listNo}`,
+        ),
+      );
+    }
+
+    for (const listNo in test.list_users) {
+      if (!test.list_users[listNo] || !test.list_users[listNo].object || !test.list_users[listNo].user_filter) {
+        return false;
+      }
+      errors.push(
+        ...validateListUsers(
+          model,
+          test.list_users[listNo],
+          tuples,
+          params,
+          instancePath + `/tests/${testNo}/list_users/${listNo}`,
         ),
       );
     }
@@ -831,6 +946,63 @@ const OPENFGA_YAML_SCHEMA: Schema = {
                 },
                 context: {
                   type: "object",
+                },
+              },
+            },
+          },
+          list_users: {
+            type: "array",
+            items: {
+              type: "object",
+              additionalProperties: false,
+              required: ["object", "user_filter", "assertions"],
+              properties: {
+                object: {
+                  type: "string",
+                  format: "object",
+                },
+                user_filter: {
+                  type: "array",
+                  items: {
+                    type: "object",
+                    required: ["type"],
+                    properties: {
+                      type: {
+                        type: "string",
+                      },
+                      relation: {
+                        type: "string",
+                      },
+                    },
+                  },
+                },
+                context: {
+                  type: "object",
+                },
+                assertions: {
+                  type: "object",
+                  patternProperties: {
+                    ".*": {
+                      type: "object",
+                      additionalProperties: false,
+                      properties: {
+                        users: {
+                          type: "array",
+                          items: {
+                            type: "string",
+                            format: "user",
+                          },
+                        },
+                        excluded_users: {
+                          type: "array",
+                          items: {
+                            type: "string",
+                            format: "user",
+                          },
+                        },
+                      },
+                    },
+                  },
                 },
               },
             },
