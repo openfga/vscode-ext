@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.2.22
+
+### [0.2.22](https://github.com/openfga/vscode-ext/compare/v0.2.21...v0.2.22) (2024-05-08)
+
+- feat: add support for list users (#232) - See [example](https://github.com/openfga/cli/blob/7f8f86973799d9be6ae443147977e36595461bc9/example/model.fga.yaml#L72-L85)
+- fix: add block chomping for yaml store model field (#228)
+- fix: adding @ to allowable characters in id (#217)
+- chore: fix roadmap link in docs (#220) - thanks @solon
+
 ## v0.2.21
 
 ### [0.2.21](https://github.com/openfga/vscode-ext/compare/v0.2.20...v0.2.21) (2024-04-04)
