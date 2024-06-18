@@ -601,14 +601,6 @@ function validateListUsers(
             }
           }
         }
-
-        if (listUsers.assertions[assertion].excluded_users) {
-          for (const excludedUser of listUsers.assertions[assertion].excluded_users) {
-            if (!tuples.some((tuple) => tuple.user === excludedUser)) {
-              errors.push(undefinedTypeTuple(excludedUser, instancePath + `/assertions/${assertion}/excluded_users`));
-            }
-          }
-        }
       }
     }
   }
@@ -987,13 +979,6 @@ const OPENFGA_YAML_SCHEMA: Schema = {
                       additionalProperties: false,
                       properties: {
                         users: {
-                          type: "array",
-                          items: {
-                            type: "string",
-                            format: "user",
-                          },
-                        },
-                        excluded_users: {
                           type: "array",
                           items: {
                             type: "string",
