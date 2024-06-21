@@ -24,6 +24,7 @@
         "keyword.as.openfga",
         "keyword.define.openfga",
         "keyword.from.openfga",
+        "keyword.with.openfga",
         "keyword.model.openfga",
         "keyword.module.openfga",
         "keyword.extend.openfga",
@@ -31,9 +32,9 @@
         "keyword.schema.openfga",
         "keyword.self.openfga",
         "keyword.type.openfga",
-        "keyword.operator.word.intersection.openfga",
-        "keyword.operator.word.exclusion.openfga",
-        "keyword.operator.word.union.openfga",
+        "keyword.intersection.openfga",
+        "keyword.exclusion.openfga",
+        "keyword.union.openfga",
         "keyword.condition.openfga",
       ],
       "settings": {
@@ -43,7 +44,7 @@
     {
       "name": "Definition",
       "scope": [
-        "computed.relation.value.openfga"
+        "variable.parameter.computed.relation.value.openfga"
       ],
       "settings": {
         "foreground": "#FFFFFF",
@@ -65,6 +66,7 @@
     {
       "name": "Type Restrictions",
       "scope": [
+        "support.class.type.reference.value.openfga",
         "variable.parameter.type-restrictions.openfga",
         "relation.type-restrictions.value.openfga",
         "type.type-restrictions.value.openfga",
@@ -80,14 +82,14 @@
     },
     {
       "name": "Type",
-      "scope": ["support.class.module.name.value.openfga", "support.class.type.name.value.openfga", "entity.name.function.condition.openfga"],
+      "scope": ["support.class.module.name.value.openfga", "support.class.type.name.value.openfga", "support.class.entity.name.function.condition.openfga"],
       "settings": {
         "foreground": "#79ED83"
       }
     },
     {
       "name": "Relation",
-      "scope": ["entity.name.function.member.relation.name.openfga", "variable.parameter.name.condition.openfga"],
+      "scope": ["entity.name.function.member.relation.name.openfga", "entity.name.function.variable.parameter.name.condition.openfga"],
       "settings": {
         "foreground": "#20F1F5"
       }
