@@ -30,7 +30,7 @@
           "name": "keyword.condition.openfga"
         },
         "2": {
-          "name": "entity.name.function.condition.openfga"
+          "name": "support.class.entity.name.function.condition.openfga"
         },
         "3": {
           "patterns": [
@@ -38,7 +38,7 @@
               "match": "([_a-zA-Z][_a-zA-Z0-9]+)\\:\\s*([_a-zA-Z][_a-zA-Z0-9]+),?",
               "captures": {
                 "1": {
-                  "name": "variable.parameter.name.condition.openfga"
+                  "name": "entity.name.function.variable.parameter.name.condition.openfga"
                 },
                 "2": {
                   "name": "variable.parameter.type.condition.openfga"
@@ -88,15 +88,15 @@
           "match": "\\bself\\b"
         },
         {
-          "name": "keyword.operator.word.intersection.openfga",
+          "name": "keyword.intersection.openfga",
           "match": "\\band\\b"
         },
         {
-          "name": "keyword.operator.word.union.openfga",
+          "name": "keyword.union.openfga",
           "match": "\\bor\\b"
         },
         {
-          "name": "keyword.operator.word.exclusion.openfga",
+          "name": "keyword.exclusion.openfga",
           "match": "\\bbut\\snot\\b"
         }
       ]
@@ -143,10 +143,10 @@
               "name": "variable.parameter.type-restrictions.openfga"
             },
             "3": {
-              "name": "keyword.operator.word.with.openfga"
+              "name": "keyword.with.openfga"
             },
             "4": {
-              "name": "variable.parameter.type-restrictions.openfga"
+              "name": "support.class.type.reference.value.openfga"
             }
           }
         }
@@ -207,7 +207,7 @@
     "types": {
       "patterns": [
         {
-          "name": "computed.relation.value.openfga",
+          "name": "variable.parameter.computed.relation.value.openfga",
           "match": "\\b([a-zA-Z0-9-_]+)\\b"
         }
       ]
