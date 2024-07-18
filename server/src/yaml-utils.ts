@@ -4,8 +4,7 @@ import { Document, LineCounter, Node, Range as TokenRange, isMap, isPair, isScal
 import { LinePos } from "yaml/dist/errors";
 import { BlockMap, SourceToken } from "yaml/dist/parse/cst";
 import { ErrorObject, ValidateFunction } from "ajv";
-import { transformer } from "@openfga/syntax-transformer";
-import { YamlStoreValidator } from "./openfga-yaml-schema";
+import { transformer, validator } from "@openfga/syntax-transformer";
 import { TextDocument } from "vscode-languageserver-textdocument";
 import { URI } from "vscode-uri";
 
@@ -56,7 +55,7 @@ export function validateYamlStore(
   map: YAMLSourceMap,
 ): Diagnostic[] {
   const diagnostics: Diagnostic[] = [];
-  const schemaValidator: ValidateFunction = YamlStoreValidator();
+  const schemaValidator: ValidateFunction = validator.YamlStoreValidator();
   const jsonModel = transformer.transformDSLToJSONObject(model);
   let diagnosticRange;
 
