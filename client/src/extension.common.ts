@@ -53,7 +53,7 @@ export const transformDSLCommand = async (readFile: ReadFileFunction) => {
       break;
     } catch (err) {
       if (fgaModUri.path === "/") {
-        console.error("Unable to find closest fga.mod file.");
+        console.error("Unable to find closest fga.mod file: " + err);
         return undefined;
       }
       fgaModUri = URI.parse(fgaModUri.path.substring(0, fgaModUri.path.lastIndexOf("/")));
