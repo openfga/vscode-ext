@@ -23,7 +23,7 @@ export const clientUtils = (connection: _Connection, documents: TextDocuments<Te
         return await getFileContents(currentUri, fileName);
       } catch (err) {
         if (currentUri.path === "/") {
-          console.error("Unable to find " + fileName);
+          console.error(`Unable to find ${fileName}: ${err}`);
           return undefined;
         }
         const index = currentUri.path.lastIndexOf("/");
