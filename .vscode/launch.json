@@ -44,7 +44,7 @@
       "request": "launch",
       "args": ["--extensionDevelopmentPath=${workspaceFolder}", "--extensionDevelopmentKind=web"],
       "outFiles": ["${workspaceRoot}/client/out/**/*.js", "${workspaceRoot}/server/out/**/*.js"],
-      "preLaunchTask": "npm: watch"
+      "preLaunchTask": "npm: compile"
     },
     // TODO: fix failing web test:
     // Currently file handler helper defaults to 'vscode-test-web' for browser based tests
@@ -63,12 +63,6 @@
         "${workspaceRoot}/client/testFixture"
       ],
       "preLaunchTask": "npm: compile"
-    }
-  ],
-  "compounds": [
-    {
-      "name": "Client/Server",
-      "configurations": ["Launch Client", "Attach to Server"]
     }
   ]
 }
