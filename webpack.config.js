@@ -131,8 +131,8 @@ const nodeServerConfig = {
   output: {
     filename: "[name].js",
     path: path.join(__dirname, "server", "out"),
-    libraryTarget: "var",
-    library: "serverExportVar",
+    libraryTarget: 'commonjs2',
+    devtoolModuleFilenameTemplate: '../[resource-path]'
   },
   resolve: {
     mainFields: ["module", "main"],
@@ -175,6 +175,7 @@ const browserServerConfig = {
     path: path.join(__dirname, "server", "out"),
     libraryTarget: "var",
     library: "serverExportVar",
+    devtoolModuleFilenameTemplate: '../[resource-path]'
   },
   resolve: {
     mainFields: ["module", "main"],
