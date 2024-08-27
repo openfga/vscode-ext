@@ -5,7 +5,7 @@ Read the [OpenFGA Contribution Process](https://github.com/openfga/.github/blob/
 ## Getting Started
 
 - Run `npm install` in the root directory. This installs all necessary npm modules.
-- Run `npm run compile && npm run test-node` to execute the client node test suite.
+- Run `npm run compile` in the root directory build both server and client code.
 
 ## Distribution (Optional)
 
@@ -23,6 +23,7 @@ To generate an installable build of this extension, you can do the following:
 │   │   ├── test // End to End tests for Language Client / Server
 │   │   ├── extension.node.ts // Language Client node entry point
 │   │   └── extension.browser.ts // Language CLient web entry point
+│   └── testFixture // Directory containing test files used in e2e tests
 ├── package.json // The extension manifest.
 └── server // Language Server
     └── src
@@ -39,12 +40,14 @@ To generate an installable build of this extension, you can do the following:
 - Switch to the Run and Debug View in the Sidebar (Ctrl+Shift+D on Windows, Command+Shift+D on OSX).
 - Select `Launch Client` from the drop down (if it is not already).
 - Press ▷ to run the launch config (F5).
+- Select `Attach to Server` from the drop down, and press ▷ to enable debugging on server code
 
 ## Testing
 
-- Run `npm install` in the root directory. This installs all necessary npm modules.
-- Run `npm run compile` to compile the code & client for testing.
+- Run `npm run compile` to compile the server and client for testing.
 - Run `npm run test-node` to execute the client node test suite.
+- Run `npm run test-web` to execute the client browser test suite.
+- Run `npm run test-web-headless` to execute the client browser test suite in headless mode.
 
 ### Remote Testing the Web functionality
 
@@ -54,10 +57,10 @@ To generate an installable build of this extension, you can do the following:
 
 1. Use `mkcert` to generate a certificate for localhost
 2. Use `serve` to startup a minimal web server
-   ![Using serve as a websever](images/serve.png)
+   ![Using serve as a websever](/docs/images/serve.png)
 3. Open the command palette and choose:
    > Developer: Install Extension from location
 4. Enter your serve url and select intstall
-   ![Install extension from location](images/install-location.png)
+   ![Install extension from location](/docs/images/install-location.png)
 5. Extension will install, and be ready to test
-   ![Installed extension](images/installed-extension.png)
+   ![Installed extension](/docs/images/installed-extension.png)
