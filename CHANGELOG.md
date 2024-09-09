@@ -1,5 +1,14 @@
 # Changelog
 
+## v0.2.23
+
+### [0.2.23](https://github.com/openfga/vscode-ext/compare/v0.2.22...v0.2.23) (2024-09-06)
+
+- fix: `tupleuserset-not-direct` is now prioritized above `no-entrypoint` error (inherited from https://github.com/openfga/language/releases/tag/pkg/js/v0.2.0-beta.20)
+- fix: correct reported location of errors in some cases (inherited from https://github.com/openfga/language/releases/tag/pkg/js/v0.2.0-beta.20)
+- fix: syntax for custom themes (#260)
+- fix: remove excluded user field from list_users (#258)
+
 ## v0.2.22
 
 ### [0.2.22](https://github.com/openfga/vscode-ext/compare/v0.2.21...v0.2.22) (2024-05-08)
