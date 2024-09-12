@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.2.24
+
+### [0.2.24](https://github.com/openfga/vscode-ext/compare/v0.2.23...v0.2.24) (2024-09-12)
+
+- chore: re-releasing due to a bug in v0.2.23 build
+
 ## v0.2.23
 
 ### [0.2.23](https://github.com/openfga/vscode-ext/compare/v0.2.22...v0.2.23) (2024-09-06)
