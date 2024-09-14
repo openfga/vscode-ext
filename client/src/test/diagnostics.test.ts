@@ -184,6 +184,48 @@ suite("Should get diagnostics", () => {
         source: "ModelValidationError",
         autofix: "Add relation `owner` to type `folder`.",
       },
+      {
+        message: "the relation `owner` does not exist.",
+        range: toRange(14, 23, 14, 28),
+        severity: vscode.DiagnosticSeverity.Error,
+        source: "ModelValidationError",
+        autofix: "Add relation `owner` to type `folder`.",
+      },
+      {
+        message: "the relation `owner` does not exist.",
+        range: toRange(16, 23, 16, 28),
+        severity: vscode.DiagnosticSeverity.Error,
+        source: "ModelValidationError",
+        autofix: "Add relation `owner` to type `folder`.",
+      },
+      {
+        message: "the relation `owner` does not exist.",
+        range: toRange(18, 23, 18, 28),
+        severity: vscode.DiagnosticSeverity.Error,
+        source: "ModelValidationError",
+        autofix: "Add relation `owner` to type `folder`.",
+      },
+      {
+        message: "the relation `owner` does not exist.",
+        range: toRange(20, 23, 20, 28),
+        severity: vscode.DiagnosticSeverity.Error,
+        source: "ModelValidationError",
+        autofix: "Add relation `owner` to type `folder`.",
+      },
+      {
+        message: "the relation `owner` does not exist.",
+        range: toRange(22, 23, 22, 28),
+        severity: vscode.DiagnosticSeverity.Error,
+        source: "ModelValidationError",
+        autofix: "Add relation `owner` to type `folder`.",
+      },
+      {
+        message: "the relation `owner` does not exist.",
+        range: toRange(24, 23, 24, 28),
+        severity: vscode.DiagnosticSeverity.Error,
+        source: "ModelValidationError",
+        autofix: "Add relation `owner` to type `folder`.",
+      },
     ]);
   });
 });
