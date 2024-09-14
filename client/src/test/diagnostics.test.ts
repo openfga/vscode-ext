@@ -2,6 +2,10 @@ import * as vscode from "vscode";
 import * as assert from "assert";
 import { getDocUri, activate } from "./helper";
 
+interface DiagnosticWithAutofix extends vscode.Diagnostic {
+  autofix?: string;
+}
+
 suite("Should get diagnostics", () => {
   test("Diagnoses validation errors in an fga.yaml file using `model_file` field", async () => {
     const docUri = getDocUri("diagnostics/model-file-diagnsotic.openfga.yaml");
@@ -162,7 +166,6 @@ suite("Should get diagnostics", () => {
     ]);
   });
 
-  // Test for autofix suggestions
   test("Suggests autofixes for failing tests", async () => {
     const docUri = getDocUri("diagnostics/diagnostics.fga.yaml");
 
@@ -207,8 +210,7 @@ async function testDiagnostics(docUri: vscode.Uri, expectedDiagnostics: vscode.D
   });
 }
 
-// Function to test autofix suggestions
-async function testAutofixSuggestions(docUri: vscode.Uri, expectedDiagnostics: vscode.Diagnostic[]) {
+async function testAutofixSuggestions(docUri: vscode.Uri, expectedDiagnostics: DiagnosticWithAutofix[]) {
   await activate(docUri);
 
   const actualDiagnostics = vscode.languages.getDiagnostics(docUri);
@@ -216,7 +218,7 @@ async function testAutofixSuggestions(docUri: vscode.Uri, expectedDiagnostics: v
   assert.equal(actualDiagnostics.length, expectedDiagnostics.length);
 
   expectedDiagnostics.forEach((expectedDiagnostic, i) => {
-    const actualDiagnostic = actualDiagnostics[i];
+    const actualDiagnostic = actualDiagnostics[i] as DiagnosticWithAutofix;
     assert.equal(actualDiagnostic.message, expectedDiagnostic.message);
     assert.deepEqual(actualDiagnostic.range, expectedDiagnostic.range);
     assert.equal(actualDiagnostic.severity, expectedDiagnostic.severity);
