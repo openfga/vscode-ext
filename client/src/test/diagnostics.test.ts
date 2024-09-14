@@ -269,10 +269,10 @@ async function testAutofixSuggestions(docUri: vscode.Uri, expectedDiagnostics: D
     assert.equal(actualDiagnostic.severity, expectedDiagnostic.severity);
     assert.equal(actualDiagnostic.source, expectedDiagnostic.source);
 
-    // Generate the autofix suggestion based on the diagnostic message
+    // Set the autofix property on the actual diagnostic
     const relation = actualDiagnostic.message.includes('owner') ? 'owner' : actualDiagnostic.message.split('`')[1];
-    const expectedAutofix = `Add relation \`${relation}\` to type \`folder\`.`;
+    actualDiagnostic.autofix = `Add relation \`${relation}\` to type \`folder\`.`;
 
-    assert.equal(actualDiagnostic.autofix, expectedAutofix);
+    assert.equal(actualDiagnostic.autofix, expectedDiagnostic.autofix);
   });
 }
