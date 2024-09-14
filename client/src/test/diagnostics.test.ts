@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-unresolved
 import * as vscode from "vscode";
 import * as assert from "assert";
 import { getDocUri, activate } from "./helper";
@@ -162,6 +161,28 @@ suite("Should get diagnostics", () => {
       },
     ]);
   });
+
+  // Test for autofix suggestions
+  test("Suggests autofixes for failing tests", async () => {
+    const docUri = getDocUri("diagnostics/diagnostics.fga.yaml");
+
+    await testAutofixSuggestions(docUri, [
+      {
+        message: "the relation `owner` does not exist.",
+        range: toRange(10, 29, 10, 34),
+        severity: vscode.DiagnosticSeverity.Error,
+        source: "ModelValidationError",
+        autofix: "Add relation `owner` to type `folder`.",
+      },
+      {
+        message: "the relation `owner` does not exist.",
+        range: toRange(12, 23, 12, 28),
+        severity: vscode.DiagnosticSeverity.Error,
+        source: "ModelValidationError",
+        autofix: "Add relation `owner` to type `folder`.",
+      },
+    ]);
+  });
 });
 
 function toRange(sLine: number, sChar: number, eLine: number, eChar: number) {
@@ -183,5 +204,23 @@ async function testDiagnostics(docUri: vscode.Uri, expectedDiagnostics: vscode.D
     assert.deepEqual(actualDiagnostic.range, expectedDiagnostic.range);
     assert.equal(actualDiagnostic.severity, expectedDiagnostic.severity);
     assert.equal(actualDiagnostic.source, expectedDiagnostic.source);
+  });
+}
+
+// Function to test autofix suggestions
+async function testAutofixSuggestions(docUri: vscode.Uri, expectedDiagnostics: vscode.Diagnostic[]) {
+  await activate(docUri);
+
+  const actualDiagnostics = vscode.languages.getDiagnostics(docUri);
+
+  assert.equal(actualDiagnostics.length, expectedDiagnostics.length);
+
+  expectedDiagnostics.forEach((expectedDiagnostic, i) => {
+    const actualDiagnostic = actualDiagnostics[i];
+    assert.equal(actualDiagnostic.message, expectedDiagnostic.message);
+    assert.deepEqual(actualDiagnostic.range, expectedDiagnostic.range);
+    assert.equal(actualDiagnostic.severity, expectedDiagnostic.severity);
+    assert.equal(actualDiagnostic.source, expectedDiagnostic.source);
+    assert.equal(actualDiagnostic.autofix, expectedDiagnostic.autofix);
   });
 }

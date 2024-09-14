@@ -59,6 +59,12 @@ The extension currently offers 4 core features, with more to come.
 
 ![Errors being highlighted with validation](resources/validation_example.gif)
 
+- Running tests through the CLI and viewing output inline
+  - Open a terminal in VS Code
+  - Run `npm run test-inline` to execute the tests and display the output inline
+
+![Running tests through the CLI and viewing output inline](resources/test-inline.png)
+
 ## Workflow to use it with the FGA CLI
 
 The extension works great when combined with the [FGA CLI](https://github.com/openfga/cli) to iterate on your model and test it.

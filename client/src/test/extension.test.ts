@@ -49,4 +49,36 @@ suite("Should execute command", () => {
     assert.equal(JSON.stringify(resultFromCommand), JSON.stringify(original));
     assert.equal(transformer.transformJSONToDSL(resultFromCommand), transformer.transformJSONToDSL(original));
   });
+
+  // Test for autofix suggestions
+  test("Suggests autofixes for failing tests", async () => {
+    const docUri = getDocUri("diagnostics/diagnostics.fga.yaml");
+
+    await activate(docUri);
+
+    const diagnostics = await commands.executeCommand<vscode.Diagnostic[]>(
+      "vscode.executeDiagnosticProvider",
+      docUri,
+    );
+
+    const autofixSuggestions = diagnostics
+      .filter((diagnostic) => diagnostic.severity === vscode.DiagnosticSeverity.Error)
+      .map((diagnostic) => ({
+        message: diagnostic.message,
+        autofix: `Add relation \`${diagnostic.message.split("`")[1]}\` to type \`${diagnostic.message.split("`")[3]}\`.`,
+      }));
+
+    const expectedAutofixSuggestions = [
+      {
+        message: "the relation `owner` does not exist.",
+        autofix: "Add relation `owner` to type `folder`.",
+      },
+      {
+        message: "the relation `owner` does not exist.",
+        autofix: "Add relation `owner` to type `folder`.",
+      },
+    ];
+
+    assert.deepEqual(autofixSuggestions, expectedAutofixSuggestions);
+  });
 });
