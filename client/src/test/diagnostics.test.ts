@@ -213,6 +213,9 @@ async function testDiagnostics(docUri: vscode.Uri, expectedDiagnostics: vscode.D
 async function testAutofixSuggestions(docUri: vscode.Uri, expectedDiagnostics: DiagnosticWithAutofix[]) {
   await activate(docUri);
 
+  // Wait for diagnostics to be calculated
+  await new Promise(resolve => setTimeout(resolve, 1000));
+
   const actualDiagnostics = vscode.languages.getDiagnostics(docUri);
 
   assert.equal(actualDiagnostics.length, expectedDiagnostics.length);
