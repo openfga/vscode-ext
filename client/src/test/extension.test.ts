@@ -53,11 +53,12 @@ suite("Should execute command", () => {
 
   test("Suggests autofixes for failing tests", async () => {
     const docUri = getDocUri("diagnostics/diagnostics.fga.yaml");
+    await activate(docUri);
 
-    const diagnostics = await commands.executeCommand<vscode.Diagnostic[]>(
-      "vscode.executeDiagnosticProvider",
-      docUri,
-    );
+    // Wait for diagnostics to be calculated
+    await new Promise(resolve => setTimeout(resolve, 1000));
+
+    const diagnostics = vscode.languages.getDiagnostics(docUri);
 
     const autofixSuggestions = diagnostics
       .filter((diagnostic) => diagnostic.severity === vscode.DiagnosticSeverity.Error)
