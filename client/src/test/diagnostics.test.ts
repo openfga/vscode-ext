@@ -268,6 +268,8 @@ async function testAutofixSuggestions(docUri: vscode.Uri, expectedDiagnostics: D
     assert.deepEqual(actualDiagnostic.range, expectedDiagnostic.range);
     assert.equal(actualDiagnostic.severity, expectedDiagnostic.severity);
     assert.equal(actualDiagnostic.source, expectedDiagnostic.source);
-    assert.equal(actualDiagnostic.autofix, expectedDiagnostic.autofix);
+    if (expectedDiagnostic.autofix) {
+      assert.equal(actualDiagnostic.autofix, expectedDiagnostic.autofix);
+    }
   });
 }

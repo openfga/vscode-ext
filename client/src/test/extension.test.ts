@@ -57,10 +57,7 @@ suite("Should execute command", () => {
 
     await activate(docUri);
 
-    const diagnostics = await commands.executeCommand<vscode.Diagnostic[]>(
-      "vscode.executeDiagnosticProvider",
-      docUri,
-    );
+    const diagnostics = vscode.languages.getDiagnostics(docUri);
 
     const autofixSuggestions = diagnostics
       .filter((diagnostic) => diagnostic.severity === vscode.DiagnosticSeverity.Error)
