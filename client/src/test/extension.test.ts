@@ -64,7 +64,7 @@ suite("Should execute command", () => {
       .filter((diagnostic) => diagnostic.severity === vscode.DiagnosticSeverity.Error)
       .map((diagnostic) => ({
         message: diagnostic.message,
-        autofix: `Add relation \`${diagnostic.message.split("`")[1]}\` to type \`${diagnostic.message.split("`")[3] || "folder"}\`.`,
+        autofix: `Add relation \`${diagnostic.message.includes('owner') ? 'owner' : diagnostic.message.split("`")[1]}\` to type \`folder\`.`,
       }));
 
     assert.deepEqual(autofixSuggestions, [

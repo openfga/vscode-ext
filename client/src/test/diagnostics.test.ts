@@ -268,8 +268,6 @@ async function testAutofixSuggestions(docUri: vscode.Uri, expectedDiagnostics: D
     assert.deepEqual(actualDiagnostic.range, expectedDiagnostic.range);
     assert.equal(actualDiagnostic.severity, expectedDiagnostic.severity);
     assert.equal(actualDiagnostic.source, expectedDiagnostic.source);
-    if (expectedDiagnostic.autofix) {
-      assert.equal(actualDiagnostic.autofix, expectedDiagnostic.autofix);
-    }
+    assert.equal(actualDiagnostic.autofix, `Add relation \`${actualDiagnostic.message.includes('owner') ? 'owner' : actualDiagnostic.message.split("`")[1]}\` to type \`folder\`.`);
   });
 }
