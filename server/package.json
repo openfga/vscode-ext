@@ -12,8 +12,8 @@
     "url": "https://github.com/openfga/vscode-ext"
   },
   "dependencies": {
-    "@openfga/sdk": "^0.6.3",
-    "@openfga/syntax-transformer": "^0.2.0-beta.21",
+    "@openfga/sdk": "^0.7.0",
+    "@openfga/syntax-transformer": "^0.2.0-beta.22",
     "ajv": "^8.17.1",
     "vscode-languageserver": "^9.0.1",
     "vscode-languageserver-textdocument": "^1.0.12",
