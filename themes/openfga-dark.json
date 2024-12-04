@@ -36,6 +36,8 @@
         "keyword.exclusion.openfga",
         "keyword.union.openfga",
         "keyword.condition.openfga",
+        "keyword.mixin.openfga",
+        "keyword.include.openfga"
       ],
       "settings": {
         "foreground": "#AAAAAA"
@@ -82,7 +84,7 @@
     },
     {
       "name": "Type",
-      "scope": ["support.class.module.name.value.openfga", "support.class.type.name.value.openfga", "support.class.entity.name.function.condition.openfga"],
+      "scope": ["support.class.module.name.value.openfga", "support.class.type.name.value.openfga", "support.class.entity.name.function.condition.openfga", "support.class.mixin.name.value.openfga"],
       "settings": {
         "foreground": "#79ED83"
       }
@@ -90,6 +92,13 @@
     {
       "name": "Relation",
       "scope": ["entity.name.function.member.relation.name.openfga", "entity.name.function.variable.parameter.name.condition.openfga"],
+      "settings": {
+        "foreground": "#20F1F5"
+      }
+    },
+    {
+      "name": "Include",
+      "scope": ["entity.name.reference.mixin.name.openfga"],
       "settings": {
         "foreground": "#20F1F5"
       }

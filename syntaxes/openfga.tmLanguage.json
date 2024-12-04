@@ -19,7 +19,13 @@
       "include": "#define"
     },
     {
+      "include": "#include"
+    },
+    {
       "include": "#condition"
+    },
+    {
+      "include": "#mixins"
     }
   ],
   "repository": {
@@ -191,6 +197,32 @@
                 { "include": "#types" },
                 { "include": "#comments" }
               ]
+            }
+          }
+        }
+      ]
+    },
+    "mixins": {
+      "patterns": [
+        {
+          "match": "\\b(include)\\s+([a-zA-Z0-9-_]+)",
+          "captures": {
+            "1": {
+              "name": "keyword.include.openfga"
+            },
+            "2": {
+              "name": "entity.name.reference.mixin.name.openfga"
+            }
+          }
+        },
+        {
+          "match": "\\b(mixin)\\s+([a-zA-Z0-9-_]+)",
+          "captures": {
+            "1": {
+              "name": "keyword.mixin.openfga"
+            },
+            "2": {
+              "name": "support.class.mixin.name.value.openfga"
             }
           }
         }
