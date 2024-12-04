@@ -52,4 +52,14 @@ export const defaultDocumentationMap: DocumentationMap = {
       "Defines the schema version to be used, with currently only support for '1.1'. Note that the 1.0 schema is deprecated.",
     link: "https://openfga.dev/docs/modeling/migrating/migrating-schema-1-1",
   },
+  [getSymbol(OpenFGAParser.MIXIN)]: {
+    summary:
+      "A mixin is a way to reuse a set of relations across multiple objects. A mixin is defined as a set of relations that can be applied to one or more types.",
+    link: "https://openfga.dev/docs/configuration-language#what-is-a-mixin",
+  },
+  [getSymbol(OpenFGAParser.INCLUDE)]: {
+    summary: 
+      "The include directive is used to include the relations from a defined mixin within this type.",
+      link: "https://openfga.dev/docs/configuration-language#what-is-an-include",
+  }
 };
