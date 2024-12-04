@@ -54,12 +54,12 @@ export const defaultDocumentationMap: DocumentationMap = {
   },
   [getSymbol(OpenFGAParser.MIXIN)]: {
     summary:
-      "A mixin is a way to reuse a set of relations across multiple objects. A mixin is defined as a set of relations that can be applied to one or more types.",
+      "A mixin is a way to reuse a set of [relations](https://openfga.dev/docs/concepts#what-is-a-relation) across multiple [types](https://openfga.dev/docs/concepts#what-is-a-type).",
     link: "https://openfga.dev/docs/configuration-language#what-is-a-mixin",
   },
   [getSymbol(OpenFGAParser.INCLUDE)]: {
     summary: 
-      "The include directive is used to include the relations from a defined mixin within this type.",
+      "The include directive is used to include the [relations](https://openfga.dev/docs/concepts#what-is-a-relation) from a defined mixin within this [type](https://openfga.dev/docs/concepts#what-is-a-type).",
       link: "https://openfga.dev/docs/configuration-language#what-is-an-include",
   }
 };
