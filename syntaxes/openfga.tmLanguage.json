@@ -205,12 +205,15 @@
     "mixins": {
       "patterns": [
         {
-          "match": "\\b(include)\\s+([a-zA-Z0-9-_]+)",
+          "match": "\\b(include)\\s+([a-zA-Z0-9-_]+)(\\s*,?\\s*([a-zA-Z0-9-_]+))*",
           "captures": {
             "1": {
               "name": "keyword.include.openfga"
             },
             "2": {
+              "name": "entity.name.reference.mixin.name.openfga"
+            },
+            "5": {
               "name": "entity.name.reference.mixin.name.openfga"
             }
           }

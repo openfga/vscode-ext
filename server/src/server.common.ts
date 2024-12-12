@@ -14,6 +14,9 @@ import {
   DocumentUri,
   DocumentDiagnosticReport,
   DocumentDiagnosticParams,
+  FileOperationPatternKind,
+  DidOpenTextDocumentNotification,
+  DidOpenTextDocumentParams,
 } from "vscode-languageserver";
 
 import { TextDocument } from "vscode-languageserver-textdocument";
@@ -315,7 +318,7 @@ export function startServer(connection: _Connection) {
       return { modfile: yamlDoc, dsl: undefined, diagnostics: [...createDiagnostics(err)] };
     }
   }
-
+  
   // Respond to request for diagnostics from server
   connection.languages.diagnostics.on(async (params: DocumentDiagnosticParams): Promise<DocumentDiagnosticReport> => {
     try {
