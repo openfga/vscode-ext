@@ -184,8 +184,8 @@
     "@types/mocha": "^10.0.10",
     "@types/node": "^22.10.2",
     "@types/webpack-env": "^1.18.5",
-    "@typescript-eslint/eslint-plugin": "^8.18.1",
-    "@typescript-eslint/parser": "^8.18.1",
+    "@typescript-eslint/eslint-plugin": "^8.18.2",
+    "@typescript-eslint/parser": "^8.18.2",
     "@vscode/test-web": "^0.0.65",
     "@vscode/vsce": "^3.2.1",
     "assert-browserify": "^2.0.0",
@@ -198,6 +198,6 @@
     "process": "^0.11.10",
     "ts-loader": "^9.5.1",
     "webpack": "^5.97.1",
-    "webpack-cli": "^5.1.4"
+    "webpack-cli": "^6.0.1"
   }
 }
