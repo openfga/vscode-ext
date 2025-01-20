@@ -182,10 +182,10 @@
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
-    "@types/node": "^22.10.6",
+    "@types/node": "^22.10.7",
     "@types/webpack-env": "^1.18.5",
-    "@typescript-eslint/eslint-plugin": "^8.20.0",
-    "@typescript-eslint/parser": "^8.20.0",
+    "@typescript-eslint/eslint-plugin": "^8.21.0",
+    "@typescript-eslint/parser": "^8.21.0",
     "@vscode/test-web": "^0.0.65",
     "@vscode/vsce": "^3.2.1",
     "assert-browserify": "^2.0.0",
