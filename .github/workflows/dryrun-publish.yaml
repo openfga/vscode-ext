@@ -24,7 +24,7 @@ jobs:
           cache-dependency-path: ./package-lock.json
       - run: npm ci
       - name: Publish to Visual Studio Marketplace
-        uses: HaaLeo/publish-vscode-extension@28e2d3f5817fccf23c1f219eb0cecc903132d1a2 # 1.6.2
+        uses: HaaLeo/publish-vscode-extension@ca5561daa085dee804bf9f37fe0165785a9b14db # 2.0.0
         with:
           pat: "this_is_a_stub"
           registryUrl: https://marketplace.visualstudio.com/
