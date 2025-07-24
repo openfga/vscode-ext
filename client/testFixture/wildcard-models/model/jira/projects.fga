@@ -1,0 +1,6 @@
+module jira-projects
+
+type project
+  relations
+    define viewer: [user]
+    define editor: [user] or viewer

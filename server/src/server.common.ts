@@ -39,7 +39,7 @@ import { URI } from "vscode-uri";
 import { clientUtils } from "./client-utils";
 import { AuthorizationModel } from "@openfga/sdk";
 
-export function startServer(connection: _Connection) {
+export function startServer(connection: _Connection, wildcardResolver?: (patterns: string[], baseUri: URI) => Promise<{ pattern: string; files: string[] }[]>) {
   console.log = connection.console.log.bind(connection.console);
   console.error = connection.console.error.bind(connection.console);
 
@@ -261,6 +261,23 @@ export function startServer(connection: _Connection) {
     return [];
   }
 
+  // Resolve wildcard patterns to actual file paths
+  async function resolveWildcardPatterns(
+    patterns: string[],
+    baseUri: URI
+  ): Promise<{ pattern: string; files: string[] }[]> {
+    if (wildcardResolver) {
+      return await wildcardResolver(patterns, baseUri);
+    }
+    
+    // Fallback: treat all patterns as regular files
+    const results: { pattern: string; files: string[] }[] = [];
+    for (const pattern of patterns) {
+      results.push({ pattern, files: [pattern] });
+    }
+    return results;
+  }
+
   // Validate a given fga.mod
   async function validateFgaMod(
     text: string,
@@ -285,21 +302,44 @@ export function startServer(connection: _Connection) {
 
     const files: transformer.ModuleFile[] = [];
 
-    for (const file in yamlDoc.contents.value) {
-      const fileValue = yamlDoc.contents.value[file];
-      try {
-        files.push({
-          name: fileValue.value,
-          contents: (await clientRequests.getFileContents(URI.parse(uri), fileValue.value)).contents,
-        });
-      } catch (err: any) {
-        diagnostics.push({
-          message: `unable to retrieve contents of \`${fileValue.value}\`; ${err.message}`,
-          range: {
-            start: { line: fileValue.line.start, character: fileValue.column.start },
-            end: { line: fileValue.line.end, character: fileValue.column.end },
-          },
-        });
+    // Extract patterns from the modfile contents
+    const patterns = yamlDoc.contents.value.map(item => item.value);
+    
+    // Resolve wildcard patterns to actual files
+    const resolvedPatterns = await resolveWildcardPatterns(patterns, URI.parse(uri));
+    
+    // Process all resolved files
+    for (const resolvedPattern of resolvedPatterns) {
+      for (const filePath of resolvedPattern.files) {
+        try {
+          const fileContents = (await clientRequests.getFileContents(URI.parse(uri), filePath)).contents;
+          files.push({
+            name: filePath,
+            contents: fileContents,
+          });
+        } catch (err: any) {
+          // Find the original pattern position for error reporting
+          const originalPatternIndex = patterns.indexOf(resolvedPattern.pattern);
+          if (originalPatternIndex >= 0 && originalPatternIndex < yamlDoc.contents.value.length) {
+            const fileValue = yamlDoc.contents.value[originalPatternIndex];
+            diagnostics.push({
+              message: `unable to retrieve contents of \`${filePath}\` (from pattern \`${resolvedPattern.pattern}\`); ${err.message}`,
+              range: {
+                start: { line: fileValue.line.start, character: fileValue.column.start },
+                end: { line: fileValue.line.end, character: fileValue.column.end },
+              },
+            });
+          } else {
+            // Fallback if we can't find the pattern position
+            diagnostics.push({
+              message: `unable to retrieve contents of \`${filePath}\` (from pattern \`${resolvedPattern.pattern}\`); ${err.message}`,
+              range: {
+                start: { line: 0, character: 0 },
+                end: { line: 0, character: 0 },
+              },
+            });
+          }
+        }
       }
     }
 
