@@ -1,0 +1,8 @@
+module core
+
+type user
+
+type folder
+  relations
+    define parent: [folder]
+    define viewer: [user] or viewer from parent

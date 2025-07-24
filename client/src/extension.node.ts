@@ -1,4 +1,5 @@
 import * as path from "path";
+import { glob } from "glob";
 // eslint-disable-next-line import/no-unresolved
 import { workspace, ExtensionContext, commands, Uri } from "vscode";
 
@@ -43,6 +44,9 @@ export function activate(context: ExtensionContext) {
       async (uri: URI, file: string, resourceConfig: { scheme: string; authority: string | undefined }) => {
         return (await workspace.fs.readFile(Utils.joinPath(uri, file).with(resourceConfig))).toString();
       },
+      async (pattern: string, options?: any) => { // eslint-disable-line @typescript-eslint/no-explicit-any
+        return await glob(pattern, options);
+      }
     ),
   );
 
