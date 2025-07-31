@@ -27,8 +27,8 @@
   "engines": {
     "vscode": "^1.75.0"
   },
-  "main": "./client/out/extension.node",
-  "browser": "./client/out/extension.browser",
+  "main": "./client/out/extension.node.js",
+  "browser": "./client/out/extension.browser.js",
   "contributes": {
     "configuration": [
       {
