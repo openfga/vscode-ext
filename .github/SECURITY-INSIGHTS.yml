@@ -41,7 +41,7 @@ repository:
     dependency-management-policy: https://github.com/openfga/openfga/blob/main/docs/dependencies-policy.md
     governance: https://github.com/openfga/.github/blob/main/GOVERNANCE.md
     review-policy: https://github.com/openfga/.github/blob/main/CONTRIBUTING.md
-    security-policy: https://github.com/openfga/vscode-ext/SECURITY.md
+    security-policy: https://github.com/openfga/vscode-ext/security.md
 
   security:
     assessments:
