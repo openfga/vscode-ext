@@ -27,8 +27,8 @@
   "engines": {
     "vscode": "^1.75.0"
   },
-  "main": "./client/out/extension.node",
-  "browser": "./client/out/extension.browser",
+  "main": "./client/out/extension.node.js",
+  "browser": "./client/out/extension.browser.js",
   "contributes": {
     "configuration": [
       {
@@ -182,22 +182,22 @@
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
-    "@types/node": "^22.15.3",
+    "@types/node": "^24.1.0",
     "@types/webpack-env": "^1.18.8",
-    "@typescript-eslint/eslint-plugin": "^8.31.1",
-    "@typescript-eslint/parser": "^8.31.1",
-    "@vscode/test-web": "^0.0.68",
-    "@vscode/vsce": "^3.3.2",
+    "@typescript-eslint/eslint-plugin": "^8.38.0",
+    "@typescript-eslint/parser": "^8.38.0",
+    "@vscode/test-web": "^0.0.71",
+    "@vscode/vsce": "^3.6.0",
     "assert-browserify": "^2.0.0",
     "eslint": "^8.57.1",
-    "eslint-config-prettier": "^10.1.2",
-    "eslint-plugin-import": "^2.31.0",
-    "mocha": "^11.1.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-import": "^2.32.0",
+    "mocha": "^11.7.1",
     "path-browserify": "^1.0.1",
-    "prettier": "^3.5.3",
+    "prettier": "^3.6.2",
     "process": "^0.11.10",
     "ts-loader": "^9.5.2",
-    "webpack": "^5.99.7",
+    "webpack": "^5.101.0",
     "webpack-cli": "^6.0.1"
   }
 }
