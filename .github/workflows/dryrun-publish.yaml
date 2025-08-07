@@ -2,6 +2,8 @@ on:
   workflow_dispatch:
 
 name: Dryrun Publish Extension
+permissions:
+  contents: read
 jobs:
   test:
     uses: ./.github/workflows/main.yaml
