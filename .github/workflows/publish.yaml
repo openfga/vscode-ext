@@ -7,6 +7,8 @@ on:
 name: Publish Extension
 jobs:
   test:
+    permissions:
+      contents: read
     uses: ./.github/workflows/main.yaml
   publish:
     needs: test
