@@ -5,7 +5,7 @@ VS Code extension that provides syntax highlighting for the [OpenFGA](https://op
 [![Visual Studio Marketplace](https://img.shields.io/visual-studio-marketplace/v/openfga.openfga-vscode)](https://marketplace.visualstudio.com/items?itemName=openfga.openfga-vscode)
 [![Open VSX Version](https://img.shields.io/open-vsx/v/OpenFGA/openfga-vscode)](https://open-vsx.org/extension/OpenFGA/openfga-vscode)
 [![Release](https://img.shields.io/github/v/release/openfga/vscode-ext?sort=semver&color=green)](https://github.com/openfga/vscode-ext/releases)
-[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://github.com/openfga/vscode-ext/blob/main/LICENSE)
+[![OpenSSF Scorecard](https://api.securityscorecards.dev/projects/github.com/openfga/vscode-ext/badge)](https://securityscorecards.dev/viewer/?uri=github.com/openfga/vscode-ext)
 [![Join our community](https://img.shields.io/badge/slack-cncf_%23openfga-40abb8.svg?logo=slack)](https://openfga.dev/community)
 [![Twitter](https://img.shields.io/twitter/follow/openfga?color=%23179CF0&logo=twitter&style=flat-square "@openfga on Twitter")](https://twitter.com/openfga)
 
