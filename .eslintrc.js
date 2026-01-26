@@ -33,5 +33,11 @@ module.exports = {
       },
     ],
     "object-curly-spacing": ["error", "always"],
+    "import/no-unresolved": [
+      "error",
+      {
+        ignore: ["vscode"],
+      },
+    ],
   },
 };

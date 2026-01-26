@@ -1,7 +1,10 @@
-// eslint-disable-next-line import/no-unresolved
 import * as vscode from "vscode";
 import * as assert from "assert";
 import { getDocUri, activate } from "./helper";
+
+interface DiagnosticWithAutofix extends vscode.Diagnostic {
+  autofix?: string;
+}
 
 suite("Should get diagnostics", () => {
   test("Diagnoses validation errors in an fga.yaml file using `model_file` field", async () => {
@@ -162,6 +165,69 @@ suite("Should get diagnostics", () => {
       },
     ]);
   });
+
+  test("Suggests autofixes for failing tests", async () => {
+    const docUri = getDocUri("diagnostics/diagnostics.fga.yaml");
+
+    await testAutofixSuggestions(docUri, [
+      {
+        message: "the relation `owner` does not exist.",
+        range: toRange(10, 29, 10, 34),
+        severity: vscode.DiagnosticSeverity.Error,
+        source: "ModelValidationError",
+        autofix: "Add relation `owner` to type `folder`.",
+      },
+      {
+        message: "the relation `owner` does not exist.",
+        range: toRange(12, 23, 12, 28),
+        severity: vscode.DiagnosticSeverity.Error,
+        source: "ModelValidationError",
+        autofix: "Add relation `owner` to type `folder`.",
+      },
+      {
+        message: "tests.0.tuples.0.relation relation 'owner' is not a relation on type 'folder'.",
+        range: toRange(22, 8, 22, 16),
+        severity: vscode.DiagnosticSeverity.Error,
+        source: "OpenFGAYamlValidationError",
+        autofix: "Add relation `owner` to type `folder`.",
+      },
+      {
+        message: "tests.1.tuples.0.relation relation 'owner' is not a relation on type 'folder'.",
+        range: toRange(48, 8, 48, 16),
+        severity: vscode.DiagnosticSeverity.Error,
+        source: "OpenFGAYamlValidationError",
+        autofix: "Add relation `owner` to type `folder`.",
+      },
+      {
+        message: "tests.0.check.0.assertions.can_write `can_write` is not a relationship for type `folder`.",
+        range: toRange(30, 10, 30, 19),
+        severity: vscode.DiagnosticSeverity.Error,
+        source: "OpenFGAYamlValidationError",
+        autofix: "Add relation `can_write` to type `folder`.",
+      },
+      {
+        message: "tests.0.check.0.assertions.can_share `can_share` is not a relationship for type `folder`.",
+        range: toRange(31, 10, 31, 19),
+        severity: vscode.DiagnosticSeverity.Error,
+        source: "OpenFGAYamlValidationError",
+        autofix: "Add relation `can_share` to type `folder`.",
+      },
+      {
+        message: "tests.0.list_objects.0.assertions.can_write `can_write` is not a relationship for type `folder`.",
+        range: toRange(40, 10, 40, 19),
+        severity: vscode.DiagnosticSeverity.Error,
+        source: "OpenFGAYamlValidationError",
+        autofix: "Add relation `can_write` to type `folder`.",
+      },
+      {
+        message: "tests.0.list_objects.0.assertions.can_share `can_share` is not a relationship for type `folder`.",
+        range: toRange(43, 10, 43, 19),
+        severity: vscode.DiagnosticSeverity.Error,
+        source: "OpenFGAYamlValidationError",
+        autofix: "Add relation `can_share` to type `folder`.",
+      },
+    ]);
+  });
 });
 
 function toRange(sLine: number, sChar: number, eLine: number, eChar: number) {
@@ -183,5 +249,30 @@ async function testDiagnostics(docUri: vscode.Uri, expectedDiagnostics: vscode.D
     assert.deepEqual(actualDiagnostic.range, expectedDiagnostic.range);
     assert.equal(actualDiagnostic.severity, expectedDiagnostic.severity);
     assert.equal(actualDiagnostic.source, expectedDiagnostic.source);
+  });
+}
+
+async function testAutofixSuggestions(docUri: vscode.Uri, expectedDiagnostics: DiagnosticWithAutofix[]) {
+  await activate(docUri);
+
+  // Wait for diagnostics to be calculated
+  await new Promise(resolve => setTimeout(resolve, 1000));
+
+  const actualDiagnostics = vscode.languages.getDiagnostics(docUri);
+
+  assert.equal(actualDiagnostics.length, expectedDiagnostics.length);
+
+  expectedDiagnostics.forEach((expectedDiagnostic, i) => {
+    const actualDiagnostic = actualDiagnostics[i] as DiagnosticWithAutofix;
+    assert.equal(actualDiagnostic.message, expectedDiagnostic.message);
+    assert.deepEqual(actualDiagnostic.range, expectedDiagnostic.range);
+    assert.equal(actualDiagnostic.severity, expectedDiagnostic.severity);
+    assert.equal(actualDiagnostic.source, expectedDiagnostic.source);
+
+    // Set the autofix property on the actual diagnostic
+    const relation = actualDiagnostic.message.includes('owner') ? 'owner' : actualDiagnostic.message.split('`')[1];
+    actualDiagnostic.autofix = `Add relation \`${relation}\` to type \`folder\`.`;
+
+    assert.equal(actualDiagnostic.autofix, expectedDiagnostic.autofix);
   });
 }

@@ -178,7 +178,8 @@
     "test": "npm run test-node && npm run test-web-headless",
     "lint": "eslint ./client/src ./server/src --ext .ts,.tsx",
     "format:fix": "npx prettier --write .",
-    "postinstall": "cd client && npm install && cd ../server && npm install && cd .."
+    "postinstall": "cd client && npm install && cd ../server && npm install && cd ..",
+    "test-inline": "mocha --reporter spec"
   },
   "devDependencies": {
     "@types/mocha": "^10.0.10",
