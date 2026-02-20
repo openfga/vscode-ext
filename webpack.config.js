@@ -34,6 +34,7 @@ const webClientConfig = /** @type WebpackConfig */ {
       //assert: require.resolve("assert"),
       path: require.resolve("path-browserify"),
       assert: require.resolve("assert-browserify"),
+      crypto: false,
     },
   },
   module: {
@@ -181,7 +182,9 @@ const browserServerConfig = {
     mainFields: ["module", "main"],
     extensions: [".ts", ".js"],
     alias: {},
-    fallback: {},
+    fallback: {
+      crypto: false,
+    },
   },
   module: {
     rules: [
