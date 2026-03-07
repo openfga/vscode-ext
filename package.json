@@ -60,7 +60,11 @@
           ".fga",
           ".openfga"
         ],
-        "configuration": "./fga.language-configuration.json"
+        "configuration": "./fga.language-configuration.json",
+        "icon": {
+          "light": "./resources/openfga-icon.png",
+          "dark": "./resources/openfga-icon.png"
+        }
       },
       {
         "id": "mod-openfga",
