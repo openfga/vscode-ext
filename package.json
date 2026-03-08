@@ -62,8 +62,8 @@
         ],
         "configuration": "./fga.language-configuration.json",
         "icon": {
-          "light": "./resources/openfga-icon.png",
-          "dark": "./resources/openfga-icon.png"
+          "light": "./resources/openfga-icon-color.png",
+          "dark": "./resources/openfga-icon-color.png"
         }
       },
       {
