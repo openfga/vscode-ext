@@ -31,7 +31,9 @@ updates:
         exclude-patterns:
           - "eslint"
   - package-ecosystem: "github-actions"
-    directory: "/"
+    directories:
+      - "/"
+      - "/.github/actions/upload-artifact"
     schedule:
       interval: "weekly"
     groups:
