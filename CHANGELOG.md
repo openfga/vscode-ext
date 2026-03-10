@@ -1,5 +1,15 @@
 # Changelog
 
+## [Unreleased](https://github.com/openfga/vscode-ext/compare/v0.2.25...HEAD)
+
+## v0.2.25
+
+### [0.2.25](https://github.com/openfga/vscode-ext/compare/v0.2.24...v0.2.25) (2026-03-10)
+
+### Added
+
+- feat: add icon for .openfga and .fga files (#468) - thanks @rawshashimi1604
+
 ## v0.2.24
 
 ### [0.2.24](https://github.com/openfga/vscode-ext/compare/v0.2.23...v0.2.24) (2024-09-12)
