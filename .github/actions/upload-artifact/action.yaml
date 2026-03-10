@@ -8,7 +8,7 @@ runs:
   using: "composite"
   steps:
     - name: Install Node.js
-      uses: actions/setup-node@e33196f7422957bea03ed53f6fbb155025ffc7b8 # 3.7.0
+      uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # 6.3.0
       with:
         node-version: 20.x
         registry-url: "https://registry.npmjs.org"
@@ -22,7 +22,7 @@ runs:
       shell: bash
     - run: npx vsce package -o openfga-latest.vsix
       shell: bash
-    - uses: actions/upload-artifact@0b7f8abb1508181956e8e162db84b466c27e18ce # 3.1.2
+    - uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # 7.0.0
       with:
         name: openfga-latest.vsix
         path: ./openfga-latest.vsix
