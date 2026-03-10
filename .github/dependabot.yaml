@@ -1,4 +1,4 @@
-version: 2
+oiversion: 2
 updates:
   - package-ecosystem: "npm"
     directory: "/"
@@ -31,7 +31,9 @@ updates:
         exclude-patterns:
           - "eslint"
   - package-ecosystem: "github-actions"
-    directory: "/"
+    directories:
+      - "/"
+      - "/actions/upload-artifact"
     schedule:
       interval: "weekly"
     groups:
