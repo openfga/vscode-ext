@@ -6,7 +6,9 @@
 
 ### [0.2.26-beta.1](https://github.com/openfga/vscode-ext/compare/v0.2.25...v0.2.26-beta.1) (2026-03-10)
 
-- fix: split publish jobs for Open VSX Registry and Visual Studio Marketplace to run independently
+#### Maintenance
+- fix: verify PAT token before publishing
+- chore: split publish jobs for Open VSX Registry and Visual Studio Marketplace to run independently
 
 ## v0.2.25
 
