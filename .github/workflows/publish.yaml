@@ -15,22 +15,14 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+    # Versions below should be kept in sync with package.json devDependencies
     steps:
-      - name: Checkout
-        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-      - name: Install Node.js
-        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # 6.3.0
-        with:
-          node-version: 20.x
-          cache: "npm"
-          cache-dependency-path: ./package-lock.json
-      - run: npm ci
       - name: Verify VS Marketplace token
-        run: npx vsce verify-pat openfga
+        run: npx @vscode/vsce@3.7.1 verify-pat openfga
         env:
           VSCE_PAT: ${{ secrets.VS_MARKETPLACE_TOKEN }}
       - name: Verify Open VSX token
-        run: npx ovsx verify-pat openfga -p "$OVSX_PAT"
+        run: npx ovsx@0.10.9 verify-pat openfga -p "$OVSX_PAT"
         env:
           OVSX_PAT: ${{ secrets.OPEN_VSX_TOKEN }}
   publish-openvsx:
