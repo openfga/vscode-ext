@@ -6,7 +6,7 @@
 
 ### Added
 
-- feat: add icon for .openfga and .fga files (#468) - thanks @rawshashivi1604
+- feat: add icon for .openfga and .fga files (#468) - thanks @rawshashimi1604
 
 ## v0.2.24
 
