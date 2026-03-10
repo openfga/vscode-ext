@@ -13,7 +13,7 @@
     "zanzibar"
   ],
   "license": "Apache-2.0",
-  "version": "0.2.25",
+  "version": "0.2.26-beta.1",
   "repository": {
     "type": "git",
     "url": "https://github.com/openfga/vscode-ext"
@@ -197,6 +197,7 @@
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.32.0",
     "mocha": "^11.7.5",
+    "ovsx": "^0.10.9",
     "path-browserify": "^1.0.1",
     "prettier": "^3.8.1",
     "process": "^0.11.10",
