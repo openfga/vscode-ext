@@ -10,8 +10,23 @@ jobs:
     permissions:
       contents: read
     uses: ./.github/workflows/main.yaml
-  publish:
+  verify-tokens:
     needs: test
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    # Versions below should be kept in sync with package.json devDependencies
+    steps:
+      - name: Verify VS Marketplace token
+        run: npx @vscode/vsce@3.7.1 verify-pat openfga
+        env:
+          VSCE_PAT: ${{ secrets.VS_MARKETPLACE_TOKEN }}
+      - name: Verify Open VSX token
+        run: npx ovsx@0.10.9 verify-pat openfga -p "$OVSX_PAT"
+        env:
+          OVSX_PAT: ${{ secrets.OPEN_VSX_TOKEN }}
+  publish-openvsx:
+    needs: [test, verify-tokens]
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -34,22 +49,45 @@ jobs:
         uses: HaaLeo/publish-vscode-extension@ca5561daa085dee804bf9f37fe0165785a9b14db # 2.0.0
         with:
           pat: ${{ secrets.OPEN_VSX_TOKEN }}
+          preRelease: ${{ contains(github.ref, '-') }}
+  publish-vscode-marketplace:
+    needs: [test, verify-tokens]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - name: Checkout
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+      - name: Install Node.js
+        uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # 6.3.0
+        with:
+          node-version: 20.x
+          registry-url: "https://registry.npmjs.org"
+          scope: "@openfga"
+          always-auth: false
+          cache: "npm"
+          cache-dependency-path: ./package-lock.json
+      - run: npm ci
       - name: Publish to Visual Studio Marketplace
         uses: HaaLeo/publish-vscode-extension@ca5561daa085dee804bf9f37fe0165785a9b14db # 2.0.0
         with:
           pat: ${{ secrets.VS_MARKETPLACE_TOKEN }}
           registryUrl: https://marketplace.visualstudio.com/
+          preRelease: ${{ contains(github.ref, '-') }}
   create-release:
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/v')
-    needs: publish
+    needs: [publish-openvsx, publish-vscode-marketplace]
     permissions:
       contents: write
     steps:
       - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - uses: Roang-zero1/github-create-release-action@57eb9bdce7a964e48788b9e78b5ac766cb684803 # v3.0.1
         with:
-          version_regex: ^v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+
+          version_regex: ^v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+(-[a-zA-Z0-9.]+)?$
+          prerelease_regex: ^v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+-
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - id: upload-artifact
