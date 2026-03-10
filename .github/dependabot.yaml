@@ -33,7 +33,7 @@ updates:
   - package-ecosystem: "github-actions"
     directories:
       - "/"
-      - "/actions/upload-artifact"
+      - "/.github/actions/upload-artifact"
     schedule:
       interval: "weekly"
     groups:
