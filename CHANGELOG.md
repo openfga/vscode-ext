@@ -4,7 +4,7 @@
 
 ## v0.2.25
 
-## [0.2.25](https://github.com/openfga/vscode-ext/compare/v0.2.24...v0.2.25) - (2026-03-10)
+### [0.2.25](https://github.com/openfga/vscode-ext/compare/v0.2.24...v0.2.25) (2026-03-10)
 
 ### Added
 
