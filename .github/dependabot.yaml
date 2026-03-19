@@ -4,6 +4,9 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    commit-message:
+      prefix: "chore(deps)"
+      prefix-development: "chore(deps-dev)"
     groups:
       dependencies:
         patterns:
@@ -14,6 +17,9 @@ updates:
     directory: "/server"
     schedule:
       interval: "weekly"
+    commit-message:
+      prefix: "chore(deps)"
+      prefix-development: "chore(deps-dev)"
     groups:
       dependencies:
         patterns:
@@ -24,6 +30,9 @@ updates:
     directory: "/client"
     schedule:
       interval: "weekly"
+    commit-message:
+      prefix: "chore(deps)"
+      prefix-development: "chore(deps-dev)"
     groups:
       dependencies:
         patterns:
@@ -36,6 +45,8 @@ updates:
       - "/.github/actions/upload-artifact"
     schedule:
       interval: "weekly"
+    commit-message:
+      prefix: "chore(deps)"
     groups:
       dependencies:
         patterns:
