@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-unresolved
 import { ExtensionContext, Uri, commands, workspace } from "vscode";
 import { LanguageClientOptions } from "vscode-languageclient";
 

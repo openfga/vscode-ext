@@ -11,8 +11,7 @@ updates:
       dependencies:
         patterns:
           - "*"
-        exclude-patterns:
-          - "eslint"
+        exclude-patterns: []
   - package-ecosystem: "npm"
     directory: "/server"
     schedule:
@@ -24,8 +23,7 @@ updates:
       dependencies:
         patterns:
           - "*"
-        exclude-patterns:
-          - "eslint"
+        exclude-patterns: []
   - package-ecosystem: "npm"
     directory: "/client"
     schedule:
@@ -37,8 +35,7 @@ updates:
       dependencies:
         patterns:
           - "*"
-        exclude-patterns:
-          - "eslint"
+        exclude-patterns: []
   - package-ecosystem: "github-actions"
     directories:
       - "/"
