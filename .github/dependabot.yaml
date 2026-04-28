@@ -9,7 +9,7 @@ updates:
       prefix-development: "chore(deps-dev)"
     ignore:
       - dependency-name: "eslint"
-        versions: [">=10.0.0, <11.0.0"]
+        versions: [">=10.0.0 <11.0.0"]
     groups:
       dependencies:
         patterns:
@@ -25,7 +25,7 @@ updates:
       prefix-development: "chore(deps-dev)"
     ignore:
       - dependency-name: "eslint"
-        versions: [">=10.0.0, <11.0.0"]
+        versions: [">=10.0.0 <11.0.0"]
     groups:
       dependencies:
         patterns:
@@ -41,7 +41,7 @@ updates:
       prefix-development: "chore(deps-dev)"
     ignore:
       - dependency-name: "eslint"
-        versions: [">=10.0.0, <11.0.0"]
+        versions: [">=10.0.0 <11.0.0"]
     groups:
       dependencies:
         patterns:
