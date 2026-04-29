@@ -21,12 +21,12 @@
     "vscode": "^1.75.0"
   },
   "dependencies": {
-    "@openfga/sdk": "^0.9.3",
+    "@openfga/sdk": "^0.9.5",
     "@openfga/syntax-transformer": "^0.2.1",
     "vscode-languageclient": "^9.0.1"
   },
   "devDependencies": {
-    "@types/vscode": "^1.110.0",
+    "@types/vscode": "^1.116.0",
     "@vscode/test-electron": "^2.5.2"
   }
 }
