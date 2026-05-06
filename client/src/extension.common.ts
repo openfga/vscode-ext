@@ -1,5 +1,4 @@
 import { transformer } from "@openfga/syntax-transformer";
-// eslint-disable-next-line import/no-unresolved
 import { window, workspace } from "vscode";
 import { URI } from "vscode-uri";
 

@@ -1,5 +1,4 @@
 import * as assert from "assert";
-// eslint-disable-next-line import/no-unresolved
 import { TextDocument, commands, window, workspace } from "vscode";
 import { getDocUri, activate } from "./helper";
 import { transformer } from "@openfga/syntax-transformer";
