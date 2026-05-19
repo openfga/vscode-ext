@@ -23,7 +23,11 @@
   },
   "homepage": "https://github.com/openfga/vscode-ext#readme",
   "publisher": "openfga",
-  "categories": [],
+  "categories": [
+    "Programming Languages",
+    "Themes",
+    "Snippets"
+  ],
   "engines": {
     "vscode": "^1.75.0"
   },
