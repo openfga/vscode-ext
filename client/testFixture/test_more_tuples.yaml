@@ -1,0 +1,3 @@
+- user: user:test2
+  relation: viewer
+  object: folder:test2
