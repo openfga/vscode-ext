@@ -26,7 +26,11 @@
       ],
       "extra-files": [
         { "type": "json", "path": "client/package.json", "jsonpath": "$.version" },
-        { "type": "json", "path": "server/package.json", "jsonpath": "$.version" }
+        { "type": "json", "path": "client/package-lock.json", "jsonpath": "$.version" },
+        { "type": "json", "path": "client/package-lock.json", "jsonpath": "$.packages[''].version" },
+        { "type": "json", "path": "server/package.json", "jsonpath": "$.version" },
+        { "type": "json", "path": "server/package-lock.json", "jsonpath": "$.version" },
+        { "type": "json", "path": "server/package-lock.json", "jsonpath": "$.packages[''].version" }
       ]
     }
   }
