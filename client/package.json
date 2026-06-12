@@ -23,10 +23,10 @@
   "dependencies": {
     "@openfga/sdk": "^0.9.6",
     "@openfga/syntax-transformer": "^0.2.1",
-    "vscode-languageclient": "^9.0.1"
+    "vscode-languageclient": "^10.0.0"
   },
   "devDependencies": {
     "@types/vscode": "^1.120.0",
-    "@vscode/test-electron": "^2.5.2"
+    "@vscode/test-electron": "^3.0.0"
   }
 }
