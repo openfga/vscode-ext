@@ -1,7 +1,5 @@
 # Changelog
 
-## [Unreleased](https://github.com/openfga/vscode-ext/compare/v0.2.26...HEAD)
-
 ## v0.2.26
 
 ### [0.2.26](https://github.com/openfga/vscode-ext/compare/v0.2.25...v0.2.26) (2026-03-10)
