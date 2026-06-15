@@ -1,5 +1,4 @@
 import * as path from "path";
-// eslint-disable-next-line import/no-unresolved
 import { workspace, ExtensionContext, commands, Uri } from "vscode";
 
 import { LanguageClient, LanguageClientOptions, ServerOptions, TransportKind } from "vscode-languageclient/node";
