@@ -1,0 +1,24 @@
+---
+name: Simple Validation Test
+model: |
+  model
+    schema 1.1
+  type user
+  type folder
+    relations
+      define owner: [user]
+      define viewer: [user] or owner
+# This should work - no tuple files defined
+tests:
+  - name: basic-test
+    description: Test without tuple files
+    tuples:
+      - user: user:anne
+        relation: owner
+        object: folder:1
+    check:
+      - user: user:anne
+        object: folder:1
+        assertions:
+          owner: true
+          viewer: true
