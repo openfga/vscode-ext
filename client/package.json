@@ -22,7 +22,7 @@
   },
   "dependencies": {
     "@openfga/sdk": "^0.9.6",
-    "@openfga/syntax-transformer": "^0.2.1",
+    "@openfga/syntax-transformer": "^0.2.2",
     "vscode-languageclient": "^9.0.1"
   },
   "devDependencies": {
