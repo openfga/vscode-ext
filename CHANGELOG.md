@@ -1,5 +1,18 @@
 # Changelog
 
+## [0.2.27](https://github.com/openfga/vscode-ext/compare/v0.2.26...v0.2.27) (2026-07-07)
+
+
+### Fixed
+
+* [Snyk] Security upgrade yaml from 2.8.2 to 2.8.3 ([#493](https://github.com/openfga/vscode-ext/issues/493)) ([ce9091c](https://github.com/openfga/vscode-ext/commit/ce9091cf0bcd991c5438aefd9115355996ccf39a))
+* build(deps-dev) - bump the dependencies group with 4 updates ([#483](https://github.com/openfga/vscode-ext/issues/483)) ([80cc65f](https://github.com/openfga/vscode-ext/commit/80cc65fb9b14a49e90c48dadead76903b6a1ba81))
+
+
+### Miscellaneous
+
+* release 0.2.27 ([e5ed976](https://github.com/openfga/vscode-ext/commit/e5ed97601297c4bcfa422d40e7e9ee389c8c2f43))
+
 ## v0.2.26
 
 ### [0.2.26](https://github.com/openfga/vscode-ext/compare/v0.2.25...v0.2.26) (2026-03-10)
