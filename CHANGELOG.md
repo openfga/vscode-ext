@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.27](https://github.com/openfga/vscode-ext/compare/v0.2.26...v0.2.27) (2026-07-07)
+
+### Changed
+
+* chore(deps): bump @openfga/syntax-transformer to 0.2.2 ([#557](https://github.com/openfga/vscode-ext/pull/557))
+
+
 ## v0.2.26
 
 ### [0.2.26](https://github.com/openfga/vscode-ext/compare/v0.2.25...v0.2.26) (2026-03-10)
