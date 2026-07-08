@@ -76,7 +76,8 @@ jobs:
           pat: ${{ secrets.VS_MARKETPLACE_TOKEN }}
           registryUrl: https://marketplace.visualstudio.com/
           preRelease: ${{ contains(github.ref, '-') }}
-  create-release:
+  # Build the VSIX and attach it to the draft release created by release-please.
+  attach-asset:
     runs-on: ubuntu-latest
     if: startsWith(github.ref, 'refs/tags/v')
     needs: [publish-openvsx, publish-vscode-marketplace]
@@ -84,19 +85,18 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
-      - uses: Roang-zero1/github-create-release-action@57eb9bdce7a964e48788b9e78b5ac766cb684803 # v3.0.1
-        with:
-          version_regex: ^v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+(-[a-zA-Z0-9.]+)?$
-          prerelease_regex: ^v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+-
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - id: upload-artifact
         name: Upload Artifact
         uses: ./.github/actions/upload-artifact
-      - name: Upload Artifact to Release
-        uses: svenstaro/upload-release-action@29e53e917877a24fad85510ded594ab3c9ca12de # v2.11.5
-        with:
-          repo_token: ${{ secrets.GITHUB_TOKEN }}
-          file: ${{ steps.upload-artifact.outputs.location }}
-          tag: ${{ github.ref }}
-          overwrite: true
+      - name: Attach VSIX to draft release
+        run: gh release upload "${GITHUB_REF_NAME}" "${ASSET}" --clobber
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REF_NAME: ${{ github.ref_name }}
+          ASSET: ${{ steps.upload-artifact.outputs.location }}
+  # Undraft the release once the VSIX is attached (this makes it immutable).
+  undraft-release:
+    needs: attach-asset
+    permissions:
+      contents: write
+    uses: openfga/.github/.github/workflows/undraft-release.yml@835baf31562809ad9eb884c73efc5b79318f700f # pin@main
