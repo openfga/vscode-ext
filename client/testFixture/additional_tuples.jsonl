@@ -1,0 +1,2 @@
+{"user": "user:charlie", "relation": "owner", "object": "folder:3"}
+{"user": "user:david", "relation": "viewer", "object": "folder:4"}
