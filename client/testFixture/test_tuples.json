@@ -1,0 +1,7 @@
+[
+  {
+    "user": "user:test",
+    "relation": "owner", 
+    "object": "folder:test"
+  }
+]
