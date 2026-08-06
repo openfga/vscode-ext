@@ -25,7 +25,10 @@ jobs:
           scope: "@openfga"
           always-auth: false
           cache: "npm"
-          cache-dependency-path: ./package-lock.json
+          cache-dependency-path: |
+            package-lock.json
+            client/package-lock.json
+            server/package-lock.json
       - run: npm install
       - run: npm run lint
       - run: npm audit
@@ -50,7 +53,10 @@ jobs:
           scope: "@openfga"
           always-auth: false
           cache: "npm"
-          cache-dependency-path: ./package-lock.json
+          cache-dependency-path: |
+            package-lock.json
+            client/package-lock.json
+            server/package-lock.json
       - run: npm install
       - run: npx playwright install
       - run: npm run compile

@@ -23,7 +23,10 @@ jobs:
           scope: "@openfga"
           always-auth: false
           cache: "npm"
-          cache-dependency-path: ./package-lock.json
+          cache-dependency-path: |
+            package-lock.json
+            client/package-lock.json
+            server/package-lock.json
       - run: npm ci
       - name: Publish to Visual Studio Marketplace
         uses: HaaLeo/publish-vscode-extension@ca5561daa085dee804bf9f37fe0165785a9b14db # 2.0.0

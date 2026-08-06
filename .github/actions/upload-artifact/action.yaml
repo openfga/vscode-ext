@@ -15,10 +15,11 @@ runs:
         scope: "@openfga"
         always-auth: false
         cache: "npm"
-        cache-dependency-path: ./package-lock.json
+        cache-dependency-path: |
+          package-lock.json
+          client/package-lock.json
+          server/package-lock.json
     - run: npm ci
-      shell: bash
-    - run: npm install @vscode/vsce
       shell: bash
     - run: npx vsce package -o openfga-latest.vsix
       shell: bash
