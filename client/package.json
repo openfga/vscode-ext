@@ -18,6 +18,7 @@
     "url": "https://github.com/openfga/vscode-ext"
   },
   "engines": {
+    "node": ">=22",
     "vscode": "^1.75.0"
   },
   "dependencies": {
@@ -27,6 +28,6 @@
   },
   "devDependencies": {
     "@types/vscode": "^1.120.0",
-    "@vscode/test-electron": "^2.5.2"
+    "@vscode/test-electron": "^3.1.0"
   }
 }
