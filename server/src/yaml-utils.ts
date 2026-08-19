@@ -1,8 +1,7 @@
 import { Range, Position, Diagnostic, DiagnosticSeverity } from "vscode-languageserver";
 
 import { Document, LineCounter, Node, Range as TokenRange, isMap, isPair, isScalar, isSeq } from "yaml";
-import { LinePos } from "yaml/dist/errors";
-import { BlockMap, SourceToken } from "yaml/dist/parse/cst";
+import type { CST } from "yaml";
 import { ErrorObject, ValidateFunction } from "ajv";
 import { transformer, validator } from "@openfga/syntax-transformer";
 import { TextDocument } from "vscode-languageserver-textdocument";
@@ -15,6 +14,8 @@ export type YamlStoreValidateResults = {
 };
 
 export type YamlFileFIeldContents = { contents: string; contentsUri: string; diagnostic?: Diagnostic };
+
+type LinePos = ReturnType<LineCounter["linePos"]>;
 
 export function isStringValue(str: unknown) {
   return typeof str == "string" || str instanceof String;
@@ -39,8 +40,8 @@ export function getFieldPosition(
   let position: { line: number; col: number } = { line: 0, col: 0 };
 
   // Get the model token and find its position
-  (yamlDoc.contents?.srcToken as BlockMap).items.forEach((i) => {
-    if (i.key?.offset !== undefined && (i.key as SourceToken).source === field) {
+  (yamlDoc.contents?.srcToken as CST.BlockMap).items.forEach((i) => {
+    if (i.key?.offset !== undefined && (i.key as CST.SourceToken).source === field) {
       position = lineCounter.linePos(i.key?.offset);
     }
   });
