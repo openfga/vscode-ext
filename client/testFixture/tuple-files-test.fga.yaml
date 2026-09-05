@@ -1,0 +1,27 @@
+---
+name: Multiple Tuple Files Test
+model: |
+  model
+    schema 1.1
+  type user
+  type folder
+    relations
+      define owner: [user]
+      define viewer: [user] or owner
+      define can_view: viewer
+tuple_files:
+  - tuples.json
+  - more_tuples.yaml
+  - additional_tuples.jsonl
+  - extra_tuples.csv
+tests:
+  - name: test-with-tuple-files
+    description: testing with multiple tuple files
+    tuple_files:
+      - test_tuples.json
+      - test_more_tuples.yaml
+    check:
+      - user: user:anne
+        object: folder:1
+        assertions:
+          can_view: true

@@ -1,0 +1,19 @@
+---
+name: Invalid Extension Test
+model: |
+  model
+    schema 1.1
+  type user
+  type folder
+    relations
+      define owner: [user]
+tuple_file: invalid_tuples.txt
+tuple_files:
+  - valid_tuples.json
+  - invalid_tuples.xyz
+tests:
+  - name: test-invalid-extensions
+    tuple_file: test_invalid.doc
+    tuple_files:
+      - valid_test.yaml
+      - invalid_test.unknown
