@@ -65,5 +65,5 @@ function createWorkerLanguageClient(context: ExtensionContext, clientOptions: La
   const worker = new Worker(serverMain.toString(true));
 
   // create the language server client to communicate with the server running in the worker
-  return new LanguageClient("openfgaLanguageServer", "OpenFGA Language Server", clientOptions, worker);
+  return new LanguageClient("openfgaLanguageServer", "OpenFGA Language Server", worker, clientOptions);
 }

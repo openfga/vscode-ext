@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "module": "commonjs",
+    "module": "esnext",
     "target": "es2020",
     "lib": ["es2020", "WebWorker"],
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     "outDir": "out",
     "rootDir": "src",
     "sourceMap": true
