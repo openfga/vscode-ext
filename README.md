@@ -123,6 +123,8 @@ tests: # required
           can_share: []
 ```
 
+For the full store file syntax, see the [store file documentation](https://openfga.dev/docs/modeling/testing).
+
 When ready to test, from the terminal, and while inside your working directory, run:
 
 ```shell
