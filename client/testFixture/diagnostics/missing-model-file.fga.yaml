@@ -1,0 +1,10 @@
+---
+name: Store with a model_file that does not exist
+model_file: ./no-such-model.fga
+tests:
+  - name: test-1
+    check:
+      - user: user:anne
+        object: folder:1
+        assertions:
+          owner: true
