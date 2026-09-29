@@ -1,0 +1,3 @@
+- user: user:anne
+  relation: editor
+  object: folder:1
