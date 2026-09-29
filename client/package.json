@@ -24,7 +24,7 @@
   "dependencies": {
     "@openfga/sdk": "^0.9.7",
     "@openfga/syntax-transformer": "^0.2.2",
-    "vscode-languageclient": "^10.1.1"
+    "vscode-languageclient": "^10.1.2"
   },
   "devDependencies": {
     "@types/vscode": "^1.138.0",
