@@ -1,0 +1,3 @@
+user,relation,object
+user:eve,owner,folder:5
+user:frank,viewer,folder:6
