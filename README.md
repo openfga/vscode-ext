@@ -26,13 +26,44 @@ OpenFGA is designed to make it easy for application builders to model their perm
 
 ## Installation
 
-You can install the OpenFGA VS Code plugin from:
+### Prerequisites
 
-- [OpenFGA on the VS Code marketplace](https://marketplace.visualstudio.com/items?itemName=openfga.openfga-vscode)
+- [Visual Studio Code](https://code.visualstudio.com/) version 1.75.0 or later
+
+### Method 1: Install from VS Code Marketplace (Recommended)
+
+1. Open Visual Studio Code
+2. Click on the Extensions icon in the Activity Bar (or press `Ctrl+Shift+X` on Windows/Linux or `Cmd+Shift+X` on macOS)
+3. Search for "OpenFGA" in the search box
+4. Look for the extension published by "openfga"
+5. Click the "Install" button
+
+Alternatively, you can install directly from the [OpenFGA VS Code Marketplace page](https://marketplace.visualstudio.com/items?itemName=openfga.openfga-vscode) by clicking "Install".
+
+### Method 2: Install from OpenVSX Registry
+
+If you're using VS Code compatible editors (like VSCodium), you can install from:
 - [OpenFGA on the OpenVSX Registry](https://open-vsx.org/extension/OpenFGA/openfga-vscode)
-- [The VSIX releases on GitHub](https://github.com/openfga/vscode-ext/releases) for manual installation
+
+### Method 3: Manual Installation from VSIX File
+
+Use this method if you want to install a specific version or if you're unable to access the marketplace:
+
+1. Download the latest VSIX file from the [GitHub Releases page](https://github.com/openfga/vscode-ext/releases)
+2. Open Visual Studio Code
+3. Open the Command Palette (`Ctrl+Shift+P` on Windows/Linux or `Cmd+Shift+P` on macOS)
+4. Type "Extensions: Install from VSIX..." and select it
+5. Browse to and select the downloaded VSIX file
+6. Click "Install"
 
   ![Installing from VSIX file](resources/vsix-install.png)
+
+### Verification
+
+After installation, you can verify the extension is working by:
+1. Creating a new file with a `.fga` extension
+2. You should see syntax highlighting for OpenFGA language constructs
+3. The extension should appear in your installed extensions list
 
 ## Usage
 
