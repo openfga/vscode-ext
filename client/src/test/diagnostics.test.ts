@@ -161,6 +161,33 @@ suite("Should get diagnostics", () => {
       },
     ]);
   });
+
+  // Before #364, a `tuple_file`'s contents were fetched and then thrown away,
+  // so a tuple living in one was invisible to validation. Both diagnostics
+  // below come from file-sourced tuples and do not appear at all without the
+  // merge. Each points at the `tuple_file` entry that supplied it, because the
+  // tuple has no node of its own in this document, and names the file so the
+  // reader knows where to go. The indices show the append order: the inline
+  // tuple keeps index 0, so its own diagnostics keep pointing at its own line.
+  test("Diagnoses validation errors in tuples supplied by a tuple_file", async () => {
+    const docUri = getDocUri("diagnostics/tuple-file/tuple-file.fga.yaml");
+
+    await testDiagnostics(docUri, [
+      {
+        message: "tuples.1.relation relation 'editor' is not a relation on type 'folder'. (from ./store-tuples.yaml)",
+        range: toRange(10, 12, 10, 31),
+        severity: vscode.DiagnosticSeverity.Error,
+        source: "OpenFGAYamlValidationError",
+      },
+      {
+        message:
+          "tests.0.tuples.1.relation relation 'viewer' is not a relation on type 'folder'. (from ./test-tuples.yaml)",
+        range: toRange(17, 16, 17, 34),
+        severity: vscode.DiagnosticSeverity.Error,
+        source: "OpenFGAYamlValidationError",
+      },
+    ]);
+  });
 });
 
 function toRange(sLine: number, sChar: number, eLine: number, eChar: number) {
