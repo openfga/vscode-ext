@@ -17,12 +17,16 @@ jobs:
       contents: read
     # Versions below should be kept in sync with package.json devDependencies
     steps:
+      - name: Install Node.js
+        uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # 7.1.0
+        with:
+          node-version: 24.x
       - name: Verify VS Marketplace token
-        run: npx @vscode/vsce@3.7.1 verify-pat openfga
+        run: npx @vscode/vsce@4.0.0 verify-pat openfga
         env:
           VSCE_PAT: ${{ secrets.VS_MARKETPLACE_TOKEN }}
       - name: Verify Open VSX token
-        run: npx ovsx@0.10.9 verify-pat openfga -p "$OVSX_PAT"
+        run: npx ovsx@1.3.0 verify-pat openfga -p "$OVSX_PAT"
         env:
           OVSX_PAT: ${{ secrets.OPEN_VSX_TOKEN }}
   publish-openvsx:
@@ -38,7 +42,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # 7.1.0
         with:
-          node-version: 22.x
+          node-version: 24.x
           registry-url: "https://registry.npmjs.org"
           scope: "@openfga"
           always-auth: false
@@ -66,7 +70,7 @@ jobs:
       - name: Install Node.js
         uses: actions/setup-node@949feb2413d6458794dcd2491c4babbbce0c15c1 # 7.1.0
         with:
-          node-version: 22.x
+          node-version: 24.x
           registry-url: "https://registry.npmjs.org"
           scope: "@openfga"
           always-auth: false

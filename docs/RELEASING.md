@@ -2,7 +2,7 @@
 
 ## Prerequisites
 
-- [Node.js](https://nodejs.org/) v20.x installed
+- [Node.js](https://nodejs.org/) v24.x (LTS) installed
 - Commit access to the [openfga/vscode-ext](https://github.com/openfga/vscode-ext) repository
 - GPG key configured for signing tags (see [GitHub docs](https://docs.github.com/en/authentication/managing-commit-signature-verification))
 
