@@ -10,12 +10,15 @@ updates:
     ignore:
       - dependency-name: "eslint"
         versions: [">=10.0.0 <11.0.0"]
+      - dependency-name: "@eslint/js"
+        versions: [">=10.0.0 <11.0.0"]
     groups:
       dependencies:
         patterns:
           - "*"
         exclude-patterns:
           - "eslint"
+          - "@eslint/js"
   - package-ecosystem: "npm"
     directory: "/server"
     schedule:
@@ -26,12 +29,15 @@ updates:
     ignore:
       - dependency-name: "eslint"
         versions: [">=10.0.0 <11.0.0"]
+      - dependency-name: "@eslint/js"
+        versions: [">=10.0.0 <11.0.0"]
     groups:
       dependencies:
         patterns:
           - "*"
         exclude-patterns:
           - "eslint"
+          - "@eslint/js"
   - package-ecosystem: "npm"
     directory: "/client"
     schedule:
@@ -42,12 +48,15 @@ updates:
     ignore:
       - dependency-name: "eslint"
         versions: [">=10.0.0 <11.0.0"]
+      - dependency-name: "@eslint/js"
+        versions: [">=10.0.0 <11.0.0"]
     groups:
       dependencies:
         patterns:
           - "*"
         exclude-patterns:
           - "eslint"
+          - "@eslint/js"
   - package-ecosystem: "github-actions"
     directories:
       - "/"

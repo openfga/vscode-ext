@@ -54,6 +54,12 @@ const webClientConfig = /** @type WebpackConfig */ {
           fullySpecified: false
         },
       },
+      {
+        // mocha >= 12 is an ES module package, but `mocha/mocha.js` is a UMD bundle. Parse it as CommonJS so it
+        // doesn't detect the web extension host's `module`/`exports` and overwrite the test runner's exports.
+        test: /[\\/]node_modules[\\/]mocha[\\/]mocha\.js$/,
+        type: "javascript/auto",
+      },
     ],
   },
   plugins: [
