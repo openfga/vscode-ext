@@ -27,7 +27,7 @@ export function activate(context: ExtensionContext) {
     initializationOptions: {},
   };
 
-  const client = createWorkerLanguageClient(context, clientOptions);
+  client = createWorkerLanguageClient(context, clientOptions);
 
   client.start();
 
