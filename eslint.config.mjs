@@ -1,54 +1,35 @@
 import js from "@eslint/js";
-import tseslint from "typescript-eslint";
+import { defineConfig, globalIgnores } from "eslint/config";
+import eslintConfigPrettier from "eslint-config-prettier/flat";
 import importX from "eslint-plugin-import-x";
-import prettier from "eslint-config-prettier";
 import globals from "globals";
+import tseslint from "typescript-eslint";
 
-export default tseslint.config(
-  {
-    ignores: [
-      "node_modules/**",
-      "client/node_modules/**",
-      "client/out/**",
-      "server/node_modules/**",
-      "server/out/**",
-      "src/parser/grammar.ts",
-    ],
-  },
+export default defineConfig([
+  globalIgnores(["client/out/", "server/out/"]),
   {
     files: ["client/src/**/*.{ts,tsx}", "server/src/**/*.{ts,tsx}"],
-    extends: [
-      js.configs.recommended,
-      ...tseslint.configs.recommended,
-      importX.flatConfigs.recommended,
-      prettier,
-    ],
+    extends: [js.configs.recommended, tseslint.configs.recommended, importX.flatConfigs.recommended],
     languageOptions: {
-      parserOptions: {
-        ecmaVersion: 2021,
-        sourceType: "module",
-      },
       globals: {
         ...globals.browser,
-        ...globals.es2021,
         ...globals.node,
       },
     },
     rules: {
-      // TypeScript handles module resolution; the rules below require a
-      // TypeScript-aware resolver to work correctly with ambient VSCode
-      // modules and declaration files. tsc catches these errors instead.
+      // Without a TypeScript-aware resolver these fail on ambient VSCode modules and declaration files, and import-x's
+      // `typescript` preset needs eslint-import-resolver-typescript (not installed). tsc catches these errors instead.
       "import-x/no-unresolved": "off",
       "import-x/namespace": "off",
       "import-x/named": "off",
+      // Silenced in #80 to clear existing findings; original reason not recorded.
       "no-case-declarations": "off",
-      "linebreak-style": ["error", "unix"],
+      // Silenced in #80 to clear existing findings; original reason not recorded.
       "@typescript-eslint/ban-ts-comment": "off",
+      // Existing `any` usages are tolerated but surfaced as warnings.
       "@typescript-eslint/no-explicit-any": "warn",
-      quotes: ["error", "double"],
-      semi: ["error", "always"],
-      "max-len": ["warn", { code: 120 }],
-      "object-curly-spacing": ["error", "always"],
     },
   },
-);
+  // Must stay last: turns off any rule that conflicts with Prettier.
+  eslintConfigPrettier,
+]);
