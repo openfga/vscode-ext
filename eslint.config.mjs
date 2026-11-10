@@ -17,6 +17,8 @@ export default defineConfig([
       },
     },
     rules: {
+      // The preset defers this to tsc, which only reports it with allowUnreachableCode: false (unset here).
+      "no-unreachable": "error",
       // Without a TypeScript-aware resolver these fail on ambient VSCode modules and declaration files, and import-x's
       // `typescript` preset needs eslint-import-resolver-typescript (not installed). tsc catches these errors instead.
       "import-x/no-unresolved": "off",
@@ -30,6 +32,8 @@ export default defineConfig([
       "@typescript-eslint/no-explicit-any": "warn",
     },
   },
-  // Must stay last: turns off any rule that conflicts with Prettier.
+  // Must stay last apart from the override below: turns off any rule that conflicts with Prettier.
   eslintConfigPrettier,
+  // Keeps the ASI guard that eslint-config-prettier disables.
+  { rules: { "no-unexpected-multiline": "error" } },
 ]);
