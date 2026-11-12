@@ -1,5 +1,29 @@
 # Changelog
 
+## [0.2.29](https://github.com/openfga/vscode-ext/compare/v0.2.28...v0.2.29) (2026-11-12)
+
+
+### Fixed
+
+* resize extension icon to 512x512 for VS Marketplace ([#640](https://github.com/openfga/vscode-ext/issues/640)) ([caf0ce8](https://github.com/openfga/vscode-ext/commit/caf0ce84120f26f628c8dc7918223245187d35c7))
+
+
+### Miscellaneous
+
+* release 0.2.29 ([b3d7f3e](https://github.com/openfga/vscode-ext/commit/b3d7f3edf6b744bc1f68e830c8e107eb2c925571))
+
+## [0.2.28](https://github.com/openfga/vscode-ext/compare/v0.2.27...v0.2.28) (2026-11-12)
+
+
+### Fixed
+
+* **ci:** upgrade VS Code test runner ([#582](https://github.com/openfga/vscode-ext/issues/582)) ([ccea27d](https://github.com/openfga/vscode-ext/commit/ccea27d2e5270fd7d5a71e2cd53ba2b75c82287a))
+
+
+### Documentation
+
+* link store file documentation from README ([#606](https://github.com/openfga/vscode-ext/issues/606)) ([a423948](https://github.com/openfga/vscode-ext/commit/a423948b97d66195f74a989015d62ec8dfcb1693))
+
 ## [0.2.27](https://github.com/openfga/vscode-ext/compare/v0.2.26...v0.2.27) (2026-07-07)
 
 ### Changed
