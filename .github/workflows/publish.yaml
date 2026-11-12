@@ -15,12 +15,11 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
-    # Versions below should be kept in sync with package.json devDependencies
+    # Version below should be kept in sync with package.json devDependencies
+    # VS Marketplace uses Trusted Publishing (OIDC), so there is no token to verify
     steps:
-      - name: Verify VS Marketplace token
-        run: npx @vscode/vsce@3.7.1 verify-pat openfga
       - name: Verify Open VSX token
-        run: npx ovsx@0.10.9 verify-pat openfga -p "$OVSX_PAT"
+        run: npx ovsx@1.1.1 verify-pat openfga -p "$OVSX_PAT"
         env:
           OVSX_PAT: ${{ secrets.OPEN_VSX_TOKEN }}
   publish-openvsx:
@@ -56,6 +55,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: read
+      id-token: write # Required for VS Marketplace Trusted Publishing (OIDC)
     steps:
       - name: Checkout
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
@@ -74,11 +74,9 @@ jobs:
             client/package-lock.json
             server/package-lock.json
       - run: npm ci
+      # Trusted Publishing requires @vscode/vsce >= 4.0.0 (--oidc flag)
       - name: Publish to Visual Studio Marketplace
-        uses: HaaLeo/publish-vscode-extension@1b8df468b849f76a143b8c18bf0ffa2075398d12 # 2.1.0
-        with:
-          registryUrl: https://marketplace.visualstudio.com/
-          preRelease: ${{ contains(github.ref, '-') }}
+        run: npx @vscode/vsce@4.1.0 publish --oidc ${{ contains(github.ref, '-') && '--pre-release' || '' }}
   # Build the VSIX and attach it to the draft release created by release-please.
   attach-asset:
     runs-on: ubuntu-latest
