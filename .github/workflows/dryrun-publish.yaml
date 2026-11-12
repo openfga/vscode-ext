@@ -28,9 +28,6 @@ jobs:
             client/package-lock.json
             server/package-lock.json
       - run: npm ci
-      - name: Publish to Visual Studio Marketplace
-        uses: HaaLeo/publish-vscode-extension@1b8df468b849f76a143b8c18bf0ffa2075398d12 # 2.1.0
-        with:
-          pat: "this_is_a_stub"
-          registryUrl: https://marketplace.visualstudio.com/
-          dryRun: true
+      # vsce has no publish dry run, so package with the same vsce version publish.yaml uses
+      - name: Dry run publish to Visual Studio Marketplace
+        run: npx @vscode/vsce@4.1.0 package ${{ contains(github.ref, '-') && '--pre-release' || '' }}
