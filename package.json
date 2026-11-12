@@ -181,7 +181,8 @@
     "test-web-headless": "vscode-test-web --browserType=chromium --headless --extensionDevelopmentPath=. --extensionTestsPath=./client/out/test/index.browser.js ./client/testFixture",
     "test": "npm run test-node && npm run test-web-headless",
     "lint": "eslint ./client/src ./server/src",
-    "format:fix": "npx prettier --write .",
+    "format:check": "prettier --check client/src server/src eslint.config.mjs",
+    "format:fix": "prettier --write client/src server/src eslint.config.mjs",
     "postinstall": "cd client && npm install && cd ../server && npm install && cd .."
   },
   "overrides": {
@@ -189,24 +190,24 @@
     "serialize-javascript": "^7.1.4"
   },
   "devDependencies": {
-    "@eslint/js": "^9.0.0",
+    "@eslint/js": "^10.0.1",
     "@types/mocha": "^10.0.10",
     "@types/node": "^25.9.2",
     "@types/webpack-env": "^1.18.8",
     "@vscode/test-web": "^0.0.81",
     "@vscode/vsce": "^3.9.2",
     "assert-browserify": "^2.0.0",
-    "eslint": "^9.0.0",
+    "eslint": "^10.14.0",
     "eslint-config-prettier": "^10.1.8",
-    "eslint-plugin-import-x": "^4.17.1",
-    "globals": "^15.0.0",
+    "eslint-plugin-import-x": "^4.18.0",
+    "globals": "^17.14.0",
     "mocha": "^11.8.0",
     "ovsx": "^1.1.1",
     "path-browserify": "^1.0.1",
     "prettier": "^3.9.6",
     "process": "^0.11.10",
     "ts-loader": "^9.6.2",
-    "typescript-eslint": "^8.68.0",
+    "typescript-eslint": "^8.72.1",
     "webpack": "^5.110.1",
     "webpack-cli": "^7.2.3"
   }
