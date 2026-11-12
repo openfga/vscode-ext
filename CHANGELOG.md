@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.2.29](https://github.com/openfga/vscode-ext/compare/v0.2.28...v0.2.29) (2026-11-12)
+
+
+### Fixed
+
+* resize extension icon to 512x512 for VS Marketplace ([#640](https://github.com/openfga/vscode-ext/issues/640)) ([caf0ce8](https://github.com/openfga/vscode-ext/commit/caf0ce84120f26f628c8dc7918223245187d35c7))
+
+
+### Miscellaneous
+
+* release 0.2.29 ([b3d7f3e](https://github.com/openfga/vscode-ext/commit/b3d7f3edf6b744bc1f68e830c8e107eb2c925571))
+
 ## [0.2.28](https://github.com/openfga/vscode-ext/compare/v0.2.27...v0.2.28) (2026-11-12)
 
 
