@@ -24,10 +24,6 @@ export default defineConfig([
       "import-x/no-unresolved": "off",
       "import-x/namespace": "off",
       "import-x/named": "off",
-      // Silenced in #80 to clear existing findings; original reason not recorded.
-      "no-case-declarations": "off",
-      // Silenced in #80 to clear existing findings; original reason not recorded.
-      "@typescript-eslint/ban-ts-comment": "off",
       // Existing `any` usages are tolerated but surfaced as warnings.
       "@typescript-eslint/no-explicit-any": "warn",
     },

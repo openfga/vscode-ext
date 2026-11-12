@@ -182,7 +182,7 @@
     "test": "npm run test-node && npm run test-web-headless",
     "lint": "eslint ./client/src ./server/src",
     "format:check": "prettier --check client/src server/src eslint.config.mjs",
-    "format:fix": "npx prettier --write .",
+    "format:fix": "prettier --write client/src server/src eslint.config.mjs",
     "postinstall": "cd client && npm install && cd ../server && npm install && cd .."
   },
   "overrides": {
