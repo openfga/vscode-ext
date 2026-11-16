@@ -1,12 +1,24 @@
 {
-  "editor.insertSpaces": false,
+  "editor.insertSpaces": true,
   "typescript.tsc.autoDetect": "off",
-  "typescript.preferences.quoteStyle": "single",
+  "typescript.preferences.quoteStyle": "double",
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
+    "source.fixAll.eslint": "explicit"
+  },
+  // Prettier owns formatting. Scoped per language so the openfga language is not handed to Prettier.
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true
   },
   "[openfga]": {
-    "editor.tabSize": 2,
-    "editor.insertSpaces": true
+    "editor.tabSize": 2
   }
 }

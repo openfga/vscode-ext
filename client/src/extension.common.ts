@@ -43,7 +43,7 @@ export const transformDSLCommand = async (readFile: ReadFileFunction) => {
 
   // Since docuemnt is not a standalone, look for Modular model
   let fgaModUri = URI.parse(uri.path.substring(0, uri.path.lastIndexOf("/")));
-  let contents = undefined;
+  let contents: string;
 
   // Lookup
   for (;;) {

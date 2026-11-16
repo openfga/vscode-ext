@@ -7,15 +7,10 @@ updates:
     commit-message:
       prefix: "chore(deps)"
       prefix-development: "chore(deps-dev)"
-    ignore:
-      - dependency-name: "eslint"
-        versions: [">=10.0.0 <11.0.0"]
     groups:
       dependencies:
         patterns:
           - "*"
-        exclude-patterns:
-          - "eslint"
   - package-ecosystem: "npm"
     directory: "/server"
     schedule:
@@ -23,15 +18,10 @@ updates:
     commit-message:
       prefix: "chore(deps)"
       prefix-development: "chore(deps-dev)"
-    ignore:
-      - dependency-name: "eslint"
-        versions: [">=10.0.0 <11.0.0"]
     groups:
       dependencies:
         patterns:
           - "*"
-        exclude-patterns:
-          - "eslint"
   - package-ecosystem: "npm"
     directory: "/client"
     schedule:
@@ -39,15 +29,10 @@ updates:
     commit-message:
       prefix: "chore(deps)"
       prefix-development: "chore(deps-dev)"
-    ignore:
-      - dependency-name: "eslint"
-        versions: [">=10.0.0 <11.0.0"]
     groups:
       dependencies:
         patterns:
           - "*"
-        exclude-patterns:
-          - "eslint"
   - package-ecosystem: "github-actions"
     directories:
       - "/"
