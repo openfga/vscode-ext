@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.30](https://github.com/openfga/vscode-ext/compare/v0.2.29...v0.2.30) (2026-11-17)
+
+
+### Miscellaneous
+
+* release 0.2.30 ([3a198e7](https://github.com/openfga/vscode-ext/commit/3a198e78781255c92600b9253d004fd04d999477))
+
 ## [0.2.29](https://github.com/openfga/vscode-ext/compare/v0.2.28...v0.2.29) (2026-11-12)
 
 
