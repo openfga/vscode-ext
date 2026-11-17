@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.30](https://github.com/openfga/vscode-ext/compare/v0.2.29...v0.2.30) (2026-11-17)
+
+
+### Security
+
+* bump @openfga/sdk to 0.9.8 to resolve [GHSA-7833-hg9v-mvxg](https://github.com/openfga/js-sdk/security/advisories/GHSA-7833-hg9v-mvxg) ([#643](https://github.com/openfga/vscode-ext/issues/643), [#645](https://github.com/openfga/vscode-ext/issues/645)) ([85002b2](https://github.com/openfga/vscode-ext/commit/85002b2bb5e8a4ea9f82369526ec25f4f3660dcd), [bf869e4](https://github.com/openfga/vscode-ext/commit/bf869e4ee38ad7a9baa14b9c28fdc3e8f89c7383))
+
 ## [0.2.29](https://github.com/openfga/vscode-ext/compare/v0.2.28...v0.2.29) (2026-11-12)
 
 
