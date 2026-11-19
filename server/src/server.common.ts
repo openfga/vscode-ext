@@ -22,7 +22,7 @@ import { errors, transformer, validator } from "@openfga/syntax-transformer";
 
 import { defaultDocumentationMap } from "./documentation";
 import { getDuplicationFix, getMissingDefinitionFix, getReservedTypeNameFix } from "./code-action";
-import { LineCounter, YAMLSeq, isScalar, parseDocument, visitAsync, Document } from "yaml";
+import { LineCounter, YAMLSeq, isScalar, isSeq, parseDocument, visitAsync, Document } from "yaml";
 import {
   YAMLSourceMap,
   YamlStoreValidateResults,
@@ -106,6 +106,12 @@ export function startServer(connection: _Connection) {
     connection.languages.diagnostics.refresh();
   });
 
+  // Validate that tuple file has a supported extension
+  function validateTupleFileExtension(fileName: string): boolean {
+    const supportedExtensions = [".json", ".yaml", ".yml", ".csv", ".jsonl"];
+    return supportedExtensions.some(ext => fileName.toLowerCase().endsWith(ext));
+  }
+
   // Validate YAML store file
   async function validateYamlSyntaxAndModel(textDocument: TextDocument): Promise<YamlStoreValidateResults> {
     const lineCounter = new LineCounter();
@@ -135,14 +141,53 @@ export function startServer(connection: _Connection) {
       async Pair(_, pair) {
         if (pair.key && isScalar(pair.key) && pair.key.value === "tuple_file" && isScalar(pair.value)) {
           const fileName = pair.value;
+          const fileNameStr = fileName.value as string;
+          
+          // Validate file extension
+          if (!validateTupleFileExtension(fileNameStr)) {
+            diagnostics.push({
+              range: getRangeFromToken(fileName.range, textDocument),
+              message: "tuple_file must have a supported extension (.json, .yaml, .yml, .csv, .jsonl)",
+              source: "ParseError",
+            });
+          }
+          
           try {
-            await clientRequests.getFileContents(URI.parse(textDocument.uri), fileName.value as string);
+            await clientRequests.getFileContents(URI.parse(textDocument.uri), fileNameStr);
           } catch (err) {
             diagnostics.push({
               range: getRangeFromToken(fileName.range, textDocument),
               message: "error with external file: " + (err as Error).message,
               source: "ParseError",
             });
+          }
+        } else if (pair.key && isScalar(pair.key) && pair.key.value === "tuple_files" && isSeq(pair.value)) {
+          // Handle tuple_files array
+          const tupleFiles = pair.value;
+          for (let i = 0; i < tupleFiles.items.length; i++) {
+            const fileItem = tupleFiles.items[i];
+            if (isScalar(fileItem) && fileItem.value) {
+              const fileNameStr = fileItem.value as string;
+              
+              // Validate file extension
+              if (!validateTupleFileExtension(fileNameStr)) {
+                diagnostics.push({
+                  range: getRangeFromToken(fileItem.range, textDocument),
+                  message: "tuple_files entries must have a supported extension (.json, .yaml, .yml, .csv, .jsonl)",
+                  source: "ParseError",
+                });
+              }
+              
+              try {
+                await clientRequests.getFileContents(URI.parse(textDocument.uri), fileNameStr);
+              } catch (err) {
+                diagnostics.push({
+                  range: getRangeFromToken(fileItem.range, textDocument),
+                  message: "error with external file: " + (err as Error).message,
+                  source: "ParseError",
+                });
+              }
+            }
           }
         }
       },
