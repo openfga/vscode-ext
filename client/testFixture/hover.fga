@@ -1,0 +1,15 @@
+model
+  schema 1.1
+type user
+type document
+  relations
+    define blocked: [user]
+    define editor: [user]
+    define viewer: [user] and editor
+    define commenter: [user] or editor
+    define active_viewer: viewer but not blocked
+type folder
+  relations
+    define owner: [user]
+    define parent: [folder]
+    define can_read: owner from parent

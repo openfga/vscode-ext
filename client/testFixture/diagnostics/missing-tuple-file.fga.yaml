@@ -1,0 +1,17 @@
+---
+name: Store with a tuple_file that does not exist
+model: |
+  model
+    schema 1.1
+  type user
+  type folder
+    relations
+      define owner: [user]
+tuple_file: ./no-such-tuples.yaml
+tests:
+  - name: test-1
+    check:
+      - user: user:anne
+        object: folder:1
+        assertions:
+          owner: true

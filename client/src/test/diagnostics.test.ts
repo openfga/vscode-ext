@@ -163,10 +163,54 @@ suite("Should get diagnostics", () => {
   });
 });
 
+// Error handling for external file references. A store file can point at a
+// model or a tuple file that does not exist; the server reports that as a
+// diagnostic rather than failing validation silently
+// (server/src/server.common.ts, the `error with external file:` paths).
+//
+// These assert the message PREFIX, not the whole string: the remainder is the
+// underlying filesystem error, whose wording differs across platforms and Node
+// versions, and the suite runs on Linux, macOS and Windows.
+suite("Should get diagnostics for missing external files", () => {
+  test("Reports a model_file that does not exist", async () => {
+    const docUri = getDocUri("diagnostics/missing-model-file.fga.yaml");
+
+    const diagnostics = await getDiagnostics(docUri);
+
+    assert.strictEqual(diagnostics.length, 1);
+    assert.ok(
+      diagnostics[0].message.startsWith("error with external file:"),
+      `unexpected message: ${diagnostics[0].message}`,
+    );
+    assert.strictEqual(diagnostics[0].source, "ParseError");
+    assert.strictEqual(diagnostics[0].range.start.line, 2);
+  });
+
+  test("Reports a tuple_file that does not exist", async () => {
+    const docUri = getDocUri("diagnostics/missing-tuple-file.fga.yaml");
+
+    const diagnostics = await getDiagnostics(docUri);
+
+    const externalFileDiagnostics = diagnostics.filter((diagnostic) =>
+      diagnostic.message.startsWith("error with external file:"),
+    );
+
+    assert.strictEqual(externalFileDiagnostics.length, 1);
+    assert.strictEqual(externalFileDiagnostics[0].source, "ParseError");
+    assert.strictEqual(externalFileDiagnostics[0].range.start.line, 9);
+  });
+});
+
 function toRange(sLine: number, sChar: number, eLine: number, eChar: number) {
   const start = new vscode.Position(sLine, sChar);
   const end = new vscode.Position(eLine, eChar);
   return new vscode.Range(start, end);
+}
+
+async function getDiagnostics(docUri: vscode.Uri): Promise<vscode.Diagnostic[]> {
+  await activate(docUri);
+
+  return vscode.languages.getDiagnostics(docUri);
 }
 
 async function testDiagnostics(docUri: vscode.Uri, expectedDiagnostics: vscode.Diagnostic[]) {
