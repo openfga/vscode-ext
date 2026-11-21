@@ -1,0 +1,27 @@
+---
+name: Store with external tuples
+model: |
+  model
+    schema 1.1
+  type user
+  type folder
+    relations
+      define owner: [user]
+      define can_view: owner
+tuple_file: ./store-tuples.yaml
+tuples:
+  - user: user:anne
+    relation: owner
+    object: folder:1
+tests:
+  - name: test-1
+    tuple_file: ./test-tuples.yaml
+    tuples:
+      - user: user:bob
+        relation: owner
+        object: folder:2
+    check:
+      - user: user:anne
+        object: folder:1
+        assertions:
+          can_view: true

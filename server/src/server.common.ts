@@ -22,11 +22,16 @@ import { errors, transformer, validator } from "@openfga/syntax-transformer";
 
 import { defaultDocumentationMap } from "./documentation";
 import { getDuplicationFix, getMissingDefinitionFix, getReservedTypeNameFix } from "./code-action";
-import { LineCounter, YAMLSeq, isScalar, parseDocument, visitAsync, Document } from "yaml";
+import { LineCounter, YAMLSeq, Scalar, isMap, isScalar, isSeq, parseDocument, Document } from "yaml";
 import {
+  ExternalTuples,
+  ResolvedTupleFile,
   YAMLSourceMap,
   YamlStoreValidateResults,
   getTooManyTuplesException,
+  isParseableTupleFile,
+  mergeExternalTuples,
+  parseTupleFileContents,
   rangeFromLinePos,
   validateYamlStore,
   getFieldPosition,
@@ -131,25 +136,18 @@ export function startServer(connection: _Connection) {
       diagnostics.push({ message: err.message, range: rangeFromLinePos(err.linePos) });
     }
 
-    await visitAsync(yamlDoc, {
-      async Pair(_, pair) {
-        if (pair.key && isScalar(pair.key) && pair.key.value === "tuple_file" && isScalar(pair.value)) {
-          const fileName = pair.value;
-          try {
-            await clientRequests.getFileContents(URI.parse(textDocument.uri), fileName.value as string);
-          } catch (err) {
-            diagnostics.push({
-              range: getRangeFromToken(fileName.range, textDocument),
-              message: "error with external file: " + (err as Error).message,
-              source: "ParseError",
-            });
-          }
-        }
-      },
-    });
+    // Resolve every `tuple_file` and keep what comes back. The store schema
+    // allows the key at store level and once per test, and nowhere else, so
+    // reading those two places directly says which tuples belong where —
+    // something a generic walk of the document cannot tell us.
+    const externalTuples = await resolveTupleFiles(yamlDoc, textDocument, diagnostics);
 
     const map = new YAMLSourceMap();
     map.doMap(yamlDoc.contents);
+
+    // The store as the CLI would see it: this document's own tuples plus the
+    // ones its `tuple_file` entries supply.
+    const { storeJson, resolveExternalTuple } = mergeExternalTuples(yamlDoc.toJSON(), externalTuples);
 
     let model,
       modelUri = undefined;
@@ -158,7 +156,16 @@ export function startServer(connection: _Connection) {
       // Parse model field
       if (yamlDoc.has("model")) {
         diagnostics.push(...(await parseYamlModel(yamlDoc, lineCounter)));
-        diagnostics.push(...validateYamlStore(yamlDoc.get("model") as string, yamlDoc, textDocument, map));
+        diagnostics.push(
+          ...validateYamlStore(
+            yamlDoc.get("model") as string,
+            yamlDoc,
+            textDocument,
+            map,
+            storeJson,
+            resolveExternalTuple,
+          ),
+        );
       } else if (yamlDoc.has("model_file")) {
         const position = getFieldPosition(yamlDoc, lineCounter, "model_file");
         const modelFile = yamlDoc.get("model_file") as string;
@@ -184,7 +191,7 @@ export function startServer(connection: _Connection) {
           diagnostics.push({ range: rangeFromLinePos([position]), message: "syntax error in model_file" });
           return { diagnostics, modelUri, modelDiagnostics };
         }
-        diagnostics.push(...validateYamlStore(model, yamlDoc, textDocument, map));
+        diagnostics.push(...validateYamlStore(model, yamlDoc, textDocument, map, storeJson, resolveExternalTuple));
       }
     } catch (err: any) {
       console.error("Unhandled exception: " + err.message);
@@ -209,6 +216,78 @@ export function startServer(connection: _Connection) {
       return d;
     });
     return dslDiagnostics;
+  }
+
+  // Resolve one `tuple_file` entry into the tuples it holds. A file that cannot
+  // be read, or that does not hold a list of tuples, reports against the
+  // `tuple_file` entry itself and contributes nothing, so validation continues
+  // on whatever tuples the document does have.
+  async function resolveTupleFile(
+    textDocument: TextDocument,
+    fileNode: Scalar,
+    diagnostics: Diagnostic[],
+  ): Promise<ResolvedTupleFile> {
+    const file = fileNode.value as string;
+    const resolved: ResolvedTupleFile = { file, range: fileNode.range ?? undefined, tuples: [] };
+
+    let contents: string;
+    try {
+      contents = (await clientRequests.getFileContents(URI.parse(textDocument.uri), file)).contents;
+    } catch (err) {
+      diagnostics.push({
+        range: getRangeFromToken(fileNode.range, textDocument),
+        message: "error with external file: " + (err as Error).message,
+        source: "ParseError",
+      });
+      return resolved;
+    }
+
+    if (!isParseableTupleFile(file)) {
+      return resolved;
+    }
+
+    try {
+      resolved.tuples = parseTupleFileContents(file, contents);
+    } catch (err) {
+      diagnostics.push({
+        range: getRangeFromToken(fileNode.range, textDocument),
+        message: "error with external file: " + (err as Error).message,
+        source: "ParseError",
+      });
+    }
+
+    return resolved;
+  }
+
+  // Resolve every `tuple_file` in the document. The store schema allows the key
+  // at store level and once per test, so those are the only two places read.
+  async function resolveTupleFiles(
+    yamlDoc: Document,
+    textDocument: TextDocument,
+    diagnostics: Diagnostic[],
+  ): Promise<ExternalTuples> {
+    const external: ExternalTuples = { tests: new Map() };
+
+    const storeNode = yamlDoc.get("tuple_file", true);
+    if (isScalar(storeNode)) {
+      external.store = await resolveTupleFile(textDocument, storeNode, diagnostics);
+    }
+
+    const tests = yamlDoc.get("tests", true);
+    if (isSeq(tests)) {
+      for (let index = 0; index < tests.items.length; index++) {
+        const test = tests.items[index];
+        if (!isMap(test)) {
+          continue;
+        }
+        const testNode = test.get("tuple_file", true);
+        if (isScalar(testNode)) {
+          external.tests.set(index, await resolveTupleFile(textDocument, testNode, diagnostics));
+        }
+      }
+    }
+
+    return external;
   }
 
   // Retrieve external model file
