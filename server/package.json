@@ -13,9 +13,9 @@
   },
   "dependencies": {
     "@openfga/sdk": "^0.9.8",
-    "@openfga/syntax-transformer": "^0.2.2",
+    "@openfga/syntax-transformer": "^0.2.3",
     "ajv": "^8.20.0",
-    "vscode-languageserver": "^11.0.0",
+    "vscode-languageserver": "^11.0.1",
     "vscode-languageserver-textdocument": "^1.0.16",
     "vscode-uri": "^3.2.0",
     "yaml": "^2.9.1"
